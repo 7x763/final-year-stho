@@ -3,50 +3,48 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Project;
-use App\Models\Ticket;
-use Filament\Widgets\ChartWidget;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
-use Illuminate\Support\Facades\DB;
+use Filament\Widgets\ChartWidget;
 
 class TicketsPerProjectChart extends ChartWidget
 {
     use HasWidgetShield;
-    
+
     protected ?string $heading = 'Number of tickets per project';
-    
+
     protected static ?int $sort = 2;
-    
-    protected int | string | array $columnSpan = [
+
+    protected int|string|array $columnSpan = [
         'md' => 2,
         'xl' => 1,
     ];
-    
+
     protected ?string $maxHeight = '300px';
-    
+
     protected ?string $pollingInterval = '30s';
-    
+
     protected function getData(): array
     {
         $user = auth()->user();
         $isSuperAdmin = $user->hasRole('super_admin');
-        
+
         // Query projects based on user role
         $projectsQuery = Project::query()
             ->withCount('tickets')
             ->orderBy('name');
-            
-        if (!$isSuperAdmin) {
-            $projectsQuery->whereHas('members', function ($query) use ($user) {
+
+        if (! $isSuperAdmin) {
+            $projectsQuery->whereHas('members', function ($query) use ($user): void {
                 $query->where('user_id', $user->id);
             });
         }
-        
+
         $projects = $projectsQuery->get();
-        
+
         // Prepare data for chart
         $labels = $projects->pluck('name')->toArray();
         $data = $projects->pluck('tickets_count')->toArray();
-        
+
         // Generate colors for each bar
         $colors = [];
         $baseColors = [
@@ -61,11 +59,11 @@ class TicketsPerProjectChart extends ChartWidget
             '#EC4899', // Pink
             '#6B7280', // Gray
         ];
-        
+
         for ($i = 0; $i < count($labels); $i++) {
             $colors[] = $baseColors[$i % count($baseColors)];
         }
-        
+
         return [
             'datasets' => [
                 [
@@ -79,12 +77,12 @@ class TicketsPerProjectChart extends ChartWidget
             'labels' => $labels,
         ];
     }
-    
+
     protected function getType(): string
     {
         return 'bar';
     }
-    
+
     protected function getOptions(): array
     {
         return [

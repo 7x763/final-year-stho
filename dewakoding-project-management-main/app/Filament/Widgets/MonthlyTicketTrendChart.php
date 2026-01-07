@@ -3,10 +3,10 @@
 namespace App\Filament\Widgets;
 
 use App\Models\Ticket;
-use Filament\Widgets\ChartWidget;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
-use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Filament\Widgets\ChartWidget;
+use Illuminate\Support\Facades\DB;
 
 class MonthlyTicketTrendChart extends ChartWidget
 {
@@ -16,7 +16,7 @@ class MonthlyTicketTrendChart extends ChartWidget
 
     protected static ?int $sort = 4;
 
-    protected int | string | array $columnSpan = [
+    protected int|string|array $columnSpan = [
         'md' => 2,
         'xl' => 2,
     ];
@@ -33,15 +33,15 @@ class MonthlyTicketTrendChart extends ChartWidget
         // Get the earliest ticket date
         $earliestTicketQuery = Ticket::query();
 
-        if (!$isSuperAdmin) {
-            $earliestTicketQuery->whereHas('project.members', function ($query) use ($user) {
+        if (! $isSuperAdmin) {
+            $earliestTicketQuery->whereHas('project.members', function ($query) use ($user): void {
                 $query->where('user_id', $user->id);
             });
         }
 
         $earliestTicket = $earliestTicketQuery->orderBy('created_at', 'asc')->first();
 
-        if (!$earliestTicket) {
+        if (! $earliestTicket) {
             return [
                 'datasets' => [],
                 'labels' => [],
@@ -83,19 +83,20 @@ class MonthlyTicketTrendChart extends ChartWidget
             ->groupByRaw("$yearKey, $monthKey")
             ->orderByRaw("$yearKey, $monthKey");
 
-        if (!$isSuperAdmin) {
-            $ticketsQuery->whereHas('project.members', function ($query) use ($user) {
+        if (! $isSuperAdmin) {
+            $ticketsQuery->whereHas('project.members', function ($query) use ($user): void {
                 $query->where('user_id', $user->id);
             });
         }
 
         $ticketData = $ticketsQuery->get()->keyBy(function ($item) {
-            return $item->year . '-' . str_pad($item->month, 2, '0', STR_PAD_LEFT);
+            return $item->year.'-'.str_pad($item->month, 2, '0', STR_PAD_LEFT);
         });
 
         // Fill data for each month
         $data = $months->map(function ($month) use ($ticketData) {
             $key = $month->format('Y-m');
+
             return $ticketData->get($key)->total ?? 0;
         })->toArray();
 

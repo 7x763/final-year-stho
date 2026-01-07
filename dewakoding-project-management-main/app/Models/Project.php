@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Carbon\Carbon;
 
 class Project extends Model
 {
@@ -31,7 +31,7 @@ class Project extends Model
 
     public function getIsPinnedAttribute(): bool
     {
-        return !is_null($this->pinned_date);
+        return ! is_null($this->pinned_date);
     }
 
     public function pin(): void
@@ -78,7 +78,7 @@ class Project extends Model
 
     public function getRemainingDaysAttribute()
     {
-        if (!$this->end_date) {
+        if (! $this->end_date) {
             return null;
         }
 
@@ -91,33 +91,33 @@ class Project extends Model
 
         return $today->diffInDays($endDate);
     }
-    
+
     public function getProgressPercentageAttribute(): float
     {
         $totalTickets = $this->tickets()->count();
-        
+
         if ($totalTickets === 0) {
             return 0.0;
         }
-        
+
         $completedTickets = $this->tickets()
-            ->whereHas('status', function ($query) {
+            ->whereHas('status', function ($query): void {
                 $query->where('is_completed', true);
             })
             ->count();
-        
+
         return round(($completedTickets / $totalTickets) * 100, 1);
     }
-    
+
     public function externalAccess(): HasOne
     {
         return $this->hasOne(ExternalAccess::class);
     }
-    
+
     public function generateExternalAccess()
     {
         $this->externalAccess()?->delete();
-    
+
         return ExternalAccess::generateForProject($this->id);
     }
 }

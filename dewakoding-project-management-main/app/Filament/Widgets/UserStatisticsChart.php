@@ -3,43 +3,43 @@
 namespace App\Filament\Widgets;
 
 use App\Models\User;
-use Filament\Widgets\ChartWidget;
 use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+use Filament\Widgets\ChartWidget;
 
 class UserStatisticsChart extends ChartWidget
 {
     use HasWidgetShield;
-    
+
     protected ?string $heading = 'User Statistics Chart';
-    
-    protected int | string | array $columnSpan = [
+
+    protected int|string|array $columnSpan = [
         'md' => 2,
         'xl' => 1,
     ];
-    
+
     protected static ?int $sort = 3;
-    
+
     protected ?string $maxHeight = '300px';
-    
+
     protected ?string $pollingInterval = '30s';
-    
+
     protected function getData(): array
     {
         $users = User::query()
-            ->when(!auth()->user()->hasRole('super_admin'), function ($query) {
+            ->when(! auth()->user()->hasRole('super_admin'), function ($query): void {
                 $query->where('id', auth()->id());
             })
             ->withCount([
                 'projects as total_projects',
-                'assignedTickets as total_assigned_tickets'
+                'assignedTickets as total_assigned_tickets',
             ])
             ->orderBy('name')
             ->get();
-        
+
         $labels = $users->pluck('name')->toArray();
         $projectsData = $users->pluck('total_projects')->toArray();
         $ticketsData = $users->pluck('total_assigned_tickets')->toArray();
-        
+
         return [
             'datasets' => [
                 [
@@ -60,12 +60,12 @@ class UserStatisticsChart extends ChartWidget
             'labels' => $labels,
         ];
     }
-    
+
     protected function getType(): string
     {
         return 'bar';
     }
-    
+
     protected function getOptions(): array
     {
         return [

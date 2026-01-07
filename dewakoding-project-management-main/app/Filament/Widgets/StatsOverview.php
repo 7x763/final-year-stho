@@ -67,9 +67,9 @@ class StatsOverview extends BaseWidget
     protected function getUserStats(): array
     {
         $user = auth()->user();
-        
+
         $myProjects = $user->projects()->count();
-        
+
         $myProjectIds = $user->projects()->pluck('projects.id')->toArray();
 
         $projectTickets = Ticket::whereIn('project_id', $myProjectIds)->count();
@@ -101,7 +101,7 @@ class StatsOverview extends BaseWidget
             ->where('tickets.updated_at', '>=', Carbon::now()->subDays(7))
             ->count();
 
-        $teamMembers = User::whereHas('projects', function ($query) use ($myProjectIds) {
+        $teamMembers = User::whereHas('projects', function ($query) use ($myProjectIds): void {
             $query->whereIn('projects.id', $myProjectIds);
         })->where('id', '!=', $user->id)->count();
 

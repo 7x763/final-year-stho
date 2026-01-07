@@ -69,7 +69,7 @@ class MembersRelationManager extends RelationManager
                         )
                     )
                     ->label('Add Member')
-                    ->after(function (Model $record) {
+                    ->after(function (Model $record): void {
                         $project = $this->getOwnerRecord();
                         $user = User::find($record->id);
                         $assignedBy = auth()->user();
@@ -82,7 +82,7 @@ class MembersRelationManager extends RelationManager
             ->recordActions([
                 DetachAction::make()
                     ->label('Remove')
-                    ->after(function (Model $record) {
+                    ->after(function (Model $record): void {
                         $project = $this->getOwnerRecord();
                         $user = User::find($record->id);
                         $removedBy = auth()->user();

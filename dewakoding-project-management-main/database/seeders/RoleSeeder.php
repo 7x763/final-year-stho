@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -27,7 +27,7 @@ class RoleSeeder extends Seeder
         $permissions = [];
         foreach ($resources as $resource) {
             foreach ($actions as $action) {
-                $permissions[] = $action . '_' . $resource;
+                $permissions[] = $action.'_'.$resource;
             }
         }
 
@@ -49,7 +49,7 @@ class RoleSeeder extends Seeder
         $admin->syncPermissions($adminPermissions);
 
         // member: hanya view/view_any project, ticket, ticket_priority, ticket_comment, notification, dan update ticket (untuk drag & drop)
-        $memberPermissions = Permission::where(function($q) {
+        $memberPermissions = Permission::where(function ($q) {
             $q->whereIn('name', [
                 'view_project', 'view_any_project',
                 'view_ticket', 'view_any_ticket', 'update_ticket',

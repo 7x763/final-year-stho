@@ -171,7 +171,7 @@ class UserResource extends Resource
                                 ->default('add')
                                 ->required(),
                         ])
-                        ->action(function (array $data, $records) {
+                        ->action(function (array $data, $records): void {
                             foreach ($records as $record) {
                                 if ($data['role_mode'] === 'replace') {
                                     $record->roles()->sync($data['roles']);

@@ -16,11 +16,11 @@ class TicketComment extends Model
 
     protected static function booted()
     {
-        static::created(function ($comment) {
+        static::created(function ($comment): void {
             app(NotificationService::class)->notifyCommentAdded($comment);
         });
 
-        static::updated(function ($comment) {
+        static::updated(function ($comment): void {
             if ($comment->wasChanged('comment')) {
                 app(NotificationService::class)->notifyCommentUpdated($comment);
             }

@@ -135,7 +135,7 @@ class ProjectBoard extends Page
 
         $statuses = $this->selectedProject->ticketStatuses()
             ->with([
-                'tickets' => function ($query) {
+                'tickets' => function ($query): void {
                     $query->with([
                         'assignees:id,name',
                         'status:id,name,color,is_completed',
@@ -143,8 +143,8 @@ class ProjectBoard extends Page
                         'creator:id,name',
                     ])
                         ->select('id', 'project_id', 'ticket_status_id', 'priority_id', 'name', 'description', 'uuid', 'due_date', 'created_at', 'updated_at', 'created_by')
-                        ->when(! empty($this->selectedUserIds), function ($query) {
-                            $query->whereHas('assignees', function ($assigneeQuery) {
+                        ->when(! empty($this->selectedUserIds), function ($query): void {
+                            $query->whereHas('assignees', function ($assigneeQuery): void {
                                 $assigneeQuery->whereIn('users.id', $this->selectedUserIds);
                             });
                         })
@@ -156,7 +156,7 @@ class ProjectBoard extends Page
             ->orderBy('sort_order')
             ->get();
 
-        $statuses->each(function ($status) {
+        $statuses->each(function ($status): void {
             $sortOrder = $this->sortOrders[$status->id] ?? 'date_created_newest';
             $status->tickets = $this->applySorting($status->tickets, $sortOrder);
         });
@@ -218,7 +218,7 @@ class ProjectBoard extends Page
                 return $tickets->values();
             case 'date_created_oldest':
                 return $tickets->sortBy(function ($ticket) {
-                    return $ticket->created_at->timestamp . '_' . str_pad($ticket->id, 10, '0', STR_PAD_LEFT);
+                    return $ticket->created_at->timestamp.'_'.str_pad($ticket->id, 10, '0', STR_PAD_LEFT);
                 })->values();
             case 'card_name_alphabetical':
                 return $tickets->sortBy('name')->values();
@@ -341,7 +341,7 @@ class ProjectBoard extends Page
                     ];
 
                 })
-                ->action(function (array $data, $schema) {
+                ->action(function (array $data, $schema): void {
                     $data['created_by'] = auth()->id();
 
                     $model = $schema->getModel();
@@ -377,7 +377,7 @@ class ProjectBoard extends Page
                         ->searchable()
                         ->bulkToggleable(),
                 ])
-                ->action(function (array $data) {
+                ->action(function (array $data): void {
                     $this->selectedUserIds = $data['selectedUserIds'] ?? [];
                     $this->loadTicketStatuses();
 

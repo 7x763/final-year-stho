@@ -33,7 +33,7 @@ class Ticket extends Model
 
     protected static function booted()
     {
-        static::creating(function ($ticket) {
+        static::creating(function ($ticket): void {
             if (empty($ticket->uuid)) {
                 $project = Project::find($ticket->project_id);
                 $prefix = $project ? $project->ticket_prefix : 'TKT';
@@ -48,7 +48,7 @@ class Ticket extends Model
             }
         });
 
-        static::updating(function ($ticket) {
+        static::updating(function ($ticket): void {
             if ($ticket->isDirty('ticket_status_id')) {
                 TicketHistory::create([
                     'ticket_id' => $ticket->id,

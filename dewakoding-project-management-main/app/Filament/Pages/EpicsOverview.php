@@ -12,10 +12,15 @@ use Livewire\Attributes\On;
 class EpicsOverview extends Page
 {
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-flag';
+
     protected string $view = 'filament.pages.epics-overview';
+
     protected static string|\UnitEnum|null $navigationGroup = 'Project Management';
+
     protected static ?string $navigationLabel = 'Epics';
+
     protected static ?string $title = 'Epics Overview';
+
     protected static ?int $navigationSort = 7;
 
     public function getSubheading(): ?string
@@ -41,7 +46,7 @@ class EpicsOverview extends Page
 
         if ($project_id && $this->availableProjects->contains('id', $project_id)) {
             $this->selectedProjectId = (int) $project_id;
-        } elseif ($project_id && !$this->availableProjects->contains('id', $project_id)) {
+        } elseif ($project_id && ! $this->availableProjects->contains('id', $project_id)) {
             Notification::make()
                 ->title('Project Not Found')
                 ->body('The selected project was not found or you do not have access to it.')
@@ -88,7 +93,7 @@ class EpicsOverview extends Page
     {
         $query = Epic::with([
             'project',
-            'tickets' => function ($query) {
+            'tickets' => function ($query): void {
                 $query->with(['status', 'assignees', 'creator']);
             },
         ])
@@ -179,7 +184,7 @@ class EpicsOverview extends Page
             return implode(', ', $names);
         }
 
-        return $names[0] . ', ' . $names[1] . ' +' . (count($names) - 2) . ' more';
+        return $names[0].', '.$names[1].' +'.(count($names) - 2).' more';
     }
 
     #[On('epic-created')]

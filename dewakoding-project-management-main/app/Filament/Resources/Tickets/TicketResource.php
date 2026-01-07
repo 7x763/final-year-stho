@@ -2,33 +2,33 @@
 
 namespace App\Filament\Resources\Tickets;
 
+use App\Filament\Resources\Tickets\Pages\CreateTicket;
+use App\Filament\Resources\Tickets\Pages\EditTicket;
+use App\Filament\Resources\Tickets\Pages\ListTickets;
+use App\Filament\Resources\Tickets\Pages\ViewTicket;
 use App\Models\Epic;
-use App\Models\Ticket;
 use App\Models\Project;
-use Filament\Tables\Table;
+use App\Models\Ticket;
+use App\Models\TicketPriority;
 use App\Models\TicketStatus;
 use Filament\Actions\Action;
-use Filament\Schemas\Schema;
-use App\Models\TicketPriority;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Resources\Resource;
-use Illuminate\Support\HtmlString;
-use Filament\Tables\Filters\Filter;
-use Filament\Actions\BulkActionGroup;
-use Filament\Forms\Components\Select;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TextInput;
+use Filament\Resources\Resource;
 use Filament\Schemas\Components\Utilities\Get;
-use App\Filament\Resources\Tickets\Pages\EditTicket;
-use App\Filament\Resources\Tickets\Pages\ViewTicket;
-use App\Filament\Resources\Tickets\Pages\ListTickets;
-use App\Filament\Resources\Tickets\Pages\CreateTicket;
+use Filament\Schemas\Schema;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\HtmlString;
 
 class TicketResource extends Resource
 {
@@ -46,13 +46,13 @@ class TicketResource extends Resource
     {
         $query = parent::getEloquentQuery();
 
-        if (!auth()->user()->hasRole(['super_admin'])) {
-            $query->where(function ($query) {
-                $query->whereHas('assignees', function ($query) {
+        if (! auth()->user()->hasRole(['super_admin'])) {
+            $query->where(function ($query): void {
+                $query->whereHas('assignees', function ($query): void {
                     $query->where('users.id', auth()->id());
                 })
                     ->orWhere('created_by', auth()->id())
-                    ->orWhereHas('project.members', function ($query) {
+                    ->orWhereHas('project.members', function ($query): void {
                         $query->where('users.id', auth()->id());
                     });
             });
@@ -84,7 +84,7 @@ class TicketResource extends Resource
                     ->searchable()
                     ->preload()
                     ->live()
-                    ->afterStateUpdated(function (callable $set) {
+                    ->afterStateUpdated(function (callable $set): void {
                         $set('ticket_status_id', null);
                         $set('assignees', []);
                         $set('epic_id', null);
@@ -94,7 +94,7 @@ class TicketResource extends Resource
                     ->label('Status')
                     ->options(function ($get) {
                         $projectId = $get('project_id');
-                        if (!$projectId) {
+                        if (! $projectId) {
                             return [];
                         }
 
@@ -119,7 +119,7 @@ class TicketResource extends Resource
                     ->options(function (Get $get) {
                         $projectId = $get('project_id');
 
-                        if (!$projectId) {
+                        if (! $projectId) {
                             return [];
                         }
 
@@ -130,7 +130,7 @@ class TicketResource extends Resource
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->hidden(fn(Get $get): bool => !$get('project_id')),
+                    ->hidden(fn (Get $get): bool => ! $get('project_id')),
 
                 TextInput::make('name')
                     ->label('Ticket Name')
@@ -154,16 +154,16 @@ class TicketResource extends Resource
                         titleAttribute: 'name',
                         modifyQueryUsing: function (Builder $query, Get $get) {
                             $projectId = $get('project_id');
-                            if (!$projectId) {
+                            if (! $projectId) {
                                 return $query->whereRaw('1 = 0');
                             }
 
                             $project = Project::find($projectId);
-                            if (!$project) {
+                            if (! $project) {
                                 return $query->whereRaw('1 = 0');
                             }
 
-                            return $query->whereHas('projects', function ($query) use ($projectId) {
+                            return $query->whereHas('projects', function ($query) use ($projectId): void {
                                 $query->where('projects.id', $projectId);
                             });
                         }
@@ -171,7 +171,7 @@ class TicketResource extends Resource
                     ->searchable()
                     ->preload()
                     ->helperText('Select multiple users to assign this ticket to. Only project members can be assigned.')
-                    ->hidden(fn(Get $get): bool => !$get('project_id'))
+                    ->hidden(fn (Get $get): bool => ! $get('project_id'))
                     ->live(),
 
                 DatePicker::make('start_date')
@@ -226,7 +226,7 @@ class TicketResource extends Resource
                 TextColumn::make('priority.name')
                     ->label('Priority')
                     ->badge()
-                    ->color(fn(string $state): string => match ($state) {
+                    ->color(fn (string $state): string => match ($state) {
                         'High' => 'danger',
                         'Medium' => 'warning',
                         'Low' => 'success',
@@ -291,7 +291,7 @@ class TicketResource extends Resource
                     ->options(function () {
                         $projectId = request()->input('tableFilters.project_id');
 
-                        if (!$projectId) {
+                        if (! $projectId) {
                             return [];
                         }
 
@@ -307,7 +307,7 @@ class TicketResource extends Resource
                     ->options(function () {
                         $projectId = request()->input('tableFilters.project_id');
 
-                        if (!$projectId) {
+                        if (! $projectId) {
                             return [];
                         }
 
@@ -348,11 +348,11 @@ class TicketResource extends Resource
                         return $query
                             ->when(
                                 $data['due_from'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('due_date', '>=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('due_date', '>=', $date),
                             )
                             ->when(
                                 $data['due_until'],
-                                fn(Builder $query, $date): Builder => $query->whereDate('due_date', '<=', $date),
+                                fn (Builder $query, $date): Builder => $query->whereDate('due_date', '<=', $date),
                             );
                     }),
             ])
