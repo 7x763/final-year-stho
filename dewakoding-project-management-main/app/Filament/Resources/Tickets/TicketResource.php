@@ -44,7 +44,7 @@ class TicketResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery();
+        $query = parent::getEloquentQuery()->with(['project', 'status', 'priority', 'assignees', 'creator', 'epic']);
 
         if (! auth()->user()->hasRole(['super_admin'])) {
             $query->where(function ($query): void {

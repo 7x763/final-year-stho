@@ -116,7 +116,7 @@ class EpicResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery();
+        $query = parent::getEloquentQuery()->with(['project']);
 
         $userIsSuperAdmin = auth()->user() && (
             (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('super_admin'))
