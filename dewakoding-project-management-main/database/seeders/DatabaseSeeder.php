@@ -22,5 +22,10 @@ class DatabaseSeeder extends Seeder
 
         // Jalankan RoleSeeder
         $this->call(RoleSeeder::class);
+
+        $user = User::where('email', 'test@example.com')->first();
+        if ($user) {
+            $user->assignRole('super_admin');
+        }
     }
 }
