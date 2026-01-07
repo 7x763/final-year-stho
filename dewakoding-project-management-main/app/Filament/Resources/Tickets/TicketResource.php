@@ -29,6 +29,7 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\HtmlString;
+use Closure;
 
 class TicketResource extends Resource
 {
@@ -105,7 +106,18 @@ class TicketResource extends Resource
                     ->default($statusId)
                     ->required()
                     ->searchable()
-                    ->preload(),
+                    ->preload()
+                    ->rules([
+                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (! $value) {
+                                return;
+                            }
+                            $projectId = $get('project_id');
+                            if (! TicketStatus::where('id', $value)->where('project_id', $projectId)->exists()) {
+                                $fail("The selected status does not belong to the selected project.");
+                            }
+                        },
+                    ]),
 
                 Select::make('priority_id')
                     ->label('Priority')
@@ -130,7 +142,18 @@ class TicketResource extends Resource
                     ->searchable()
                     ->preload()
                     ->nullable()
-                    ->hidden(fn (Get $get): bool => ! $get('project_id')),
+                    ->hidden(fn (Get $get): bool => ! $get('project_id'))
+                    ->rules([
+                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (! $value) {
+                                return;
+                            }
+                            $projectId = $get('project_id');
+                            if (! Epic::where('id', $value)->where('project_id', $projectId)->exists()) {
+                                $fail("The selected epic does not belong to the selected project.");
+                            }
+                        },
+                    ]),
 
                 TextInput::make('name')
                     ->label('Ticket Name')
@@ -172,16 +195,42 @@ class TicketResource extends Resource
                     ->preload()
                     ->helperText('Select multiple users to assign this ticket to. Only project members can be assigned.')
                     ->hidden(fn (Get $get): bool => ! $get('project_id'))
-                    ->live(),
+                    ->live()
+                    ->rules([
+                        fn (Get $get): Closure => function (string $attribute, $value, Closure $fail) use ($get) {
+                            if (! $value) {
+                                return;
+                            }
+                            $projectId = $get('project_id');
+                            if (! $projectId) {
+                                return;
+                            }
+                            // $value is an array of IDs for multiple select
+                            $userIds = is_array($value) ? $value : [$value];
+                            $project = Project::find($projectId);
+                            if (! $project) {
+                                return;
+                            }
+                            $memberIds = $project->members()->pluck('users.id')->toArray();
+                            foreach ($userIds as $userId) {
+                                if (! in_array($userId, $memberIds)) {
+                                    $fail("One or more selected assignees are not members of this project.");
+                                    break;
+                                }
+                            }
+                        },
+                    ]),
 
                 DatePicker::make('start_date')
                     ->label('Start Date')
                     ->default(now())
-                    ->nullable(),
+                    ->nullable()
+                    ->live(),
 
                 DatePicker::make('due_date')
                     ->label('Due Date')
-                    ->nullable(),
+                    ->nullable()
+                    ->afterOrEqual('start_date'),
                 Select::make('created_by')
                     ->label('Created By')
                     ->relationship('creator', 'name')

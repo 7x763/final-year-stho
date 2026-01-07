@@ -47,67 +47,6 @@ class CreateTicket extends CreateRecord
         return $data;
     }
 
-    protected function handleRecordCreation(array $data): Model
-    {
-        $ticket = parent::handleRecordCreation($data);
-
-        if (! empty($data['assignees']) && ! empty($data['project_id'])) {
-            $project = Project::find($data['project_id']);
-
-            if ($project) {
-                $validAssignees = [];
-                $invalidAssignees = [];
-
-                foreach ($data['assignees'] as $userId) {
-                    $isMember = $project->members()->where('users.id', $userId)->exists();
-
-                    if ($isMember) {
-                        $validAssignees[] = $userId;
-                    } else {
-                        $invalidAssignees[] = $userId;
-                    }
-                }
-
-                if (! empty($validAssignees)) {
-                    $ticket->assignees()->sync($validAssignees);
-                }
-
-                if (! empty($invalidAssignees)) {
-                    Notification::make()
-                        ->warning()
-                        ->title('Some assignees removed')
-                        ->body('Some selected users are not members of this project and have been removed from assignees.')
-                        ->send();
-                }
-
-                if (empty($validAssignees)) {
-                    $currentUserIsMember = $project->members()->where('users.id', auth()->id())->exists();
-
-                    if ($currentUserIsMember) {
-                        $ticket->assignees()->sync([auth()->id()]);
-
-                        Notification::make()
-                            ->info()
-                            ->title('Auto-assigned')
-                            ->body('No valid assignees found. You have been automatically assigned to this ticket.')
-                            ->send();
-                    }
-                }
-            }
-        } else {
-            if (! empty($data['project_id'])) {
-                $project = Project::find($data['project_id']);
-                $currentUserIsMember = $project?->members()->where('users.id', auth()->id())->exists();
-
-                if ($currentUserIsMember) {
-                    $ticket->assignees()->sync([auth()->id()]);
-                }
-            }
-        }
-
-        return $ticket;
-    }
-
     protected function getRedirectUrl(): string
     {
         $referer = request()->header('referer');
