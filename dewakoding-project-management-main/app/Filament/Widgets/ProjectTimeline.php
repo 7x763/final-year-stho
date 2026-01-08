@@ -122,8 +122,10 @@ class ProjectTimeline extends Widget
 
         $months = [];
         $current = $startDate->copy();
+        $maxMonths = 24; // Safety limit
+        $count = 0;
 
-        while ($current->lte($endDate)) {
+        while ($current->lte($endDate) && $count < $maxMonths) {
             $months[] = [
                 'date' => $current->copy(),
                 'label' => $current->format('M Y'),
@@ -131,6 +133,7 @@ class ProjectTimeline extends Widget
                 'days' => $current->daysInMonth,
             ];
             $current->addMonth();
+            $count++;
         }
 
         return [

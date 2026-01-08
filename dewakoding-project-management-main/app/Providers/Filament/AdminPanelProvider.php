@@ -25,7 +25,6 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         $panel = $panel
-            ->spa()
             ->databaseTransactions()
             ->default()
             ->id('admin')
