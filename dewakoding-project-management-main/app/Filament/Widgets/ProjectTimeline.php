@@ -24,8 +24,14 @@ class ProjectTimeline extends Widget
 
     public string $viewMode = 'projects';
 
+    protected $projects = null;
+
     public function getProjects()
     {
+        if ($this->projects !== null) {
+            return $this->projects;
+        }
+
         $query = Project::query()
             ->with(['tickets' => function ($q): void {
                 $q->whereNotNull('due_date')
@@ -52,7 +58,7 @@ class ProjectTimeline extends Widget
             });
         }
 
-        return $query->get();
+        return $this->projects = $query->get();
     }
 
     public function setFilter($filter)

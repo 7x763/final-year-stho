@@ -16,7 +16,10 @@ class AutoLoginMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if (!auth()->check()) {
-            auth()->loginUsingId(1);
+            $user = \App\Models\User::find(1);
+            if ($user) {
+                auth()->login($user);
+            }
         }
         return $next($request);
     }
