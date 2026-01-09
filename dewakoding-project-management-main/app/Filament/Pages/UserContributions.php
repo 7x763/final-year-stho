@@ -286,15 +286,4 @@ class UserContributions extends Page implements HasForms
 
         return 'very-high';
     }
-
-    public function getTimeRangeLabel(): string
-    {
-        return match ($this->timeRange) {
-            '1month' => 'Last Month',
-            '3months' => 'Last 3 Months',
-            '6months' => 'Last 6 Months',
-            '1year' => 'Last Year',
-            default => 'Last 3 Months'
-        };
-    }
 }

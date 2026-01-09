@@ -49,11 +49,6 @@ class TicketsRelationManager extends RelationManager
 
     protected static ?string $pluralModelLabel = 'Vé hỗ trợ';
 
-    public static function getBadge(Model $ownerRecord, string $pageClass): ?string
-    {
-        return $ownerRecord->tickets_count ?? $ownerRecord->tickets()->count();
-    }
-
     public function form(Schema $schema): Schema
     {
         $projectId = $this->getOwnerRecord()->id;

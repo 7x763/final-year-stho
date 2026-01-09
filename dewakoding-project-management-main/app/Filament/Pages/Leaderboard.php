@@ -220,17 +220,6 @@ class Leaderboard extends Page implements HasForms
         };
     }
 
-    public function getTimeRangeLabel(): string
-    {
-        return match ($this->timeRange) {
-            '7days' => 'Last 7 Days',
-            '30days' => 'Last 30 Days',
-            'thisweek' => 'This Week',
-            '1month' => 'Last Month',
-            default => 'Last 7 Days'
-        };
-    }
-
     public function getRankBadgeColor(int $rank): string
     {
         return match ($rank) {
