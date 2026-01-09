@@ -19,15 +19,15 @@ class Leaderboard extends Page implements HasForms
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-trophy';
 
-    protected static ?string $navigationLabel = 'Leaderboard';
+    protected static ?string $navigationLabel = 'Bảng xếp hạng';
 
-    protected static ?string $title = 'Contribution Leaderboard';
+    protected static ?string $title = 'Bảng xếp hạng đóng góp';
 
     protected static ?int $navigationSort = 6;
 
     protected string $view = 'filament.pages.leaderboard';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Analytics';
+    protected static string|\UnitEnum|null $navigationGroup = 'Phân tích';
 
     protected static ?string $slug = 'leaderboard';
 
@@ -37,7 +37,18 @@ class Leaderboard extends Page implements HasForms
 
     public function getSubheading(): ?string
     {
-        return 'Top contributors ranked by their overall activity and engagement';
+        return 'Xếp hạng những người đóng góp hàng đầu dựa trên hoạt động và tương tác tổng thể';
+    }
+
+    public function getTimeRangeLabel(): string
+    {
+        return match ($this->timeRange) {
+            '7days' => '7 ngày qua',
+            '30days' => '30 ngày qua',
+            'thisweek' => 'Tuần này',
+            '1month' => 'Tháng qua',
+            default => '7 ngày qua'
+        };
     }
 
     public function setTimeRange(string $range): void

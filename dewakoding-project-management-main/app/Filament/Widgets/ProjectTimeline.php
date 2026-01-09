@@ -12,7 +12,7 @@ class ProjectTimeline extends Widget
 {
     use HasWidgetShield;
 
-    protected ?string $heading = 'Project Timeline';
+    protected ?string $heading = 'Dòng thời gian dự án';
 
     protected string $view = 'filament.widgets.project-timeline';
 
@@ -128,8 +128,8 @@ class ProjectTimeline extends Widget
         while ($current->lte($endDate) && $count < $maxMonths) {
             $months[] = [
                 'date' => $current->copy(),
-                'label' => $current->format('M Y'),
-                'short' => $current->format('M'),
+                'label' => 'Tháng ' . $current->format('m Y'),
+                'short' => 'T' . $current->format('m'),
                 'days' => $current->daysInMonth,
             ];
             $current->addMonth();
@@ -194,20 +194,20 @@ class ProjectTimeline extends Widget
                 $progressPercent = ($pastDays / $totalDays) * 100;
             }
 
-            $status = 'In Progress';
+            $status = 'Đang thực hiện';
             $statusColor = 'blue';
 
             if ($today->gt($endDate)) {
-                $status = 'Completed';
+                $status = 'Đã hoàn thành';
                 $statusColor = 'green';
             } elseif ($project->remaining_days <= 0) {
-                $status = 'Overdue';
+                $status = 'Quá hạn';
                 $statusColor = 'red';
             } elseif ($project->remaining_days <= 7) {
-                $status = 'Approaching Deadline';
+                $status = 'Sắp đến hạn';
                 $statusColor = 'yellow';
             } elseif ($today->lt($startDate)) {
-                $status = 'Not Started';
+                $status = 'Chưa bắt đầu';
                 $statusColor = 'gray';
             }
 
@@ -253,8 +253,8 @@ class ProjectTimeline extends Widget
                         'name' => $ticket->name,
                         'due_date' => $dueDate->format('d/m/Y'),
                         'due_percent' => max(0, min(100, $duePercent)),
-                        'status' => $ticket->status?->name ?? 'No Status',
-                        'priority' => $ticket->priority?->name ?? 'No Priority',
+                        'status' => $ticket->status?->name ?? 'Không có trạng thái',
+                        'priority' => $ticket->priority?->name ?? 'Không có ưu tiên',
                         'assignees' => $ticket->assignees->pluck('name')->join(', '),
                         'is_overdue' => $dueDate->isPast(),
                     ];

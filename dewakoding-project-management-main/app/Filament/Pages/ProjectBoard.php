@@ -25,17 +25,17 @@ class ProjectBoard extends Page
 
     protected string $view = 'filament.pages.project-board';
 
-    protected static ?string $title = 'Project Board';
+    protected static ?string $title = 'Bảng dự án';
 
-    protected static ?string $navigationLabel = 'Project Board';
+    protected static ?string $navigationLabel = 'Bảng dự án';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Project Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
 
     protected static ?int $navigationSort = 4;
 
     public function getSubheading(): ?string
     {
-        return 'Kanban board for ticket management';
+        return 'Bảng Kanban để quản lý vé hỗ trợ';
     }
 
     protected static ?string $slug = 'project-board/{project_id?}';
@@ -244,8 +244,8 @@ class ProjectBoard extends Page
         if ($ticket && $ticket->project_id === $this->selectedProject?->id) {
             if (! $this->canManageTicket($ticket)) {
                 Notification::make()
-                    ->title('Permission Denied')
-                    ->body('You do not have permission to move this ticket.')
+                    ->title('Quyền bị từ chối')
+                    ->body('Bạn không có quyền di chuyển vé này.')
                     ->danger()
                     ->send();
 
@@ -261,7 +261,7 @@ class ProjectBoard extends Page
             $this->dispatch('ticket-updated');
 
             Notification::make()
-                ->title('Ticket Updated')
+                ->title('Đã cập nhật vé')
                 ->success()
                 ->send();
         }
@@ -280,7 +280,7 @@ class ProjectBoard extends Page
 
         if (! $ticket) {
             Notification::make()
-                ->title('Ticket Not Found')
+                ->title('Không tìm thấy vé')
                 ->danger()
                 ->send();
 
@@ -302,8 +302,8 @@ class ProjectBoard extends Page
 
         if (! $this->canEditTicket($ticket)) {
             Notification::make()
-                ->title('Permission Denied')
-                ->body('You do not have permission to edit this ticket.')
+                ->title('Quyền bị từ chối')
+                ->body('Bạn không có quyền chỉnh sửa vé này.')
                 ->danger()
                 ->send();
 
@@ -318,7 +318,7 @@ class ProjectBoard extends Page
         return [
             Action::make('new_ticket')
                 ->name('ticket_on_board')
-                ->label('New Ticket')
+                ->label('Vé mới')
                 ->icon('heroicon-m-plus')
                 ->visible(fn () => $this->selectedProject !== null && auth()->user()->can('create_ticket'))
                 ->schema(fn ($schema) => TicketResource::form($schema)
@@ -351,14 +351,14 @@ class ProjectBoard extends Page
                     $schema->model($record)->saveRelationships();
 
                     Notification::make()
-                        ->title('Ticket Created')
-                        ->body('The ticket has been created successfully.')
+                        ->title('Đã tạo vé')
+                        ->body('Vé hỗ trợ đã được tạo thành công.')
                         ->success()
                         ->send();
                 }),
 
             Action::make('refresh_board')
-                ->label('Refresh Board')
+                ->label('Làm mới bảng')
                 ->icon('heroicon-m-arrow-path')
                 ->action('refreshBoard')
                 ->color('warning'),
@@ -366,12 +366,12 @@ class ProjectBoard extends Page
                 ->visible(fn () => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin'])),
 
             Action::make('filter_users')
-                ->label('Filter by User')
+                ->label('Lọc theo người dùng')
                 ->icon('heroicon-m-user-group')
                 ->visible(fn () => $this->selectedProject !== null && $this->projectUsers->isNotEmpty())
                 ->schema([
                     CheckboxList::make('selectedUserIds')
-                        ->label('Select Users to Filter')
+                        ->label('Chọn người dùng để lọc')
                         ->options(fn () => $this->projectUsers->pluck('name', 'id')->toArray())
                         ->columns(2)
                         ->searchable()
@@ -384,14 +384,14 @@ class ProjectBoard extends Page
                     $userCount = count($this->selectedUserIds);
                     if ($userCount > 0) {
                         Notification::make()
-                            ->title('Filter Applied')
-                            ->body("Showing tickets for {$userCount} selected user(s)")
+                            ->title('Đã áp dụng bộ lọc')
+                            ->body("Đang hiển thị vé cho {$userCount} người dùng đã chọn")
                             ->success()
                             ->send();
                     } else {
                         Notification::make()
-                            ->title('Filter Cleared')
-                            ->body('Showing all tickets')
+                            ->title('Đã xóa bộ lọc')
+                            ->body('Đang hiển thị tất cả vé')
                             ->info()
                             ->send();
                     }

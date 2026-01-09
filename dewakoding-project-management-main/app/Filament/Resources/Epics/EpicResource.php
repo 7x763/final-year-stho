@@ -26,34 +26,48 @@ class EpicResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-flag';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Project Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
 
     protected static ?int $navigationSort = 2;
+
+    public static function getModelLabel(): string
+    {
+        return 'Epic';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Epic';
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Select::make('project_id')
+                    ->label('Dự án')
                     ->relationship('project', 'name')
                     ->required()
                     ->searchable()
                     ->preload(),
                 TextInput::make('name')
+                    ->label('Tên Epic')
                     ->required()
                     ->maxLength(255),
                 RichEditor::make('description')
+                    ->label('Mô tả')
                     ->columnSpanFull(),
                 DatePicker::make('start_date')
-                    ->label('Start Date')
+                    ->label('Ngày bắt đầu')
                     ->native(false)
                     ->displayFormat('d/m/Y'),
                 DatePicker::make('end_date')
-                    ->label('End Date')
+                    ->label('Ngày kết thúc')
                     ->native(false)
                     ->displayFormat('d/m/Y')
                     ->afterOrEqual('start_date'),
                 TextInput::make('sort_order')
+                    ->label('Thứ tự sắp xếp')
                     ->numeric()
                     ->default(0),
             ]);
@@ -64,22 +78,26 @@ class EpicResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('project.name')
-                    ->label('Project')
+                    ->label('Dự án')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label('Tên Epic')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('start_date')
+                    ->label('Ngày bắt đầu')
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('end_date')
+                    ->label('Ngày kết thúc')
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Tickets'),
+                    ->label('Số lượng vé'),
                 TextColumn::make('created_at')
+                    ->label('Ngày tạo')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

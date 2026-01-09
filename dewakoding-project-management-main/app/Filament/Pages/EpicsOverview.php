@@ -15,17 +15,17 @@ class EpicsOverview extends Page
 
     protected string $view = 'filament.pages.epics-overview';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Project Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
 
-    protected static ?string $navigationLabel = 'Epics';
+    protected static ?string $navigationLabel = 'Tổng quan Epic';
 
-    protected static ?string $title = 'Epics Overview';
+    protected static ?string $title = 'Tổng quan Epic';
 
     protected static ?int $navigationSort = 7;
 
     public function getSubheading(): ?string
     {
-        return 'Manage and track project epics with their associated tickets and progress';
+        return 'Quản lý và theo dõi các Epic dự án cùng với các vé hỗ trợ liên quan và tiến độ';
     }
 
     protected static ?string $slug = 'epics-overview/{project_id?}';
@@ -48,8 +48,8 @@ class EpicsOverview extends Page
             $this->selectedProjectId = (int) $project_id;
         } elseif ($project_id && ! $this->availableProjects->contains('id', $project_id)) {
             Notification::make()
-                ->title('Project Not Found')
-                ->body('The selected project was not found or you do not have access to it.')
+                ->title('Không tìm thấy dự án')
+                ->body('Dự án đã chọn không tồn tại hoặc bạn không có quyền truy cập.')
                 ->danger()
                 ->send();
             $this->redirect(static::getUrl());
@@ -175,7 +175,7 @@ class EpicsOverview extends Page
     public function getTicketAssigneesDisplay($ticket): string
     {
         if ($ticket->assignees->isEmpty()) {
-            return 'Unassigned';
+            return 'Chưa gán';
         }
 
         $names = $ticket->assignees->pluck('name')->toArray();
@@ -184,7 +184,7 @@ class EpicsOverview extends Page
             return implode(', ', $names);
         }
 
-        return $names[0].', '.$names[1].' +'.(count($names) - 2).' more';
+        return $names[0].', '.$names[1].' +'.(count($names) - 2).' người khác';
     }
 
     #[On('epic-created')]
@@ -201,7 +201,7 @@ class EpicsOverview extends Page
         $this->expandedEpics = array_intersect($this->expandedEpics, $currentEpicIds);
 
         Notification::make()
-            ->title('Data refreshed')
+            ->title('Đã cập nhật dữ liệu')
             ->success()
             ->send();
     }

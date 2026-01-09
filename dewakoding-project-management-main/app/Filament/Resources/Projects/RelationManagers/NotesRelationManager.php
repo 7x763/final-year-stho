@@ -23,27 +23,29 @@ class NotesRelationManager extends RelationManager
 {
     protected static string $relationship = 'notes';
 
-    protected static ?string $title = 'Project Notes';
+    protected static ?string $title = 'Ghi chú dự án';
 
-    protected static ?string $modelLabel = 'Note';
+    protected static ?string $modelLabel = 'Ghi chú';
 
-    protected static ?string $pluralModelLabel = 'Notes';
+    protected static ?string $pluralModelLabel = 'Ghi chú';
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('title')
+                    ->label('Tiêu đề')
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
 
                 DatePicker::make('note_date')
-                    ->label('Note Date')
+                    ->label('Ngày ghi chú')
                     ->default(now())
                     ->required(),
 
                 RichEditor::make('content')
+                    ->label('Nội dung')
                     ->required()
                     ->columnSpanFull()
                     ->fileAttachmentsDisk('public')
@@ -65,7 +67,7 @@ class NotesRelationManager extends RelationManager
                         'underline',
                         'undo',
                     ])
-                    ->helperText('Write your meeting summary or project notes here with rich formatting.'),
+                    ->helperText('Viết tóm tắt cuộc họp hoặc ghi chú dự án tại đây.'),
 
                 Hidden::make('created_by')
                     ->default(auth()->id()),
@@ -78,50 +80,57 @@ class NotesRelationManager extends RelationManager
             ->recordTitleAttribute('title')
             ->columns([
                 TextColumn::make('title')
+                    ->label('Tiêu đề')
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Medium),
 
                 TextColumn::make('note_date')
-                    ->date('M d, Y')
+                    ->label('Ngày ghi chú')
+                    ->date('d/m/Y')
                     ->sortable(),
 
                 TextColumn::make('creator.name')
-                    ->label('Created by')
+                    ->label('Người tạo')
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->dateTime('M d, Y H:i')
+                    ->label('Ngày tạo')
+                    ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Filter::make('recent')
                     ->query(fn ($query) => $query->where('created_at', '>=', now()->subDays(30)))
-                    ->label('Recent (30 days)'),
+                    ->label('Gần đây (30 ngày)'),
             ])
             ->headerActions([
                 CreateAction::make()
                     ->icon('heroicon-o-plus')
-                    ->label('Add Note')
+                    ->label('Thêm ghi chú')
                     ->modalWidth('2xl')
                     ->closeModalByClickingAway(false),
             ])
             ->recordActions([
                 ViewAction::make()
+                    ->label('Xem')
                     ->closeModalByClickingAway(false),
                 EditAction::make()
+                    ->label('Sửa')
                     ->closeModalByClickingAway(false),
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->label('Xóa'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->label('Xóa các mục đã chọn'),
                 ]),
             ])
             ->defaultSort('note_date', 'desc')
-            ->emptyStateHeading('No project notes yet')
-            ->emptyStateDescription('Start documenting your project meetings and important notes.')
+            ->emptyStateHeading('Chưa có ghi chú nào')
+            ->emptyStateDescription('Bắt đầu ghi lại các cuộc họp và ghi chú quan trọng cho dự án.')
             ->emptyStateIcon('heroicon-o-document-text');
     }
 }

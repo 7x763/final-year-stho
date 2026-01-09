@@ -25,6 +25,10 @@ class EpicsRelationManager extends RelationManager
         return $ownerRecord->epics_count ?? $ownerRecord->epics()->count();
     }
 
+    protected static ?string $title = 'Epic';
+
+    protected static ?string $label = 'Epic';
+
     public function form(Schema $schema): Schema
     {
         return $schema
@@ -32,19 +36,20 @@ class EpicsRelationManager extends RelationManager
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->label('Epic Name'),
+                    ->label('Tên Epic'),
                 TextInput::make('sort_order')
                     ->numeric()
                     ->default(0)
-                    ->label('Sort Order')
-                    ->helperText('Lower numbers appear first'),
+                    ->label('Thứ tự sắp xếp')
+                    ->helperText('Số càng nhỏ thì hiển thị trước'),
                 DatePicker::make('start_date')
-                    ->label('Start Date')
+                    ->label('Ngày bắt đầu')
                     ->nullable(),
                 DatePicker::make('end_date')
-                    ->label('End Date')
+                    ->label('Ngày kết thúc')
                     ->nullable(),
                 RichEditor::make('description')
+                    ->label('Mô tả')
                     ->columnSpanFull()
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('attachments')
@@ -59,21 +64,25 @@ class EpicsRelationManager extends RelationManager
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('sort_order')
-                    ->label('Order')
+                    ->label('Thứ tự')
                     ->sortable(),
                 TextColumn::make('name')
+                    ->label('Tên Epic')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('start_date')
+                    ->label('Ngày bắt đầu')
                     ->date()
                     ->sortable(),
                 TextColumn::make('end_date')
+                    ->label('Ngày kết thúc')
                     ->date()
                     ->sortable(),
                 TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Tickets'),
+                    ->label('Số lượng vé'),
                 TextColumn::make('created_at')
+                    ->label('Ngày tạo')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -82,7 +91,7 @@ class EpicsRelationManager extends RelationManager
                 //
             ])
             ->headerActions([
-                CreateAction::make(),
+                CreateAction::make()->label('Tạo Epic mới'),
             ])
             ->recordActions([
                 EditAction::make(),
@@ -90,7 +99,8 @@ class EpicsRelationManager extends RelationManager
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->label('Xóa các mục đã chọn'),
                 ]),
             ])
             ->defaultSort('sort_order', 'asc');

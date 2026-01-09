@@ -10,11 +10,13 @@ class ProjectTimeline extends Page
 {
     protected string $view = 'filament.pages.project-timeline';
 
-    protected static ?string $navigationLabel = 'Project Timeline';
+    protected static ?string $title = 'Dòng thời gian dự án';
+
+    protected static ?string $navigationLabel = 'Dòng thời gian dự án';
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calendar-days';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Project Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
 
     protected static ?int $navigationSort = 3;
 
@@ -80,16 +82,16 @@ class ProjectTimeline extends Page
             $isNearlyComplete = $progress >= 0.8;
 
             if ($isOverdue) {
-                $status = 'Overdue';
+                $status = 'Quá hạn';
                 $color = '#ef4444';
             } elseif ($isNearlyComplete) {
-                $status = 'Nearly Complete';
+                $status = 'Sắp hoàn thành';
                 $color = '#10b981';
             } elseif ($isNearDeadline) {
-                $status = 'Approaching Deadline';
+                $status = 'Sắp đến hạn';
                 $color = '#f59e0b';
             } else {
-                $status = 'In Progress';
+                $status = 'Đang thực hiện';
                 $color = '#3b82f6';
             }
 

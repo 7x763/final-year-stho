@@ -21,21 +21,32 @@ class UserContributions extends Page implements HasForms
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-chart-bar-square';
 
-    protected static ?string $navigationLabel = 'User Contributions';
+    protected static ?string $navigationLabel = 'Đóng góp người dùng';
 
-    protected static ?string $title = 'User Contributions';
+    protected static ?string $title = 'Đóng góp người dùng';
 
     protected static ?int $navigationSort = 5;
 
     protected string $view = 'filament.pages.user-contributions';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Analytics';
+    protected static string|\UnitEnum|null $navigationGroup = 'Phân tích';
 
     protected static ?string $slug = 'user-contributions';
 
     public function getSubheading(): ?string
     {
-        return 'Track daily activity and contributions across the team';
+        return 'Theo dõi hoạt động và đóng góp hàng ngày của nhóm';
+    }
+
+    public function getTimeRangeLabel(): string
+    {
+        return match ($this->timeRange) {
+            '1month' => 'Tháng trước',
+            '3months' => '3 tháng trước',
+            '6months' => '6 tháng trước',
+            '1year' => 'Năm trước',
+            default => '3 tháng trước'
+        };
     }
 
     public Collection $users;

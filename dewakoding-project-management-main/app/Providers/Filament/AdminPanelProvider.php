@@ -30,6 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->brandName('Quản lý dự án')
             ->login(Login::class)
             ->registration(Register::class)
             ->colors([

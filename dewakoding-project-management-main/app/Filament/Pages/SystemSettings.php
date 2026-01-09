@@ -23,9 +23,11 @@ class SystemSettings extends Page implements HasForms
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::Cog6Tooth;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Settings';
+    protected static string|UnitEnum|null $navigationGroup = 'Cài đặt';
 
-    protected static ?string $title = 'UI Settings';
+    protected static ?string $title = 'Cài đặt giao diện';
+
+    protected static ?string $navigationLabel = 'Cài đặt giao diện';
 
     protected string $view = 'filament.pages.system-settings';
 
@@ -45,19 +47,19 @@ class SystemSettings extends Page implements HasForms
     {
         return $schema
             ->components([
-                Section::make('Navigation Layout')
-                    ->description('Choose your preferred navigation style')
+                Section::make('Bố cục điều hướng')
+                    ->description('Chọn phong cách điều hướng yêu thích của bạn')
                     ->icon('heroicon-o-bars-3')
                     ->schema([
                         Radio::make('navigation_style')
-                            ->label('Layout Style')
+                            ->label('Phong cách bố cục')
                             ->options([
-                                'sidebar' => 'Sidebar Navigation',
-                                'top' => 'Top Navigation',
+                                'sidebar' => 'Điều hướng thanh bên (Sidebar)',
+                                'top' => 'Điều hướng thanh trên (Top)',
                             ])
                             ->descriptions([
-                                'sidebar' => 'Classic sidebar layout (recommended for desktop)',
-                                'top' => 'Modern top navigation bar (great for tablets)',
+                                'sidebar' => 'Bố cục thanh bên cổ điển (khuyên dùng cho máy tính)',
+                                'top' => 'Thanh điều hướng phía trên hiện đại (phù hợp cho máy tính bảng)',
                             ])
                             ->inline(false)
                             ->required()
@@ -67,12 +69,12 @@ class SystemSettings extends Page implements HasForms
                             }),
                     ]),
 
-                Section::make('Color Theme')
-                    ->description('Personalize your interface colors')
+                Section::make('Chủ đề màu sắc')
+                    ->description('Cá nhân hóa màu sắc giao diện của bạn')
                     ->icon('heroicon-o-swatch')
                     ->schema([
                         Select::make('panel_color')
-                            ->label('Primary Color')
+                            ->label('Màu sắc chính')
                             ->options(ColorPalette::options())
                             ->required()
                             ->live()
@@ -91,10 +93,10 @@ class SystemSettings extends Page implements HasForms
         $this->dispatch('navigation-style-updated', style: $style);
 
         Notification::make()
-            ->title('Navigation Updated')
+            ->title('Đã cập nhật điều hướng')
             ->body($style === 'top'
-                ? 'Top navigation preference saved. Reload to apply.'
-                : 'Sidebar navigation preference saved.')
+                ? 'Tùy chọn điều hướng thanh trên đã được lưu. Tải lại trang để áp dụng.'
+                : 'Tùy chọn điều hướng thanh bên đã được lưu.')
             ->success()
             ->send();
     }
@@ -108,8 +110,8 @@ class SystemSettings extends Page implements HasForms
         $this->dispatch('color-theme-updated', color: $color);
 
         Notification::make()
-            ->title('Color Theme Updated')
-            ->body("Primary color changed to {$color}.")
+            ->title('Đã cập nhật màu sắc')
+            ->body("Màu sắc chính đã được đổi thành {$color}.")
             ->success()
             ->send();
     }
@@ -127,8 +129,8 @@ class SystemSettings extends Page implements HasForms
         $this->updateColorTheme($this->data['panel_color']);
 
         Notification::make()
-            ->title('Settings Saved Successfully')
-            ->body('Preferences saved. Reloading to apply layout...')
+            ->title('Đã lưu cài đặt thành công')
+            ->body('Các tùy chọn đã được lưu. Đang tải lại để áp dụng bố cục...')
             ->success()
             ->send();
 

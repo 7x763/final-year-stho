@@ -1,13 +1,13 @@
 <x-filament-widgets::widget>
     <x-filament::section>
         <div class="space-y-6">
-            <!-- Header dengan Filter -->
+            <!-- Header với bộ lọc -->
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <x-filament::section.heading>
-                    Project Timeline
+                    Dòng thời gian dự án
                 </x-filament::section.heading>
                 
-                <!-- Filter Buttons -->
+                <!-- Nút lọc -->
                 <div class="flex gap-2">
                     <x-filament::button
                         wire:click="setFilter('pinned')"
@@ -15,7 +15,7 @@
                         :outlined="$filter !== 'pinned'"
                         size="sm"
                     >
-                        Pinned Projects
+                        Dự án đã ghim
                         <x-filament::badge
                             :color="$filter === 'pinned' ? 'primary' : 'gray'"
                             size="sm"
@@ -31,7 +31,7 @@
                         :outlined="$filter !== 'all'"
                         size="sm"
                     >
-                        All Projects
+                        Tất cả dự án
                         <x-filament::badge
                             :color="$filter === 'all' ? 'primary' : 'gray'"
                             size="sm"
@@ -43,7 +43,7 @@
                 </div>
             </div>
             
-            <!-- Project List -->
+            <!-- Danh sách dự án -->
             @if(count($projects) === 0)
                 <div class="flex flex-col items-center justify-center py-12">
                     <div class="flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800">
@@ -52,17 +52,17 @@
                     
                     <h3 class="mt-4 text-sm font-medium text-gray-900 dark:text-white">
                         @if($filter === 'pinned')
-                            No pinned projects
+                            Chưa có dự án nào được ghim
                         @else
-                            No projects found
+                            Không tìm thấy dự án nào
                         @endif
                     </h3>
                     
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
                         @if($filter === 'pinned')
-                            You haven't pinned any projects yet. Pin important projects to keep them easily accessible.
+                            Bạn chưa ghim dự án nào. Hãy ghim các dự án quan trọng để truy cập nhanh chóng.
                         @else
-                            Create a new project or check your project permissions.
+                            Hãy tạo dự án mới hoặc kiểm tra lại quyền truy cập của bạn.
                         @endif
                     </p>
                 </div>
@@ -70,7 +70,7 @@
                 <div class="space-y-4">
                     @foreach($projects as $project)
                         <div class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800">
-                            <!-- Project Header -->
+                            <!-- Header Dự án -->
                             <div class="flex items-start justify-between gap-4 mb-4">
                                 <div class="min-w-0 flex-1">
                                     <div class="flex items-center gap-3 mb-2">
@@ -80,11 +80,11 @@
                                         
                                         @php
                                             $badgeColor = match($project['status']) {
-                                                'Completed' => 'success',
-                                                'Overdue' => 'danger',
-                                                'Approaching Deadline' => 'warning',
-                                                'In Progress' => 'primary',
-                                                'Not Started' => 'gray',
+                                                'Đã hoàn thành' => 'success',
+                                                'Quá hạn' => 'danger',
+                                                'Sắp đến hạn' => 'warning',
+                                                'Đang thực hiện' => 'primary',
+                                                'Chưa bắt đầu' => 'gray',
                                                 default => 'gray'
                                             };
                                         @endphp
@@ -100,14 +100,14 @@
                                         {{ $project['start_date'] }} - {{ $project['end_date'] }}
                                     </div>
                                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        {{ $project['total_days'] }} total days
+                                        Tổng cộng {{ $project['total_days'] }} ngày
                                     </div>
                                 </div>
                             </div>
                             
-                            <!-- Progress Section -->
+                            <!-- Phần tiến độ -->
                             <div class="space-y-3">
-                                <!-- Progress Bar -->
+                                <!-- Thanh tiến độ -->
                                 <div class="relative">
                                     <div class="h-3 bg-gray-200 rounded-full overflow-hidden dark:bg-gray-700">
                                         @if($project['progress_percent'] > 0)
@@ -119,13 +119,12 @@
                                     </div>
                                 </div>
                                 
-                                <!-- Progress Info -->
+                                <!-- Thông tin tiến độ -->
                                 <div class="flex items-center justify-between text-sm">
                                     <div class="flex items-center gap-4">
                                         @if($project['past_days'] > 0)
                                             <div class="text-gray-600 dark:text-gray-400">
-                                                <span class="font-medium">{{ $project['past_days'] }}</span>
-                                                {{ Str::plural('day', $project['past_days']) }} completed
+                                                Đã trôi qua <span class="font-medium">{{ $project['past_days'] }}</span> ngày
                                             </div>
                                         @endif
                                     </div>
@@ -133,15 +132,15 @@
                                     <div class="text-right">
                                         @if($project['remaining_days'] > 0)
                                             <div class="font-medium text-gray-900 dark:text-white">
-                                                {{ $project['remaining_days'] }} {{ Str::plural('day', $project['remaining_days']) }} remaining
+                                                Còn lại {{ $project['remaining_days'] }} ngày
                                             </div>
                                         @elseif($project['remaining_days'] < 0)
                                             <div class="font-medium text-red-600 dark:text-red-400">
-                                                {{ abs($project['remaining_days']) }} {{ Str::plural('day', abs($project['remaining_days'])) }} overdue
+                                                Quá hạn {{ abs($project['remaining_days']) }} ngày
                                             </div>
                                         @else
                                             <div class="font-medium text-amber-600 dark:text-amber-400">
-                                                Due today
+                                                Hết hạn hôm nay
                                             </div>
                                         @endif
                                     </div>

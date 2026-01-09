@@ -40,6 +40,18 @@ class RoleResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
+    protected static string|\UnitEnum|null $navigationGroup = 'Quản trị hệ thống';
+
+    public static function getModelLabel(): string
+    {
+        return 'Vai trò';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Vai trò';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema

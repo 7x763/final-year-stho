@@ -23,11 +23,22 @@ class TicketCommentResource extends Resource
 
     protected static bool $shouldRegisterNavigation = false;
 
+    public static function getModelLabel(): string
+    {
+        return 'Bình luận';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Bình luận';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 RichEditor::make('comment')
+                    ->label('Bình luận')
                     ->required()
                     ->columnSpanFull()
                     ->fileAttachmentsDisk('public')
@@ -41,16 +52,20 @@ class TicketCommentResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('ticket.name')
+                    ->label('Vé hỗ trợ')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('user.name')
+                    ->label('Người dùng')
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
+                    ->label('Ngày tạo')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Ngày cập nhật')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

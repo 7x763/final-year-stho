@@ -37,49 +37,62 @@ class ProjectResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Project Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
 
     protected static ?int $navigationSort = 1;
+
+    public static function getModelLabel(): string
+    {
+        return 'Dự án';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Dự án';
+    }
 
     public static function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Tên dự án')
                     ->required()
                     ->maxLength(255),
                 RichEditor::make('description')
+                    ->label('Mô tả')
                     ->columnSpanFull()
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('attachments')
                     ->fileAttachmentsAcceptedFileTypes(['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'video/mp4'])
                     ->fileAttachmentsVisibility('public'),
                 TextInput::make('ticket_prefix')
+                    ->label('Tiền tố vé (Ticket Prefix)')
                     ->required()
                     ->maxLength(255),
                 ColorPicker::make('color')
-                    ->label('Project Color')
-                    ->helperText('Choose a color for the project card and badge')
+                    ->label('Màu sắc dự án')
+                    ->helperText('Chọn màu sắc cho thẻ dự án và huy hiệu')
                     ->nullable(),
                 DatePicker::make('start_date')
-                    ->label('Start Date')
+                    ->label('Ngày bắt đầu')
                     ->native(false)
                     ->displayFormat('d/m/Y'),
                 DatePicker::make('end_date')
-                    ->label('End Date')
+                    ->label('Ngày kết thúc')
                     ->native(false)
                     ->displayFormat('d/m/Y')
                     ->afterOrEqual('start_date'),
                 Toggle::make('create_default_statuses')
-                    ->label('Use Default Ticket Statuses')
-                    ->helperText('Create standard Backlog, To Do, In Progress, Review, and Done statuses automatically')
+                    ->label('Sử dụng trạng thái vé mặc định')
+                    ->helperText('Tự động tạo các trạng thái chuẩn: Backlog, To Do, In Progress, Review, và Done')
                     ->default(true)
                     ->dehydrated(false)
                     ->visible(fn ($livewire) => $livewire instanceof CreateProject),
 
                 Toggle::make('is_pinned')
-                    ->label('Pin Project')
-                    ->helperText('Pinned projects will appear in the dashboard timeline')
+                    ->label('Ghim dự án')
+                    ->helperText('Các dự án được ghim sẽ xuất hiện trong dòng thời gian của bảng điều khiển')
                     ->live()
                     ->afterStateUpdated(function ($state, $set): void {
                         if ($state) {
@@ -93,7 +106,7 @@ class ProjectResource extends Resource
                         $component->state(! is_null($get('pinned_date')));
                     }),
                 DateTimePicker::make('pinned_date')
-                    ->label('Pinned Date')
+                    ->label('Ngày ghim')
                     ->native(false)
                     ->displayFormat('d/m/Y H:i')
                     ->visible(fn ($get) => $get('is_pinned'))
@@ -110,11 +123,13 @@ class ProjectResource extends Resource
                     ->width('40px')
                     ->default('#6B7280'),
                 TextColumn::make('name')
+                    ->label('Tên dự án')
                     ->searchable(),
                 TextColumn::make('ticket_prefix')
+                    ->label('Tiền tố')
                     ->searchable(),
                 TextColumn::make('progress_percentage')
-                    ->label('Progress')
+                    ->label('Tiến độ')
                     ->getStateUsing(function (Project $record): string {
                         return $record->progress_percentage.'%';
                     })
@@ -127,19 +142,21 @@ class ProjectResource extends Resource
                     )
                     ->sortable(),
                 TextColumn::make('start_date')
+                    ->label('Ngày bắt đầu')
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('end_date')
+                    ->label('Ngày kết thúc')
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('remaining_days')
-                    ->label('Remaining Days')
+                    ->label('Số ngày còn lại')
                     ->getStateUsing(function (Project $record): ?string {
                         if (! $record->end_date) {
                             return null;
                         }
 
-                        return $record->remaining_days.' days';
+                        return $record->remaining_days.' ngày';
                     })
                     ->badge()
                     ->color(
@@ -148,7 +165,7 @@ class ProjectResource extends Resource
                             ($record->remaining_days <= 7 ? 'warning' : 'success'))
                     ),
                 ToggleColumn::make('is_pinned')
-                    ->label('Pinned')
+                    ->label('Đã ghim')
                     ->updateStateUsing(function ($record, $state) {
                         // Gunakan method pin/unpin yang sudah ada di model
                         if ($state) {
@@ -161,15 +178,17 @@ class ProjectResource extends Resource
                     }),
                 TextColumn::make('members_count')
                     ->counts('members')
-                    ->label('Members'),
+                    ->label('Thành viên'),
                 TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Tickets'),
+                    ->label('Vé hỗ trợ'),
                 TextColumn::make('created_at')
+                    ->label('Ngày tạo')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->label('Ngày cập nhật')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

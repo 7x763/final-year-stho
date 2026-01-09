@@ -39,9 +39,19 @@ class TicketResource extends Resource
 
     protected static ?string $navigationLabel = 'Tickets';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Project Management';
+    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
 
     protected static ?int $navigationSort = 5;
+
+    public static function getModelLabel(): string
+    {
+        return 'Vé hỗ trợ';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Vé hỗ trợ';
+    }
 
     public static function getEloquentQuery(): Builder
     {
@@ -70,7 +80,7 @@ class TicketResource extends Resource
         return $schema
             ->components([
                 Select::make('project_id')
-                    ->label('Project')
+                    ->label('Dự án')
                     ->options(function () {
                         if (auth()->user()->hasRole(['super_admin'])) {
                             return Project::pluck('name', 'id')->toArray();
@@ -92,7 +102,7 @@ class TicketResource extends Resource
                     }),
 
                 Select::make('ticket_status_id')
-                    ->label('Status')
+                    ->label('Trạng thái')
                     ->options(function ($get) {
                         $projectId = $get('project_id');
                         if (! $projectId) {
@@ -114,13 +124,13 @@ class TicketResource extends Resource
                             }
                             $projectId = $get('project_id');
                             if (! TicketStatus::where('id', $value)->where('project_id', $projectId)->exists()) {
-                                $fail("The selected status does not belong to the selected project.");
+                                $fail("Trạng thái đã chọn không thuộc về dự án đã chọn.");
                             }
                         },
                     ]),
 
                 Select::make('priority_id')
-                    ->label('Priority')
+                    ->label('Mức độ ưu tiên')
                     ->options(TicketPriority::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->preload()
@@ -150,18 +160,18 @@ class TicketResource extends Resource
                             }
                             $projectId = $get('project_id');
                             if (! Epic::where('id', $value)->where('project_id', $projectId)->exists()) {
-                                $fail("The selected epic does not belong to the selected project.");
+                                $fail("Epic đã chọn không thuộc về dự án đã chọn.");
                             }
                         },
                     ]),
 
                 TextInput::make('name')
-                    ->label('Ticket Name')
+                    ->label('Tên vé hỗ trợ')
                     ->required()
                     ->maxLength(255),
 
                 RichEditor::make('description')
-                    ->label('Description')
+                    ->label('Mô tả')
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('attachments')
                     ->fileAttachmentsVisibility('public')
@@ -170,7 +180,7 @@ class TicketResource extends Resource
 
                 // // Multi-user assignment
                 Select::make('assignees')
-                    ->label('Assigned to')
+                    ->label('Người thực hiện')
                     ->multiple()
                     ->relationship(
                         name: 'assignees',
@@ -193,7 +203,7 @@ class TicketResource extends Resource
                     )
                     ->searchable()
                     ->preload()
-                    ->helperText('Select multiple users to assign this ticket to. Only project members can be assigned.')
+                    ->helperText('Chọn một hoặc nhiều người để giao vé này. Chỉ thành viên dự án mới có thể được giao.')
                     ->hidden(fn (Get $get): bool => ! $get('project_id'))
                     ->live()
                     ->rules([
@@ -214,7 +224,7 @@ class TicketResource extends Resource
                             $memberIds = $project->members()->pluck('users.id')->toArray();
                             foreach ($userIds as $userId) {
                                 if (! in_array($userId, $memberIds)) {
-                                    $fail("One or more selected assignees are not members of this project.");
+                                    $fail("Một hoặc nhiều người được chọn không phải là thành viên của dự án này.");
                                     break;
                                 }
                             }
@@ -222,17 +232,17 @@ class TicketResource extends Resource
                     ]),
 
                 DatePicker::make('start_date')
-                    ->label('Start Date')
+                    ->label('Ngày bắt đầu')
                     ->default(now())
                     ->nullable()
                     ->live(),
 
                 DatePicker::make('due_date')
-                    ->label('Due Date')
+                    ->label('Hạn chót')
                     ->nullable()
                     ->afterOrEqual('start_date'),
                 Select::make('created_by')
-                    ->label('Created By')
+                    ->label('Người tạo')
                     ->relationship('creator', 'name')
                     ->disabled()
                     ->hiddenOn(['create', 'ticket_on_board']),
@@ -244,26 +254,26 @@ class TicketResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('uuid')
-                    ->label('Ticket ID')
+                    ->label('Mã vé')
                     ->searchable()
                     ->copyable(),
 
                 TextColumn::make('project.name')
-                    ->label('Project')
+                    ->label('Dự án')
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('name')
-                    ->label('Name')
+                    ->label('Tên vé')
                     ->searchable()
                     ->limit(30),
 
                 TextColumn::make('status.name')
-                    ->label('Status')
+                    ->label('Trạng thái')
                     ->sortable()
                     ->formatStateUsing(function ($record) {
                         $color = e($record->status?->color ?? '#6B7280');
-                        $name = e($record->status?->name ?? 'Unknown');
+                        $name = e($record->status?->name ?? 'Không rõ');
 
                         return new HtmlString(<<<HTML
                             <span class="fi-badge fi-size-sm" style="color: #fff; background-color: {$color};">
@@ -273,7 +283,7 @@ class TicketResource extends Resource
                     }),
 
                 TextColumn::make('priority.name')
-                    ->label('Priority')
+                    ->label('Ưu tiên')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'High' => 'danger',
@@ -283,11 +293,11 @@ class TicketResource extends Resource
                     })
                     ->sortable()
                     ->default('—')
-                    ->placeholder('No Priority'),
+                    ->placeholder('Không có'),
 
                 // Display multiple assignees
                 TextColumn::make('assignees.name')
-                    ->label('Assign To')
+                    ->label('Người thực hiện')
                     ->badge()
                     ->separator(',')
                     ->limitList(2)
@@ -295,18 +305,18 @@ class TicketResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('creator.name')
-                    ->label('Created By')
+                    ->label('Người tạo')
                     ->sortable()
                     ->searchable()
                     ->toggleable(),
 
                 TextColumn::make('start_date')
-                    ->label('Start Date')
+                    ->label('Ngày bắt đầu')
                     ->date()
                     ->sortable(),
 
                 TextColumn::make('due_date')
-                    ->label('Due Date')
+                    ->label('Hạn chót')
                     ->date()
                     ->sortable(),
 
@@ -315,16 +325,17 @@ class TicketResource extends Resource
                     ->sortable()
                     ->searchable()
                     ->default('—')
-                    ->placeholder('No Epic'),
+                    ->placeholder('Không có'),
 
                 TextColumn::make('created_at')
+                    ->label('Ngày tạo')
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('project_id')
-                    ->label('Project')
+                    ->label('Dự án')
                     ->options(function () {
                         if (auth()->user()->hasRole(['super_admin'])) {
                             return Project::pluck('name', 'id')->toArray();
@@ -336,7 +347,7 @@ class TicketResource extends Resource
                     ->preload(),
 
                 SelectFilter::make('ticket_status_id')
-                    ->label('Status')
+                    ->label('Trạng thái')
                     ->options(function () {
                         $projectId = request()->input('tableFilters.project_id');
 
@@ -368,14 +379,14 @@ class TicketResource extends Resource
                     ->preload(),
 
                 SelectFilter::make('priority_id')
-                    ->label('Priority')
+                    ->label('Ưu tiên')
                     ->options(TicketPriority::pluck('name', 'id')->toArray())
                     ->searchable()
                     ->preload(),
 
                 // Filter by assignees
                 SelectFilter::make('assignees')
-                    ->label('Assignee')
+                    ->label('Người thực hiện')
                     ->relationship('assignees', 'name')
                     ->multiple()
                     ->searchable()
@@ -383,15 +394,16 @@ class TicketResource extends Resource
 
                 // Filter by creator
                 SelectFilter::make('created_by')
-                    ->label('Created By')
+                    ->label('Người tạo')
                     ->relationship('creator', 'name')
                     ->searchable()
                     ->preload(),
 
                 Filter::make('due_date')
+                    ->label('Hạn chót')
                     ->schema([
-                        DatePicker::make('due_from'),
-                        DatePicker::make('due_until'),
+                        DatePicker::make('due_from')->label('Từ ngày'),
+                        DatePicker::make('due_until')->label('Đến ngày'),
                     ])
                     ->query(function (Builder $query, array $data): Builder {
                         return $query
@@ -410,7 +422,7 @@ class TicketResource extends Resource
                 ViewAction::make(),
                 EditAction::make(),
                 Action::make('copy')
-                    ->label('Copy')
+                    ->label('Sao chép')
                     ->icon('heroicon-o-document-duplicate')
                     ->color('info')
                     ->action(function ($record, $livewire) {
@@ -425,6 +437,7 @@ class TicketResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
+                        ->label('Xóa các mục đã chọn')
                         ->visible(auth()->user()->hasRole(['super_admin'])),
                 ]),
             ]);

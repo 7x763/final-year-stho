@@ -35,15 +35,21 @@ class MembersRelationManager extends RelationManager
             ]);
     }
 
+    protected static ?string $title = 'Thành viên';
+
+    protected static ?string $label = 'thành viên';
+
     public function table(Table $table): Table
     {
         return $table
             ->recordTitleAttribute('name')
             ->columns([
                 TextColumn::make('name')
+                    ->label('Họ tên')
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
+                    ->label('Email')
                     ->searchable()
                     ->sortable(),
             ])
@@ -68,7 +74,7 @@ class MembersRelationManager extends RelationManager
                             ->modalWidth('lg')
                         )
                     )
-                    ->label('Add Member')
+                    ->label('Thêm thành viên')
                     ->after(function (Model $record): void {
                         $project = $this->getOwnerRecord();
                         $user = User::find($record->id);
@@ -81,7 +87,7 @@ class MembersRelationManager extends RelationManager
             ])
             ->recordActions([
                 DetachAction::make()
-                    ->label('Remove')
+                    ->label('Gỡ bỏ')
                     ->after(function (Model $record): void {
                         $project = $this->getOwnerRecord();
                         $user = User::find($record->id);
@@ -95,7 +101,7 @@ class MembersRelationManager extends RelationManager
             ->toolbarActions([
                 BulkActionGroup::make([
                     DetachBulkAction::make()
-                        ->label('Remove Selected'),
+                        ->label('Gỡ bỏ các mục đã chọn'),
                 ]),
             ]);
     }

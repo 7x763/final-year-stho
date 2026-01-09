@@ -22,9 +22,19 @@ class NotificationResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bell';
 
-    protected static ?string $navigationLabel = 'Notifications';
+    protected static ?string $navigationLabel = 'Thông báo';
 
     protected static ?int $navigationSort = 1;
+
+    public static function getModelLabel(): string
+    {
+        return 'Thông báo';
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return 'Thông báo';
+    }
 
     public static function form(Schema $schema): Schema
     {
@@ -46,38 +56,40 @@ class NotificationResource extends Resource
                     ->size('sm'),
 
                 TextColumn::make('user.name')
-                    ->label('User')
+                    ->label('Người dùng')
                     ->badge()
                     ->color('info')
                     ->searchable()
                     ->visible(fn () => auth()->user()->hasRole('super_admin')),
 
                 TextColumn::make('message')
+                    ->label('Nội dung')
                     ->limit(50)
                     ->weight(fn (Notification $record) => $record->isUnread() ? 'bold' : 'normal'),
 
                 TextColumn::make('ticket.name')
-                    ->label('Ticket')
+                    ->label('Vé hỗ trợ')
                     ->badge()
                     ->color('primary')
                     ->searchable()
                     ->placeholder('N/A'),
 
                 TextColumn::make('ticket.project.name')
-                    ->label('Project')
+                    ->label('Dự án')
                     ->badge()
                     ->color('success')
                     ->searchable()
                     ->placeholder('N/A'),
 
                 TextColumn::make('created_at')
+                    ->label('Thời gian')
                     ->dateTime()
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
                 Action::make('markAsRead')
-                    ->label('Mark as Read')
+                    ->label('Đánh dấu đã đọc')
                     ->icon('heroicon-o-check')
                     ->color('success')
                     ->visible(fn (Notification $record) => $record->isUnread() && (auth()->id() === $record->user_id || auth()->user()->hasRole('super_admin')))
@@ -85,13 +97,13 @@ class NotificationResource extends Resource
                         app(NotificationService::class)->markAsRead($record->id, $record->user_id);
 
                         FilamentNotification::make()
-                            ->title('Notification marked as read')
+                            ->title('Đã đánh dấu thông báo là đã đọc')
                             ->success()
                             ->send();
                     }),
 
                 Action::make('viewTicket')
-                    ->label('View Ticket')
+                    ->label('Xem vé hỗ trợ')
                     ->icon('heroicon-o-eye')
                     ->color('primary')
                     ->visible(fn (Notification $record) => isset($record->data['ticket_id']))
@@ -101,7 +113,7 @@ class NotificationResource extends Resource
             ])
             ->headerActions([
                 Action::make('markAllAsRead')
-                    ->label('Mark All as Read')
+                    ->label('Đánh dấu tất cả đã đọc')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn () => ! auth()->user()->hasRole('super_admin'))
@@ -109,17 +121,18 @@ class NotificationResource extends Resource
                         app(NotificationService::class)->markAllAsRead(auth()->id());
 
                         FilamentNotification::make()
-                            ->title('All notifications marked as read')
+                            ->title('Tất cả thông báo đã được đánh dấu là đã đọc')
                             ->success()
                             ->send();
                     }),
             ])
             ->filters([
                 Filter::make('unread')
-                    ->label('Unread Only')
+                    ->label('Chỉ hiện chưa đọc')
                     ->query(fn (Builder $query) => $query->unread()),
 
                 SelectFilter::make('user')
+                    ->label('Người dùng')
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload()

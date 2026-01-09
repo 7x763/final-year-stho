@@ -24,6 +24,12 @@ class TicketStatusesRelationManager extends RelationManager
 {
     protected static string $relationship = 'ticketStatuses';
 
+    protected static ?string $title = 'Trạng thái vé';
+
+    protected static ?string $modelLabel = 'Trạng thái';
+
+    protected static ?string $pluralModelLabel = 'Trạng thái';
+
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string
     {
         return $ownerRecord->ticket_statuses_count ?? $ownerRecord->ticketStatuses()->count();
@@ -34,19 +40,22 @@ class TicketStatusesRelationManager extends RelationManager
         return $schema
             ->components([
                 TextInput::make('name')
+                    ->label('Tên trạng thái')
                     ->required()
                     ->maxLength(255),
                 ColorPicker::make('color')
+                    ->label('Màu sắc')
                     ->required()
                     ->default('#3490dc')
-                    ->helperText('Select a color for this status'),
+                    ->helperText('Chọn màu sắc cho trạng thái này'),
                 TextInput::make('sort_order')
+                    ->label('Thứ tự sắp xếp')
                     ->numeric()
                     ->default(0)
-                    ->helperText('Determines display order in the project board (lower values appear first)'),
+                    ->helperText('Xác định thứ tự hiển thị trên bảng dự án (số nhỏ hiện trước)'),
                 Toggle::make('is_completed')
-                    ->label('Mark as Completed Status')
-                    ->helperText('Only one status per project can be marked as completed')
+                    ->label('Đánh dấu là trạng thái hoàn thành')
+                    ->helperText('Mỗi dự án chỉ có thể có một trạng thái được đánh dấu là hoàn thành')
                     ->default(false)
                     ->reactive()
                     ->afterStateUpdated(function ($state, $get, $set, $record): void {
@@ -62,8 +71,8 @@ class TicketStatusesRelationManager extends RelationManager
                                 $set('is_completed', false);
                                 Notification::make()
                                     ->warning()
-                                    ->title('Cannot mark as completed')
-                                    ->body("Status '{$existingCompleted->name}' is already marked as completed for this project. Only one status can be marked as completed.")
+                                    ->title('Không thể đánh dấu hoàn thành')
+                                    ->body("Trạng thái '{$existingCompleted->name}' đã được đánh dấu là hoàn thành cho dự án này. Chỉ một trạng thái có thể được chọn.")
                                     ->send();
                             }
                         }
@@ -76,11 +85,14 @@ class TicketStatusesRelationManager extends RelationManager
         return $table
             ->recordTitleAttribute('name')
             ->columns([
-                TextColumn::make('name'),
-                ColorColumn::make('color'),
-                TextColumn::make('sort_order'),
+                TextColumn::make('name')
+                    ->label('Tên trạng thái'),
+                ColorColumn::make('color')
+                    ->label('Màu sắc'),
+                TextColumn::make('sort_order')
+                    ->label('Thứ tự'),
                 IconColumn::make('is_completed')
-                    ->label('Completed')
+                    ->label('Đã hoàn thành')
                     ->boolean()
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
@@ -94,6 +106,7 @@ class TicketStatusesRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
+                    ->label('Tạo trạng thái mới')
                     ->mutateDataUsing(function (array $data): array {
                         $maxOrder = $this->getRelationship()->max('sort_order') ?? -1;
                         $data['sort_order'] = $maxOrder + 1;
@@ -109,8 +122,8 @@ class TicketStatusesRelationManager extends RelationManager
                                 $data['is_completed'] = false;
                                 Notification::make()
                                     ->warning()
-                                    ->title('Cannot mark as completed')
-                                    ->body("Status '{$existingCompleted->name}' is already marked as completed for this project.")
+                                    ->title('Không thể đánh dấu hoàn thành')
+                                    ->body("Trạng thái '{$existingCompleted->name}' đã được đánh dấu là hoàn thành cho dự án này.")
                                     ->send();
                             }
                         }
@@ -120,6 +133,7 @@ class TicketStatusesRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make()
+                    ->label('Sửa')
                     ->mutateDataUsing(function (array $data, Model $record): array {
                         // Additional validation for is_completed on edit
                         if ($data['is_completed'] ?? false) {
@@ -133,19 +147,19 @@ class TicketStatusesRelationManager extends RelationManager
                                 $data['is_completed'] = false;
                                 Notification::make()
                                     ->warning()
-                                    ->title('Cannot mark as completed')
-                                    ->body("Status '{$existingCompleted->name}' is already marked as completed for this project.")
+                                    ->title('Không thể đánh dấu hoàn thành')
+                                    ->body("Trạng thái '{$existingCompleted->name}' đã được đánh dấu là hoàn thành cho dự án này.")
                                     ->send();
                             }
                         }
 
                         return $data;
                     }),
-                DeleteAction::make(),
+                DeleteAction::make()->label('Xóa'),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()->label('Xóa đã chọn'),
                 ]),
             ]);
     }

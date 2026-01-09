@@ -10,7 +10,7 @@ class UserStatisticsChart extends ChartWidget
 {
     use HasWidgetShield;
 
-    protected ?string $heading = 'User Statistics Chart';
+    protected ?string $heading = 'Thống kê người dùng';
 
     protected int|string|array $columnSpan = [
         'md' => 2,
@@ -43,14 +43,14 @@ class UserStatisticsChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Total Projects',
+                    'label' => 'Tổng số dự án',
                     'data' => $projectsData,
                     'backgroundColor' => '#3B82F6',
                     'borderColor' => '#3B82F6',
                     'borderWidth' => 1,
                 ],
                 [
-                    'label' => 'Total Assigned Tickets',
+                    'label' => 'Số vé được giao',
                     'data' => $ticketsData,
                     'backgroundColor' => '#10B981',
                     'borderColor' => '#10B981',
