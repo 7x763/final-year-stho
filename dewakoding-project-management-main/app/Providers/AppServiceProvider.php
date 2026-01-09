@@ -26,6 +26,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Livewire::component('app.filament.pages.auth.login', \App\Filament\Pages\Auth\Login::class);
+        Livewire::component('app.filament.pages.auth.register', \App\Filament\Pages\Auth\Register::class);
         Livewire::component('edit-comment-modal', EditCommentModal::class);
         FilamentShield::buildPermissionKeyUsing(
             function (string $entity, string $affix, string $subject, string $case, string $separator) {
