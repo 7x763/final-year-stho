@@ -86,6 +86,7 @@ class TicketStatusesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
+            ->modifyQueryUsing(fn ($query) => $query->select(['id', 'project_id', 'name', 'color', 'sort_order', 'is_completed']))
             ->columns([
                 TextColumn::make('name')
                     ->label('Tên trạng thái'),

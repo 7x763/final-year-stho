@@ -45,6 +45,7 @@ class MembersRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
+            ->modifyQueryUsing(fn (Builder $query) => $query->select(['users.id', 'users.name', 'users.email']))
             ->columns([
                 TextColumn::make('name')
                     ->label('Họ tên')

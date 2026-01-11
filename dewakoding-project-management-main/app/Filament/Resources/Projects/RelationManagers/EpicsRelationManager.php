@@ -64,6 +64,7 @@ class EpicsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
+            ->modifyQueryUsing(fn ($query) => $query->select(['id', 'project_id', 'name', 'sort_order', 'start_date', 'end_date', 'created_at']))
             ->columns([
                 TextColumn::make('sort_order')
                     ->label('Thứ tự')

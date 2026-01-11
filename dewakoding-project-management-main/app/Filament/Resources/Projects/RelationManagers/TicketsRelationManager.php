@@ -146,7 +146,15 @@ class TicketsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
-            ->modifyQueryUsing(fn (Builder $query) => $query->with(['status', 'epic', 'creator', 'assignees']))
+            ->modifyQueryUsing(fn (Builder $query) => $query
+                ->select(['tickets.id', 'tickets.project_id', 'tickets.ticket_status_id', 'tickets.epic_id', 'tickets.created_by', 'tickets.uuid', 'tickets.name', 'tickets.start_date', 'tickets.due_date', 'tickets.created_at'])
+                ->with([
+                    'status:id,name',
+                    'epic:id,name',
+                    'creator:id,name',
+                    'assignees:id,name',
+                ])
+            )
             ->columns([
                 TextColumn::make('uuid')
                     ->label('Mã vé')
@@ -221,7 +229,10 @@ class TicketsRelationManager extends RelationManager
                 // UPDATED: Filter by assignees
                 SelectFilter::make('assignees')
                     ->label('Người thực hiện')
-                    ->relationship('assignees', 'name')
+                    ->relationship('assignees', 'name', modifyQueryUsing: function (Builder $query) {
+                        $projectId = $this->getOwnerRecord()->id;
+                        return $query->whereHas('projects', fn ($q) => $query->where('projects.id', $projectId));
+                    })
                     ->multiple()
                     ->searchable()
                     ->preload(),
@@ -229,7 +240,10 @@ class TicketsRelationManager extends RelationManager
                 // Filter by creator
                 SelectFilter::make('created_by')
                     ->label('Người tạo')
-                    ->relationship('creator', 'name')
+                    ->relationship('creator', 'name', modifyQueryUsing: function (Builder $query) {
+                        $projectId = $this->getOwnerRecord()->id;
+                        return $query->whereHas('projects', fn ($q) => $query->where('projects.id', $projectId));
+                    })
                     ->searchable()
                     ->preload(),
 
