@@ -119,22 +119,22 @@ class ViewProject extends ViewRecord
                             ->schema([
                                 TextEntry::make('members_count')
                                     ->label('Total Members')
-                                    ->getStateUsing(fn ($record) => $record->members()->count())
+                                    ->getStateUsing(fn ($record) => $record->members_count ?? $record->members()->count())
                                     ->badge()
                                     ->color('info'),
                                 TextEntry::make('tickets_count')
                                     ->label('Total Tickets')
-                                    ->getStateUsing(fn ($record) => $record->tickets()->count())
+                                    ->getStateUsing(fn ($record) => $record->tickets_count ?? $record->tickets()->count())
                                     ->badge()
                                     ->color('primary'),
                                 TextEntry::make('epics_count')
                                     ->label('Total Epics')
-                                    ->getStateUsing(fn ($record) => $record->epics()->count())
+                                    ->getStateUsing(fn ($record) => $record->epics_count ?? $record->epics()->count())
                                     ->badge()
                                     ->color('warning'),
                                 TextEntry::make('statuses_count')
                                     ->label('Ticket Statuses')
-                                    ->getStateUsing(fn ($record) => $record->ticketStatuses()->count())
+                                    ->getStateUsing(fn ($record) => $record->ticket_statuses_count ?? $record->ticketStatuses()->count())
                                     ->badge()
                                     ->color('success'),
                             ]),

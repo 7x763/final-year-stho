@@ -36,6 +36,8 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class TicketsRelationManager extends RelationManager
 {
+    protected static bool $isLazy = true;
+
     protected static string $relationship = 'tickets';
 
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string

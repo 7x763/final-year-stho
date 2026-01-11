@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class MembersRelationManager extends RelationManager
 {
+    protected static bool $isLazy = true;
+
     protected static string $relationship = 'members';
 
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string

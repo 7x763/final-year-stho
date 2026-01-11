@@ -22,6 +22,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class TicketStatusesRelationManager extends RelationManager
 {
+    protected static bool $isLazy = true;
+
     protected static string $relationship = 'ticketStatuses';
 
     protected static ?string $title = 'Trạng thái vé';

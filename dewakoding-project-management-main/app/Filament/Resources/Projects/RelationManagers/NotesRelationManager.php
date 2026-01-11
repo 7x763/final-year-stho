@@ -21,6 +21,8 @@ use Filament\Tables\Table;
 
 class NotesRelationManager extends RelationManager
 {
+    protected static bool $isLazy = true;
+
     protected static string $relationship = 'notes';
 
     protected static ?string $title = 'Ghi chú dự án';

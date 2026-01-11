@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class EpicsRelationManager extends RelationManager
 {
+    protected static bool $isLazy = true;
+
     protected static string $relationship = 'epics';
 
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string
