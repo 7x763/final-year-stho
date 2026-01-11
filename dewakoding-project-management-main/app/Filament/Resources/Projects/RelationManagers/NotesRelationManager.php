@@ -25,6 +25,11 @@ class NotesRelationManager extends RelationManager
 
     protected static string $relationship = 'notes';
 
+    public static function getBadge(\Illuminate\Database\Eloquent\Model $ownerRecord, string $pageClass): ?string
+    {
+        return $ownerRecord->notes_count ?? $ownerRecord->notes()->count();
+    }
+
     protected static ?string $title = 'Ghi chú dự án';
 
     protected static ?string $modelLabel = 'Ghi chú';
