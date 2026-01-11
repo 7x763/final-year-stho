@@ -85,6 +85,7 @@ class NotesRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('title')
+            ->modifyQueryUsing(fn ($query) => $query->with(['creator']))
             ->columns([
                 TextColumn::make('title')
                     ->label('Tiêu đề')

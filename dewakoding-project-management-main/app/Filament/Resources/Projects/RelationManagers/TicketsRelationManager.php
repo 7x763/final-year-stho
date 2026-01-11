@@ -146,6 +146,7 @@ class TicketsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
+            ->modifyQueryUsing(fn (Builder $query) => $query->with(['status', 'epic', 'creator', 'assignees']))
             ->columns([
                 TextColumn::make('uuid')
                     ->label('Mã vé')

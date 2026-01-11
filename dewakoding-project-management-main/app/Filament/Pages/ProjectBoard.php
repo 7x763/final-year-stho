@@ -60,13 +60,16 @@ class ProjectBoard extends Page
 
     public function mount($project_id = null): void
     {
+        $projectQuery = Project::select('id', 'name', 'ticket_prefix', 'color', 'is_pinned', 'pinned_date')
+            ->orderByRaw('pinned_date IS NULL')
+            ->orderBy('pinned_date', 'desc')
+            ->orderBy('name');
+
         if (auth()->user()->hasRole(['super_admin'])) {
-            $this->projects = Project::orderByRaw('pinned_date IS NULL')
-                ->orderBy('pinned_date', 'desc')
-                ->orderBy('name')
-                ->get();
+            $this->projects = $projectQuery->get();
         } else {
             $this->projects = auth()->user()->projects()
+                ->select('projects.id', 'projects.name', 'projects.ticket_prefix', 'projects.color', 'projects.is_pinned', 'projects.pinned_date')
                 ->orderByRaw('pinned_date IS NULL')
                 ->orderBy('pinned_date', 'desc')
                 ->orderBy('name')
@@ -75,7 +78,7 @@ class ProjectBoard extends Page
 
         if ($project_id) {
             $this->selectedProjectId = (int) $project_id;
-            $this->selectedProject = Project::find($project_id);
+            $this->selectedProject = $this->projects->firstWhere('id', $project_id) ?? Project::find($project_id);
             $this->loadProjectUsers();
         } else {
             $this->projectUsers = collect();
@@ -178,15 +181,13 @@ class ProjectBoard extends Page
             return;
         }
 
-        // Get only users who are assigned to tickets in this project
-        $ticketAssigneeIds = $this->selectedProject->tickets()
-            ->with('assignees')
-            ->get()
-            ->flatMap(function ($ticket) {
-                return $ticket->assignees->pluck('id');
+        // Optimized: Get only users who are assigned to tickets in this project via direct query
+        $ticketAssigneeIds = \Illuminate\Support\Facades\DB::table('ticket_users')
+            ->whereIn('ticket_id', function ($query) {
+                $query->select('id')->from('tickets')->where('project_id', $this->selectedProject->id);
             })
-            ->unique()
-            ->filter();
+            ->distinct()
+            ->pluck('user_id');
 
         $this->projectUsers = User::whereIn('id', $ticketAssigneeIds)
             ->orderBy('name')
