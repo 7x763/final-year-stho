@@ -30,26 +30,8 @@ class MonthlyTicketTrendChart extends ChartWidget
         $user = auth()->user();
         $isSuperAdmin = $user->hasRole('super_admin');
 
-        // Get the earliest ticket date
-        $earliestTicketQuery = Ticket::query();
-
-        if (! $isSuperAdmin) {
-            $earliestTicketQuery->whereHas('project.members', function ($query) use ($user): void {
-                $query->where('user_id', $user->id);
-            });
-        }
-
-        $earliestTicket = $earliestTicketQuery->orderBy('created_at', 'asc')->first();
-
-        if (! $earliestTicket) {
-            return [
-                'datasets' => [],
-                'labels' => [],
-            ];
-        }
-
-        // Calculate months from earliest ticket to now
-        $startDate = Carbon::parse($earliestTicket->created_at)->startOfMonth();
+        // Calculate months for the last 12 months
+        $startDate = Carbon::now()->subMonths(11)->startOfMonth();
         $endDate = Carbon::now()->endOfMonth();
 
         $months = collect();

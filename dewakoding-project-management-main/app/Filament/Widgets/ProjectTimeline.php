@@ -33,9 +33,11 @@ class ProjectTimeline extends Widget
         }
 
         $query = Project::query()
+            ->select(['id', 'name', 'start_date', 'end_date', 'pinned_date', 'description'])
             ->with(['tickets' => function ($q): void {
-                $q->whereNotNull('due_date')
-                    ->with(['status', 'assignees', 'priority']);
+                $q->select(['id', 'project_id', 'name', 'due_date', 'ticket_status_id', 'priority_id'])
+                    ->whereNotNull('due_date')
+                    ->with(['status:id,name', 'assignees:id,name', 'priority:id,name']);
             }])
             ->whereNotNull('start_date')
             ->whereNotNull('end_date');
@@ -44,12 +46,14 @@ class ProjectTimeline extends Widget
             $query->whereNotNull('pinned_date')
                 ->orderBy('pinned_date', 'desc');
         } else {
-            $query->orderBy('start_date');
+            $query->orderBy('start_date')
+                ->limit(10); // Limit non-pinned projects to improve performance
         }
 
-        $userIsSuperAdmin = auth()->user() && (
-            (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('super_admin'))
-            || (isset(auth()->user()->role) && auth()->user()->role === 'super_admin')
+        $user = auth()->user();
+        $userIsSuperAdmin = $user && (
+            (method_exists($user, 'hasRole') && $user->hasRole('super_admin'))
+            || (isset($user->role) && $user->role === 'super_admin')
         );
 
         if (! $userIsSuperAdmin) {

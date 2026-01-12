@@ -40,6 +40,7 @@ class ProjectTimeline extends Page
     public function getProjects()
     {
         $query = Project::query()
+            ->select(['id', 'name', 'start_date', 'end_date'])
             ->whereNotNull('start_date')
             ->whereNotNull('end_date')
             ->orderBy('start_date');

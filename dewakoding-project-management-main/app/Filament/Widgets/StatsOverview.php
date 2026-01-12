@@ -69,7 +69,7 @@ class StatsOverview extends BaseWidget
         $user = auth()->user();
         $userId = $user->id;
 
-        $myProjectIds = DB::table('project_users')
+        $myProjectIds = DB::table('project_members')
             ->where('user_id', $userId)
             ->pluck('project_id')
             ->toArray();
@@ -104,7 +104,7 @@ class StatsOverview extends BaseWidget
             ->where('tickets.updated_at', '>=', Carbon::now()->subDays(7))
             ->count();
 
-        $teamMembersCount = DB::table('project_users')
+        $teamMembersCount = DB::table('project_members')
             ->whereIn('project_id', $myProjectIds)
             ->where('user_id', '!=', $userId)
             ->distinct('user_id')

@@ -343,8 +343,7 @@ class TicketResource extends Resource
 
                         return auth()->user()->projects()->pluck('name', 'projects.id')->toArray();
                     })
-                    ->searchable()
-                    ->preload(),
+                    ->searchable(),
 
                 SelectFilter::make('ticket_status_id')
                     ->label('Trạng thái')
@@ -359,8 +358,7 @@ class TicketResource extends Resource
                             ->pluck('name', 'id')
                             ->toArray();
                     })
-                    ->searchable()
-                    ->preload(),
+                    ->searchable(),
 
                 SelectFilter::make('epic_id')
                     ->label('Epic')
@@ -375,29 +373,25 @@ class TicketResource extends Resource
                             ->pluck('name', 'id')
                             ->toArray();
                     })
-                    ->searchable()
-                    ->preload(),
+                    ->searchable(),
 
                 SelectFilter::make('priority_id')
                     ->label('Ưu tiên')
                     ->options(TicketPriority::pluck('name', 'id')->toArray())
-                    ->searchable()
-                    ->preload(),
+                    ->searchable(),
 
                 // Filter by assignees
                 SelectFilter::make('assignees')
                     ->label('Người thực hiện')
                     ->relationship('assignees', 'name')
                     ->multiple()
-                    ->searchable()
-                    ->preload(),
+                    ->searchable(),
 
                 // Filter by creator
                 SelectFilter::make('created_by')
                     ->label('Người tạo')
                     ->relationship('creator', 'name')
-                    ->searchable()
-                    ->preload(),
+                    ->searchable(),
 
                 Filter::make('due_date')
                     ->label('Hạn chót')
@@ -462,7 +456,20 @@ class TicketResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        $query = static::getEloquentQuery();
+        $user = auth()->user();
+        $query = Ticket::query();
+
+        if (! $user->hasRole(['super_admin'])) {
+            $query->where(function ($query) use ($user): void {
+                $query->whereHas('assignees', function ($query) use ($user): void {
+                    $query->where('users.id', $user->id);
+                })
+                    ->orWhere('created_by', $user->id)
+                    ->orWhereHas('project.members', function ($query) use ($user): void {
+                        $query->where('users.id', $user->id);
+                    });
+            });
+        }
 
         return $query->count();
     }
