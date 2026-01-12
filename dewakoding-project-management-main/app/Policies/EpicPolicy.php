@@ -12,59 +12,66 @@ class EpicPolicy
 {
     use HandlesAuthorization;
     
+    public function before(AuthUser $authUser, $ability)
+    {
+        if ($authUser->roles()->where('name', 'super_admin')->exists()) {
+            return true;
+        }
+    }
+    
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('view_any_epic');
+        return $authUser->permissions()->where('name', 'view_any_epic')->exists();
     }
 
     public function view(AuthUser $authUser, Epic $epic): bool
     {
-        return $authUser->can('view_epic');
+        return $authUser->permissions()->where('name', 'view_epic')->exists();
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('create_epic');
+        return $authUser->permissions()->where('name', 'create_epic')->exists();
     }
 
     public function update(AuthUser $authUser, Epic $epic): bool
     {
-        return $authUser->can('update_epic');
+        return $authUser->permissions()->where('name', 'update_epic')->exists();
     }
 
     public function delete(AuthUser $authUser, Epic $epic): bool
     {
-        return $authUser->can('delete_epic');
+        return $authUser->permissions()->where('name', 'delete_epic')->exists();
     }
 
     public function restore(AuthUser $authUser, Epic $epic): bool
     {
-        return $authUser->can('restore_epic');
+        return $authUser->permissions()->where('name', 'restore_epic')->exists();
     }
 
     public function forceDelete(AuthUser $authUser, Epic $epic): bool
     {
-        return $authUser->can('force_delete_epic');
+        return $authUser->permissions()->where('name', 'force_delete_epic')->exists();
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('force_delete_any_epic');
+        return $authUser->permissions()->where('name', 'force_delete_any_epic')->exists();
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('restore_any_epic');
+        return $authUser->permissions()->where('name', 'restore_any_epic')->exists();
     }
 
     public function replicate(AuthUser $authUser, Epic $epic): bool
     {
-        return $authUser->can('replicate_epic');
+        return $authUser->permissions()->where('name', 'replicate_epic')->exists();
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('reorder_epic');
+        return $authUser->permissions()->where('name', 'reorder_epic')->exists();
     }
 
 }

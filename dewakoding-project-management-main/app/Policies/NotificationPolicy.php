@@ -12,59 +12,66 @@ class NotificationPolicy
 {
     use HandlesAuthorization;
     
+    public function before(AuthUser $authUser, $ability)
+    {
+        if ($authUser->roles()->where('name', 'super_admin')->exists()) {
+            return true;
+        }
+    }
+    
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('view_any_notification');
+        return $authUser->permissions()->where('name', 'view_any_notification')->exists();
     }
 
     public function view(AuthUser $authUser, Notification $notification): bool
     {
-        return $authUser->can('view_notification');
+        return $authUser->permissions()->where('name', 'view_notification')->exists();
     }
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('create_notification');
+        return $authUser->permissions()->where('name', 'create_notification')->exists();
     }
 
     public function update(AuthUser $authUser, Notification $notification): bool
     {
-        return $authUser->can('update_notification');
+        return $authUser->permissions()->where('name', 'update_notification')->exists();
     }
 
     public function delete(AuthUser $authUser, Notification $notification): bool
     {
-        return $authUser->can('delete_notification');
+        return $authUser->permissions()->where('name', 'delete_notification')->exists();
     }
 
     public function restore(AuthUser $authUser, Notification $notification): bool
     {
-        return $authUser->can('restore_notification');
+        return $authUser->permissions()->where('name', 'restore_notification')->exists();
     }
 
     public function forceDelete(AuthUser $authUser, Notification $notification): bool
     {
-        return $authUser->can('force_delete_notification');
+        return $authUser->permissions()->where('name', 'force_delete_notification')->exists();
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('force_delete_any_notification');
+        return $authUser->permissions()->where('name', 'force_delete_any_notification')->exists();
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('restore_any_notification');
+        return $authUser->permissions()->where('name', 'restore_any_notification')->exists();
     }
 
     public function replicate(AuthUser $authUser, Notification $notification): bool
     {
-        return $authUser->can('replicate_notification');
+        return $authUser->permissions()->where('name', 'replicate_notification')->exists();
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('reorder_notification');
+        return $authUser->permissions()->where('name', 'reorder_notification')->exists();
     }
 
 }

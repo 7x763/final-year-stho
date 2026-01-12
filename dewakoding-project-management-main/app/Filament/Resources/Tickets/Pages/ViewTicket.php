@@ -148,11 +148,16 @@ class ViewTicket extends ViewRecord
             EditAction::make()
                 ->visible(function () {
                     $ticket = $this->getRecord();
+                    $user = auth()->user();
 
-                    return auth()->user()->hasRole(['super_admin'])
-                        || $ticket->created_by == auth()->id()
-                        || $ticket->assignees()->where('users.id', auth()->id())->exists()
-                        || ($ticket->project && $ticket->project->members()->where('users.id', auth()->id())->exists());
+                    if (! $user) {
+                        return false;
+                    }
+
+                    return $user->roles()->where('name', 'super_admin')->exists()
+                        || $ticket->created_by == $user->id
+                        || $ticket->assignees()->where('users.id', $user->id)->exists()
+                        || ($ticket->project && $ticket->project->members()->where('users.id', $user->id)->exists());
                 }),
 
             Action::make('back')

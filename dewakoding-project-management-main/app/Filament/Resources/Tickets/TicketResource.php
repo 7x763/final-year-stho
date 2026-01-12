@@ -56,15 +56,16 @@ class TicketResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         $query = parent::getEloquentQuery()->with(['project', 'status', 'priority', 'assignees', 'creator', 'epic']);
+        $user = auth()->user();
 
-        if (! auth()->user()->hasRole(['super_admin'])) {
-            $query->where(function ($query): void {
-                $query->whereHas('assignees', function ($query): void {
-                    $query->where('users.id', auth()->id());
+        if ($user && ! $user->roles()->where('name', 'super_admin')->exists()) {
+            $query->where(function ($query) use ($user): void {
+                $query->whereHas('assignees', function ($query) use ($user): void {
+                    $query->where('users.id', $user->id);
                 })
-                    ->orWhere('created_by', auth()->id())
-                    ->orWhereHas('project.members', function ($query): void {
-                        $query->where('users.id', auth()->id());
+                    ->orWhere('created_by', $user->id)
+                    ->orWhereHas('project.members', function ($query) use ($user): void {
+                        $query->where('users.id', $user->id);
                     });
             });
         }
@@ -82,11 +83,12 @@ class TicketResource extends Resource
                 Select::make('project_id')
                     ->label('Dự án')
                     ->options(function () {
-                        if (auth()->user()->hasRole(['super_admin'])) {
+                        $user = auth()->user();
+                        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
                             return Project::pluck('name', 'id')->toArray();
                         }
 
-                        return auth()->user()->projects()->pluck('name', 'projects.id')->toArray();
+                        return $user ? $user->projects()->pluck('name', 'projects.id')->toArray() : [];
                     })
                     ->default($projectId)
                     ->disabledOn('ticket_on_board')
@@ -337,11 +339,12 @@ class TicketResource extends Resource
                 SelectFilter::make('project_id')
                     ->label('Dự án')
                     ->options(function () {
-                        if (auth()->user()->hasRole(['super_admin'])) {
+                        $user = auth()->user();
+                        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
                             return Project::pluck('name', 'id')->toArray();
                         }
 
-                        return auth()->user()->projects()->pluck('name', 'projects.id')->toArray();
+                        return $user ? $user->projects()->pluck('name', 'projects.id')->toArray() : [];
                     })
                     ->searchable(),
 
@@ -457,9 +460,13 @@ class TicketResource extends Resource
     public static function getNavigationBadge(): ?string
     {
         $user = auth()->user();
+        if (! $user) {
+            return null;
+        }
+
         $query = Ticket::query();
 
-        if (! $user->hasRole(['super_admin'])) {
+        if (! $user->roles()->where('name', 'super_admin')->exists()) {
             $query->where(function ($query) use ($user): void {
                 $query->whereHas('assignees', function ($query) use ($user): void {
                     $query->where('users.id', $user->id);
@@ -471,6 +478,6 @@ class TicketResource extends Resource
             });
         }
 
-        return $query->count();
+        return (string) $query->count();
     }
 }

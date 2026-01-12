@@ -65,10 +65,11 @@ class ProjectBoard extends Page
             ->orderBy('pinned_date', 'desc')
             ->orderBy('name');
 
-        if (auth()->user()->hasRole(['super_admin'])) {
+        $user = auth()->user();
+        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
             $this->projects = $projectQuery->get();
         } else {
-            $this->projects = auth()->user()->projects()
+            $this->projects = $user->projects()
                 ->select('projects.id', 'projects.name', 'projects.ticket_prefix', 'projects.color', 'projects.is_pinned', 'projects.pinned_date')
                 ->orderByRaw('pinned_date IS NULL')
                 ->orderBy('pinned_date', 'desc')
@@ -364,7 +365,7 @@ class ProjectBoard extends Page
                 ->action('refreshBoard')
                 ->color('warning'),
             ExportTicketsAction::make()
-                ->visible(fn () => $this->selectedProject !== null && auth()->user()->hasRole(['super_admin'])),
+                ->visible(fn () => $this->selectedProject !== null && auth()->user() && auth()->user()->roles()->where('name', 'super_admin')->exists()),
 
             Action::make('filter_users')
                 ->label('Lọc theo người dùng')
@@ -411,7 +412,8 @@ class ProjectBoard extends Page
             return false;
         }
 
-        if (auth()->user()->hasRole(['super_admin'])) {
+        $user = auth()->user();
+        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
             return true;
         }
 
@@ -426,7 +428,8 @@ class ProjectBoard extends Page
             return false;
         }
 
-        if (auth()->user()->hasRole(['super_admin'])) {
+        $user = auth()->user();
+        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
             return true;
         }
 
@@ -441,7 +444,8 @@ class ProjectBoard extends Page
             return false;
         }
 
-        if (auth()->user()->hasRole(['super_admin'])) {
+        $user = auth()->user();
+        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
             return true;
         }
 

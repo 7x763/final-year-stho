@@ -14,7 +14,7 @@ class ProjectPolicy
 
     public function before(AuthUser $authUser, $ability)
     {
-        if ($authUser->hasRole('super_admin')) {
+        if ($authUser->roles()->where('name', 'super_admin')->exists()) {
             return true;
         }
     }
@@ -26,7 +26,7 @@ class ProjectPolicy
 
     public function view(AuthUser $authUser, Project $project): bool
     {
-        if ($authUser->can('view_project')) {
+        if ($authUser->permissions()->where('name', 'view_project')->exists()) {
             return true;
         }
 
@@ -35,12 +35,12 @@ class ProjectPolicy
 
     public function create(AuthUser $authUser): bool
     {
-        return $authUser->can('create_project');
+        return $authUser->permissions()->where('name', 'create_project')->exists();
     }
 
     public function update(AuthUser $authUser, Project $project): bool
     {
-        if ($authUser->can('update_project')) {
+        if ($authUser->permissions()->where('name', 'update_project')->exists()) {
             return true;
         }
 
@@ -49,37 +49,37 @@ class ProjectPolicy
 
     public function delete(AuthUser $authUser, Project $project): bool
     {
-        return $authUser->can('delete_project');
+        return $authUser->permissions()->where('name', 'delete_project')->exists();
     }
 
     public function restore(AuthUser $authUser, Project $project): bool
     {
-        return $authUser->can('restore_project');
+        return $authUser->permissions()->where('name', 'restore_project')->exists();
     }
 
     public function forceDelete(AuthUser $authUser, Project $project): bool
     {
-        return $authUser->can('force_delete_project');
+        return $authUser->permissions()->where('name', 'force_delete_project')->exists();
     }
 
     public function forceDeleteAny(AuthUser $authUser): bool
     {
-        return $authUser->can('force_delete_any_project');
+        return $authUser->permissions()->where('name', 'force_delete_any_project')->exists();
     }
 
     public function restoreAny(AuthUser $authUser): bool
     {
-        return $authUser->can('restore_any_project');
+        return $authUser->permissions()->where('name', 'restore_any_project')->exists();
     }
 
     public function replicate(AuthUser $authUser, Project $project): bool
     {
-        return $authUser->can('replicate_project');
+        return $authUser->permissions()->where('name', 'replicate_project')->exists();
     }
 
     public function reorder(AuthUser $authUser): bool
     {
-        return $authUser->can('reorder_project');
+        return $authUser->permissions()->where('name', 'reorder_project')->exists();
     }
 
 }
