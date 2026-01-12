@@ -58,14 +58,15 @@ class TicketResource extends Resource
         $query = parent::getEloquentQuery()->with(['project', 'status', 'priority', 'assignees', 'creator', 'epic']);
         $user = auth()->user();
 
-        if ($user && ! $user->roles()->where('name', 'super_admin')->exists()) {
-            $query->where(function ($query) use ($user): void {
-                $query->whereHas('assignees', function ($query) use ($user): void {
-                    $query->where('users.id', $user->id);
+        if ($user && ! $user->isSuperAdmin()) {
+            $userId = $user->id;
+            $query->where(function ($query) use ($userId): void {
+                $query->whereHas('assignees', function ($query) use ($userId): void {
+                    $query->where('users.id', $userId);
                 })
-                    ->orWhere('created_by', $user->id)
-                    ->orWhereHas('project.members', function ($query) use ($user): void {
-                        $query->where('users.id', $user->id);
+                    ->orWhere('created_by', $userId)
+                    ->orWhereHas('project.members', function ($query) use ($userId): void {
+                        $query->where('users.id', $userId);
                     });
             });
         }
@@ -84,7 +85,7 @@ class TicketResource extends Resource
                     ->label('Dự án')
                     ->options(function () {
                         $user = auth()->user();
-                        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
+                        if ($user && $user->isSuperAdmin()) {
                             return Project::pluck('name', 'id')->toArray();
                         }
 
@@ -340,7 +341,7 @@ class TicketResource extends Resource
                     ->label('Dự án')
                     ->options(function () {
                         $user = auth()->user();
-                        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
+                        if ($user && $user->isSuperAdmin()) {
                             return Project::pluck('name', 'id')->toArray();
                         }
 
@@ -435,7 +436,7 @@ class TicketResource extends Resource
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
                         ->label('Xóa các mục đã chọn')
-                        ->visible(auth()->user()->hasRole(['super_admin'])),
+                        ->visible(fn() => auth()->user() && auth()->user()->isSuperAdmin()),
                 ]),
             ]);
     }
@@ -466,14 +467,15 @@ class TicketResource extends Resource
 
         $query = Ticket::query();
 
-        if (! $user->roles()->where('name', 'super_admin')->exists()) {
-            $query->where(function ($query) use ($user): void {
-                $query->whereHas('assignees', function ($query) use ($user): void {
-                    $query->where('users.id', $user->id);
+        if (! $user->isSuperAdmin()) {
+            $userId = $user->id;
+            $query->where(function ($query) use ($userId): void {
+                $query->whereHas('assignees', function ($query) use ($userId): void {
+                    $query->where('users.id', $userId);
                 })
-                    ->orWhere('created_by', $user->id)
-                    ->orWhereHas('project.members', function ($query) use ($user): void {
-                        $query->where('users.id', $user->id);
+                    ->orWhere('created_by', $userId)
+                    ->orWhereHas('project.members', function ($query) use ($userId): void {
+                        $query->where('users.id', $userId);
                     });
             });
         }

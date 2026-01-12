@@ -15,7 +15,7 @@ class TicketPolicy
     public function before(User $user, string $ability): ?bool
     {
         // Direct check to avoid Gate/Policy recursion
-        if ($user->roles()->where('name', 'super_admin')->exists()) {
+        if ($user->isSuperAdmin()) {
             return true;
         }
 

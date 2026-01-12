@@ -322,7 +322,10 @@ class ProjectBoard extends Page
                 ->name('ticket_on_board')
                 ->label('Vé mới')
                 ->icon('heroicon-m-plus')
-                ->visible(fn () => $this->selectedProject !== null && auth()->user()->can('create_ticket'))
+                ->visible(fn () => $this->selectedProject !== null && auth()->user() && (
+                    auth()->user()->roles()->where('name', 'super_admin')->exists() || 
+                    auth()->user()->permissions()->where('name', 'create_ticket')->exists()
+                ))
                 ->schema(fn ($schema) => TicketResource::form($schema)
                     ->columns(3)
                 )
@@ -413,13 +416,20 @@ class ProjectBoard extends Page
         }
 
         $user = auth()->user();
-        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
+        if (!$user) return false;
+
+        if ($user->roles()->where('name', 'super_admin')->exists()) {
             return true;
         }
 
-        return $ticket->created_by == auth()->id()
-            || $ticket->assignees()->where('users.id', auth()->id())->exists()
-            || $ticket->project->members()->where('users.id', auth()->id())->exists();
+        if ($user->permissions()->where('name', 'view_ticket')->exists()) {
+            return true;
+        }
+
+        $userId = $user->id;
+        return $ticket->created_by == $userId
+            || $ticket->assignees()->where('users.id', $userId)->exists()
+            || ($ticket->project && $ticket->project->members()->where('users.id', $userId)->exists());
     }
 
     private function canEditTicket(?Ticket $ticket): bool
@@ -429,13 +439,20 @@ class ProjectBoard extends Page
         }
 
         $user = auth()->user();
-        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
+        if (!$user) return false;
+
+        if ($user->roles()->where('name', 'super_admin')->exists()) {
             return true;
         }
 
-        return $ticket->created_by == auth()->id()
-            || $ticket->assignees()->where('users.id', auth()->id())->exists()
-            || $ticket->project->members()->where('users.id', auth()->id())->exists();
+        if ($user->permissions()->where('name', 'update_ticket')->exists()) {
+            return true;
+        }
+
+        $userId = $user->id;
+        return $ticket->created_by == $userId
+            || $ticket->assignees()->where('users.id', $userId)->exists()
+            || ($ticket->project && $ticket->project->members()->where('users.id', $userId)->exists());
     }
 
     private function canManageTicket(?Ticket $ticket): bool
@@ -445,13 +462,20 @@ class ProjectBoard extends Page
         }
 
         $user = auth()->user();
-        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
+        if (!$user) return false;
+
+        if ($user->roles()->where('name', 'super_admin')->exists()) {
             return true;
         }
 
-        return $ticket->created_by == auth()->id()
-            || $ticket->assignees()->where('users.id', auth()->id())->exists()
-            || $ticket->project->members()->where('users.id', auth()->id())->exists();
+        if ($user->permissions()->where('name', 'update_ticket')->exists()) {
+            return true;
+        }
+
+        $userId = $user->id;
+        return $ticket->created_by == $userId
+            || $ticket->assignees()->where('users.id', $userId)->exists()
+            || ($ticket->project && $ticket->project->members()->where('users.id', $userId)->exists());
     }
 
     public function exportTickets(array $selectedColumns): void
@@ -533,6 +557,10 @@ class ProjectBoard extends Page
 
     public function canMoveTickets(): bool
     {
-        return auth()->user()->can('update_ticket');
+        $user = auth()->user();
+        if (!$user) return false;
+
+        return $user->roles()->where('name', 'super_admin')->exists() || 
+               $user->permissions()->where('name', 'update_ticket')->exists();
     }
 }

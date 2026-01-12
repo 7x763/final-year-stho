@@ -14,7 +14,7 @@ class ProjectPolicy
 
     public function before(AuthUser $authUser, $ability)
     {
-        if ($authUser->roles()->where('name', 'super_admin')->exists()) {
+        if ($authUser->isSuperAdmin()) {
             return true;
         }
     }
