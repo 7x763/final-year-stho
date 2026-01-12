@@ -14,7 +14,7 @@ class TicketPolicy
     
     public function viewAny(User $user): bool
     {
-        if ($user->can('view_any_ticket')) {
+        if ($user->hasRole('super_admin') || $user->hasAnyPermission(['view_any_ticket'])) {
             return true;
         }
 
@@ -24,7 +24,7 @@ class TicketPolicy
 
     public function view(User $user, Ticket $ticket): bool
     {
-        if ($user->can('view_ticket')) {
+        if ($user->hasRole('super_admin') || $user->hasAnyPermission(['view_ticket'])) {
             return true;
         }
 
@@ -35,7 +35,7 @@ class TicketPolicy
 
     public function update(User $user, Ticket $ticket): bool
     {
-        if ($user->can('update_ticket')) {
+        if ($user->hasRole('super_admin') || $user->hasAnyPermission(['update_ticket'])) {
             return true;
         }
 
@@ -46,41 +46,41 @@ class TicketPolicy
 
     public function create(User $user): bool
     {
-        return $user->can('create_ticket');
+        return $user->hasRole('super_admin') || $user->hasAnyPermission(['create_ticket']);
     }
 
     public function delete(User $user, Ticket $ticket): bool
     {
-        return $user->can('delete_ticket');
+        return $user->hasRole('super_admin') || $user->hasAnyPermission(['delete_ticket']);
     }
 
     public function restore(User $user, Ticket $ticket): bool
     {
-        return $user->can('restore_ticket');
+        return $user->hasRole('super_admin');
     }
 
     public function forceDelete(User $user, Ticket $ticket): bool
     {
-        return $user->can('force_delete_ticket');
+        return $user->hasRole('super_admin');
     }
 
     public function forceDeleteAny(User $user): bool
     {
-        return $user->can('force_delete_any_ticket');
+        return $user->hasRole('super_admin');
     }
 
     public function restoreAny(User $user): bool
     {
-        return $user->can('restore_any_ticket');
+        return $user->hasRole('super_admin');
     }
 
     public function replicate(User $user, Ticket $ticket): bool
     {
-        return $user->can('replicate_ticket');
+        return $user->hasRole('super_admin');
     }
 
     public function reorder(User $user): bool
     {
-        return $user->can('reorder_ticket');
+        return $user->hasRole('super_admin');
     }
 }
