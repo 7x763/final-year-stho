@@ -19,7 +19,24 @@ class TicketPolicy
 
     public function view(AuthUser $authUser, Ticket $ticket): bool
     {
-        return $authUser->can('view_ticket');
+        if ($authUser->can('view_ticket')) {
+            return true;
+        }
+
+        return $ticket->created_by === $authUser->id ||
+               $ticket->assignees()->where('users.id', $authUser->id)->exists() ||
+               $ticket->project->members()->where('users.id', $authUser->id)->exists();
+    }
+
+    public function update(AuthUser $authUser, Ticket $ticket): bool
+    {
+        if ($authUser->can('update_ticket')) {
+            return true;
+        }
+
+        return $ticket->created_by === $authUser->id ||
+               $ticket->assignees()->where('users.id', $authUser->id)->exists() ||
+               $ticket->project->members()->where('users.id', $authUser->id)->exists();
     }
 
     public function create(AuthUser $authUser): bool

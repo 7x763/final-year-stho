@@ -221,9 +221,9 @@ class TicketResource extends Resource
                             if (! $project) {
                                 return;
                             }
-                            $memberIds = $project->members()->pluck('users.id')->toArray();
+                            $memberIds = $project->members()->pluck('users.id')->map(fn($id) => (string) $id)->toArray();
                             foreach ($userIds as $userId) {
-                                if (! in_array($userId, $memberIds)) {
+                                if (! in_array((string) $userId, $memberIds)) {
                                     $fail("Một hoặc nhiều người được chọn không phải là thành viên của dự án này.");
                                     break;
                                 }
