@@ -21,27 +21,30 @@ class Project extends Model
         'start_date',
         'end_date',
         'pinned_date',
+        'is_pinned',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date' => 'date',
         'pinned_date' => 'datetime',
+        'is_pinned' => 'boolean',
     ];
-
-    public function getIsPinnedAttribute(): bool
-    {
-        return ! is_null($this->pinned_date);
-    }
 
     public function pin(): void
     {
-        $this->update(['pinned_date' => now()]);
+        $this->update([
+            'pinned_date' => now(),
+            'is_pinned' => true,
+        ]);
     }
 
     public function unpin(): void
     {
-        $this->update(['pinned_date' => null]);
+        $this->update([
+            'pinned_date' => null,
+            'is_pinned' => false,
+        ]);
     }
 
     public function ticketStatuses(): HasMany
