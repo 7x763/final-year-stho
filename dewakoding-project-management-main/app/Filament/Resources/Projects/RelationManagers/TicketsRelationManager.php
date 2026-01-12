@@ -231,7 +231,7 @@ class TicketsRelationManager extends RelationManager
                     ->label('Người thực hiện')
                     ->relationship('assignees', 'name', modifyQueryUsing: function (Builder $query) {
                         $projectId = $this->getOwnerRecord()->id;
-                        return $query->whereHas('projects', fn ($q) => $query->where('projects.id', $projectId));
+                        return $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));
                     })
                     ->multiple()
                     ->searchable()
@@ -242,7 +242,7 @@ class TicketsRelationManager extends RelationManager
                     ->label('Người tạo')
                     ->relationship('creator', 'name', modifyQueryUsing: function (Builder $query) {
                         $projectId = $this->getOwnerRecord()->id;
-                        return $query->whereHas('projects', fn ($q) => $query->where('projects.id', $projectId));
+                        return $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));
                     })
                     ->searchable()
                     ->preload(),

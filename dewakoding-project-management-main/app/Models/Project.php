@@ -76,6 +76,14 @@ class Project extends Model
         return $this->hasMany(ProjectNote::class);
     }
 
+    public function completedTickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class)
+            ->whereHas('status', function ($query): void {
+                $query->where('is_completed', true);
+            });
+    }
+
     public function getRemainingDaysAttribute()
     {
         if (! $this->end_date) {
@@ -94,17 +102,13 @@ class Project extends Model
 
     public function getProgressPercentageAttribute(): float
     {
-        $totalTickets = $this->tickets()->count();
+        $totalTickets = $this->tickets_count ?? $this->tickets()->count();
 
         if ($totalTickets === 0) {
             return 0.0;
         }
 
-        $completedTickets = $this->tickets()
-            ->whereHas('status', function ($query): void {
-                $query->where('is_completed', true);
-            })
-            ->count();
+        $completedTickets = $this->completed_tickets_count ?? $this->completedTickets()->count();
 
         return round(($completedTickets / $totalTickets) * 100, 1);
     }

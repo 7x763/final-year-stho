@@ -228,7 +228,7 @@ class ProjectResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->withCount(['members', 'tickets', 'epics', 'ticketStatuses', 'notes']);
+        $query = parent::getEloquentQuery()->withCount(['members', 'tickets', 'epics', 'ticketStatuses', 'notes', 'completedTickets']);
 
         $userIsSuperAdmin = auth()->user() && (
             (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('super_admin'))
