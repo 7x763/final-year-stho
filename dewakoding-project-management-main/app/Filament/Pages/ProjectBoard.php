@@ -66,15 +66,15 @@ class ProjectBoard extends Page
             ->orderBy('name');
 
         $user = auth()->user();
-        if ($user && $user->roles()->where('name', 'super_admin')->exists()) {
+        if ($user && $user->isSuperAdmin()) {
             $this->projects = $projectQuery->get();
         } else {
-            $this->projects = $user->projects()
+            $this->projects = $user ? $user->projects()
                 ->select('projects.id', 'projects.name', 'projects.ticket_prefix', 'projects.color', 'projects.is_pinned', 'projects.pinned_date')
                 ->orderByRaw('pinned_date IS NULL')
                 ->orderBy('pinned_date', 'desc')
                 ->orderBy('name')
-                ->get();
+                ->get() : collect();
         }
 
         if ($project_id) {
@@ -323,7 +323,7 @@ class ProjectBoard extends Page
                 ->label('Vé mới')
                 ->icon('heroicon-m-plus')
                 ->visible(fn () => $this->selectedProject !== null && auth()->user() && (
-                    auth()->user()->roles()->where('name', 'super_admin')->exists() || 
+                    auth()->user()->isSuperAdmin() || 
                     auth()->user()->permissions()->where('name', 'create_ticket')->exists()
                 ))
                 ->schema(fn ($schema) => TicketResource::form($schema)
@@ -335,7 +335,7 @@ class ProjectBoard extends Page
 
                     // Auto-assign current user if they're a project member
                     if ($project = $this->selectedProject) {
-                        $isCurrentUserMember = $project->members()->where('users.id', auth()->id())->exists();
+                        $isCurrentUserMember = $project->members->contains(auth()->id());
                         $assignees = $isCurrentUserMember ? [auth()->id()] : [];
                     }
 
@@ -368,7 +368,7 @@ class ProjectBoard extends Page
                 ->action('refreshBoard')
                 ->color('warning'),
             ExportTicketsAction::make()
-                ->visible(fn () => $this->selectedProject !== null && auth()->user() && auth()->user()->roles()->where('name', 'super_admin')->exists()),
+                ->visible(fn () => $this->selectedProject !== null && auth()->user() && auth()->user()->isSuperAdmin()),
 
             Action::make('filter_users')
                 ->label('Lọc theo người dùng')
@@ -418,7 +418,7 @@ class ProjectBoard extends Page
         $user = auth()->user();
         if (!$user) return false;
 
-        if ($user->roles()->where('name', 'super_admin')->exists()) {
+        if ($user->isSuperAdmin()) {
             return true;
         }
 
@@ -428,8 +428,8 @@ class ProjectBoard extends Page
 
         $userId = $user->id;
         return $ticket->created_by == $userId
-            || $ticket->assignees()->where('users.id', $userId)->exists()
-            || ($ticket->project && $ticket->project->members()->where('users.id', $userId)->exists());
+            || $ticket->assignees->contains($userId)
+            || ($ticket->project && $ticket->project->members->contains($userId));
     }
 
     private function canEditTicket(?Ticket $ticket): bool
@@ -441,7 +441,7 @@ class ProjectBoard extends Page
         $user = auth()->user();
         if (!$user) return false;
 
-        if ($user->roles()->where('name', 'super_admin')->exists()) {
+        if ($user->isSuperAdmin()) {
             return true;
         }
 
@@ -451,8 +451,8 @@ class ProjectBoard extends Page
 
         $userId = $user->id;
         return $ticket->created_by == $userId
-            || $ticket->assignees()->where('users.id', $userId)->exists()
-            || ($ticket->project && $ticket->project->members()->where('users.id', $userId)->exists());
+            || $ticket->assignees->contains($userId)
+            || ($ticket->project && $ticket->project->members->contains($userId));
     }
 
     private function canManageTicket(?Ticket $ticket): bool
@@ -464,7 +464,7 @@ class ProjectBoard extends Page
         $user = auth()->user();
         if (!$user) return false;
 
-        if ($user->roles()->where('name', 'super_admin')->exists()) {
+        if ($user->isSuperAdmin()) {
             return true;
         }
 
@@ -474,8 +474,8 @@ class ProjectBoard extends Page
 
         $userId = $user->id;
         return $ticket->created_by == $userId
-            || $ticket->assignees()->where('users.id', $userId)->exists()
-            || ($ticket->project && $ticket->project->members()->where('users.id', $userId)->exists());
+            || $ticket->assignees->contains($userId)
+            || ($ticket->project && $ticket->project->members->contains($userId));
     }
 
     public function exportTickets(array $selectedColumns): void
@@ -560,7 +560,7 @@ class ProjectBoard extends Page
         $user = auth()->user();
         if (!$user) return false;
 
-        return $user->roles()->where('name', 'super_admin')->exists() || 
+        return $user->isSuperAdmin() || 
                $user->permissions()->where('name', 'update_ticket')->exists();
     }
 }

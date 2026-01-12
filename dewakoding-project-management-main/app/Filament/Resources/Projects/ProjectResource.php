@@ -230,12 +230,9 @@ class ProjectResource extends Resource
     {
         $query = parent::getEloquentQuery()->withCount(['members', 'tickets', 'epics', 'ticketStatuses', 'notes', 'completedTickets']);
 
-        $userIsSuperAdmin = auth()->user() && (
-            (method_exists(auth()->user(), 'hasRole') && auth()->user()->hasRole('super_admin'))
-            || (isset(auth()->user()->role) && auth()->user()->role === 'super_admin')
-        );
+        $user = auth()->user();
 
-        if (! $userIsSuperAdmin) {
+        if ($user && ! $user->isSuperAdmin()) {
             $query->whereHas('members', function (Builder $query): void {
                 $query->where('user_id', auth()->id());
             });

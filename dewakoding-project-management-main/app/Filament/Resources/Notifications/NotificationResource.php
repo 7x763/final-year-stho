@@ -44,7 +44,7 @@ class NotificationResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->query(fn () => auth()->user()->hasRole('super_admin')
+            ->query(fn () => (auth()->user() && auth()->user()->isSuperAdmin())
                     ? Notification::with(['user', 'ticket.project'])
                     : Notification::where('user_id', auth()->id())->with(['ticket.project'])
             )
@@ -60,7 +60,7 @@ class NotificationResource extends Resource
                     ->badge()
                     ->color('info')
                     ->searchable()
-                    ->visible(fn () => auth()->user()->hasRole('super_admin')),
+                    ->visible(fn () => auth()->user() && auth()->user()->isSuperAdmin()),
 
                 TextColumn::make('message')
                     ->label('Nội dung')
@@ -92,7 +92,7 @@ class NotificationResource extends Resource
                     ->label('Đánh dấu đã đọc')
                     ->icon('heroicon-o-check')
                     ->color('success')
-                    ->visible(fn (Notification $record) => $record->isUnread() && (auth()->id() === $record->user_id || auth()->user()->hasRole('super_admin')))
+                    ->visible(fn (Notification $record) => $record->isUnread() && (auth()->id() === $record->user_id || (auth()->user() && auth()->user()->isSuperAdmin())))
                     ->action(function (Notification $record): void {
                         app(NotificationService::class)->markAsRead($record->id, $record->user_id);
 
@@ -116,7 +116,7 @@ class NotificationResource extends Resource
                     ->label('Đánh dấu tất cả đã đọc')
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->visible(fn () => ! auth()->user()->hasRole('super_admin'))
+                    ->visible(fn () => auth()->user() && ! auth()->user()->isSuperAdmin())
                     ->action(function (): void {
                         app(NotificationService::class)->markAllAsRead(auth()->id());
 
@@ -136,7 +136,7 @@ class NotificationResource extends Resource
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload()
-                    ->visible(fn () => auth()->user()->hasRole('super_admin')),
+                    ->visible(fn () => auth()->user() && auth()->user()->isSuperAdmin()),
             ]);
     }
 

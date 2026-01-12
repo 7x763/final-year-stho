@@ -104,14 +104,14 @@ class User extends Authenticatable implements FilamentUser
         return true;
     }
 
-    protected ?bool $is_super_admin = null;
+    protected static array $superAdminCache = [];
 
     public function isSuperAdmin(): bool
     {
-        if ($this->is_super_admin === null) {
-            $this->is_super_admin = $this->roles()->where('name', 'super_admin')->exists();
+        if (! isset(static::$superAdminCache[$this->id])) {
+            static::$superAdminCache[$this->id] = $this->roles()->where('name', 'super_admin')->exists();
         }
 
-        return $this->is_super_admin;
+        return static::$superAdminCache[$this->id];
     }
 }

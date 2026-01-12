@@ -14,7 +14,7 @@ class NotificationPolicy
     
     public function before(AuthUser $authUser, $ability)
     {
-        if ($authUser->isSuperAdmin()) {
+        if ($authUser->roles()->where('name', 'super_admin')->exists()) {
             return true;
         }
     }

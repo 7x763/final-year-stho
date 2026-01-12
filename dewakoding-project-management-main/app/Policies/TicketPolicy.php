@@ -24,12 +24,10 @@ class TicketPolicy
 
     public function viewAny(User $user): bool
     {
-        // If before() returns true, this isn't even reached for super_admin
         if ($user->permissions()->where('name', 'view_any_ticket')->exists()) {
             return true;
         }
 
-        // Allow viewing if user is associated with any project as a member
         return $user->projects()->exists();
     }
 
@@ -40,8 +38,8 @@ class TicketPolicy
         }
 
         return $ticket->created_by == $user->id ||
-               $ticket->assignees()->where('users.id', $user->id)->exists() ||
-               ($ticket->project && $ticket->project->members()->where('users.id', $user->id)->exists());
+               $ticket->assignees->contains($user->id) ||
+               ($ticket->project && $ticket->project->members->contains($user->id));
     }
 
     public function update(User $user, Ticket $ticket): bool
@@ -51,8 +49,8 @@ class TicketPolicy
         }
 
         return $ticket->created_by == $user->id ||
-               $ticket->assignees()->where('users.id', $user->id)->exists() ||
-               ($ticket->project && $ticket->project->members()->where('users.id', $user->id)->exists());
+               $ticket->assignees->contains($user->id) ||
+               ($ticket->project && $ticket->project->members->contains($user->id));
     }
 
     public function create(User $user): bool

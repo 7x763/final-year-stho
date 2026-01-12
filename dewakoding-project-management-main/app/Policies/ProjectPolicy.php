@@ -30,7 +30,7 @@ class ProjectPolicy
             return true;
         }
 
-        return $project->members()->where('users.id', $authUser->id)->exists();
+        return $project->members->contains($authUser->id);
     }
 
     public function create(AuthUser $authUser): bool
@@ -44,7 +44,7 @@ class ProjectPolicy
             return true;
         }
 
-        return $project->members()->where('users.id', $authUser->id)->exists();
+        return $project->members->contains($authUser->id);
     }
 
     public function delete(AuthUser $authUser, Project $project): bool
