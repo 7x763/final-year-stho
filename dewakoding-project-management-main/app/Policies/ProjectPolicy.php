@@ -11,15 +11,26 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class ProjectPolicy
 {
     use HandlesAuthorization;
+
+    public function before(AuthUser $authUser, $ability)
+    {
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
+    }
     
     public function viewAny(AuthUser $authUser): bool
     {
-        return $authUser->can('view_any_project');
+        return true;
     }
 
     public function view(AuthUser $authUser, Project $project): bool
     {
-        return $authUser->can('view_project');
+        if ($authUser->can('view_project')) {
+            return true;
+        }
+
+        return $project->members()->where('users.id', $authUser->id)->exists();
     }
 
     public function create(AuthUser $authUser): bool
@@ -29,7 +40,11 @@ class ProjectPolicy
 
     public function update(AuthUser $authUser, Project $project): bool
     {
-        return $authUser->can('update_project');
+        if ($authUser->can('update_project')) {
+            return true;
+        }
+
+        return $project->members()->where('users.id', $authUser->id)->exists();
     }
 
     public function delete(AuthUser $authUser, Project $project): bool

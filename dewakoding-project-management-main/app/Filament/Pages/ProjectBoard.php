@@ -411,13 +411,13 @@ class ProjectBoard extends Page
             return false;
         }
 
-        if (! auth()->user()->can('view_ticket')) {
-            return false;
+        if (auth()->user()->hasRole(['super_admin'])) {
+            return true;
         }
 
-        return auth()->user()->hasRole(['super_admin'])
-            || $ticket->user_id === auth()->id()
-            || $ticket->assignees()->where('users.id', auth()->id())->exists();
+        return $ticket->created_by == auth()->id()
+            || $ticket->assignees()->where('users.id', auth()->id())->exists()
+            || $ticket->project->members()->where('users.id', auth()->id())->exists();
     }
 
     private function canEditTicket(?Ticket $ticket): bool
@@ -426,18 +426,13 @@ class ProjectBoard extends Page
             return false;
         }
 
-        // Check Filament Shield permission for updating tickets
-        if (! auth()->user()->can('update_ticket')) {
-            return false;
+        if (auth()->user()->hasRole(['super_admin'])) {
+            return true;
         }
 
-        // Additional business logic: user can edit if they are:
-        // 1. Super admin (already covered by permission above)
-        // 2. The ticket creator
-        // 3. Assigned to the ticket
-        return auth()->user()->hasRole(['super_admin'])
-            || $ticket->user_id === auth()->id()
-            || $ticket->assignees()->where('users.id', auth()->id())->exists();
+        return $ticket->created_by == auth()->id()
+            || $ticket->assignees()->where('users.id', auth()->id())->exists()
+            || $ticket->project->members()->where('users.id', auth()->id())->exists();
     }
 
     private function canManageTicket(?Ticket $ticket): bool
@@ -445,13 +440,14 @@ class ProjectBoard extends Page
         if (! $ticket) {
             return false;
         }
-        if (! auth()->user()->can('update_ticket')) {
-            return false;
+
+        if (auth()->user()->hasRole(['super_admin'])) {
+            return true;
         }
 
-        return auth()->user()->hasRole(['super_admin'])
-            || $ticket->user_id === auth()->id()
-            || $ticket->assignees()->where('users.id', auth()->id())->exists();
+        return $ticket->created_by == auth()->id()
+            || $ticket->assignees()->where('users.id', auth()->id())->exists()
+            || $ticket->project->members()->where('users.id', auth()->id())->exists();
     }
 
     public function exportTickets(array $selectedColumns): void
