@@ -44,11 +44,6 @@ class TicketPolicy
         return $authUser->can('create_ticket');
     }
 
-    public function update(AuthUser $authUser, Ticket $ticket): bool
-    {
-        return $authUser->can('update_ticket');
-    }
-
     public function delete(AuthUser $authUser, Ticket $ticket): bool
     {
         return $authUser->can('delete_ticket');
