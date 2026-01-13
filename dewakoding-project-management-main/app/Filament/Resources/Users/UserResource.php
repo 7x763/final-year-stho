@@ -96,27 +96,21 @@ class UserResource extends Resource
                     ->label('Vai trò')
                     ->badge()
                     ->separator(',')
-                    ->tooltip(fn (User $record): string => $record->roles->pluck('name')->join(', ') ?: 'Không có vai trò')
                     ->sortable(),
 
                 TextColumn::make('projects_count')
                     ->label('Dự án')
                     ->counts('projects')
-                    ->tooltip(fn (User $record): string => $record->projects->pluck('name')->join(', ') ?: 'Không có dự án')
                     ->sortable(),
 
                 TextColumn::make('assigned_tickets_count')
                     ->label('Vé được giao')
                     ->counts('assignedTickets')
-                    ->tooltip('Số lượng vé hỗ trợ được giao cho người dùng này')
                     ->sortable(),
 
                 TextColumn::make('created_tickets_count')
                     ->label('Vé đã tạo')
-                    ->getStateUsing(function (User $record): int {
-                        return $record->createdTickets()->count();
-                    })
-                    ->tooltip('Số lượng vé hỗ trợ do người dùng này tạo')
+                    ->counts('createdTickets')
                     ->sortable(),
 
                 TextColumn::make('email_verified_at')
