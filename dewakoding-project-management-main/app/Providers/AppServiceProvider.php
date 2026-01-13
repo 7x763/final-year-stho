@@ -26,6 +26,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        set_time_limit(120);
         Livewire::component('edit-comment-modal', EditCommentModal::class);
         FilamentShield::buildPermissionKeyUsing(
             function (string $entity, string $affix, string $subject, string $case, string $separator) {
