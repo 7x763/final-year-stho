@@ -147,7 +147,7 @@ class TicketsRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
-            ->modifyQueryUsing(fn (Builder $query) => $query
+            ->modifyQueryUsing(fn (\Illuminate\Database\Eloquent\Builder $query) => $query
                 ->select(['tickets.id', 'tickets.project_id', 'tickets.ticket_status_id', 'tickets.epic_id', 'tickets.created_by', 'tickets.uuid', 'tickets.name', 'tickets.start_date', 'tickets.due_date', 'tickets.created_at'])
                 ->with([
                     'status:id,name',
@@ -230,7 +230,7 @@ class TicketsRelationManager extends RelationManager
                 // UPDATED: Filter by assignees
                 SelectFilter::make('assignees')
                     ->label('Người thực hiện')
-                    ->relationship('assignees', 'name', modifyQueryUsing: function (Builder $query) {
+                    ->relationship('assignees', 'name', modifyQueryUsing: function (\Illuminate\Database\Eloquent\Builder $query) {
                         $projectId = $this->getOwnerRecord()->id;
                         return $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));
                     })
@@ -241,7 +241,7 @@ class TicketsRelationManager extends RelationManager
                 // Filter by creator
                 SelectFilter::make('created_by')
                     ->label('Người tạo')
-                    ->relationship('creator', 'name', modifyQueryUsing: function (Builder $query) {
+                    ->relationship('creator', 'name', modifyQueryUsing: function (\Illuminate\Database\Eloquent\Builder $query) {
                         $projectId = $this->getOwnerRecord()->id;
                         return $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));
                     })
