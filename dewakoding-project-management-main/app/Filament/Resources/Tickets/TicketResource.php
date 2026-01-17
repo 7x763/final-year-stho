@@ -55,7 +55,7 @@ class TicketResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        $query = parent::getEloquentQuery()->with(['status', 'priority', 'assignees', 'creator', 'epic']);
+        $query = parent::getEloquentQuery()->with(['project', 'status', 'priority', 'assignees', 'creator', 'epic']);
         $user = auth()->user();
 
         if ($user && ! $user->isSuperAdmin()) {
@@ -65,8 +65,10 @@ class TicketResource extends Resource
                     $query->where('users.id', $userId);
                 })
                     ->orWhere('created_by', $userId)
-                    ->orWhereHas('project.members', function ($query) use ($userId): void {
-                        $query->where('users.id', $userId);
+                    ->orWhereIn('project_id', function ($query) use ($userId) {
+                        $query->select('project_id')
+                            ->from('project_members')
+                            ->where('user_id', $userId);
                     });
             });
         }
@@ -194,13 +196,10 @@ class TicketResource extends Resource
                                 return $query->whereRaw('1 = 0');
                             }
 
-                            $project = Project::find($projectId);
-                            if (! $project) {
-                                return $query->whereRaw('1 = 0');
-                            }
-
-                            return $query->whereHas('projects', function ($query) use ($projectId): void {
-                                $query->where('projects.id', $projectId);
+                            return $query->whereIn('users.id', function ($query) use ($projectId) {
+                                $query->select('user_id')
+                                    ->from('project_members')
+                                    ->where('project_id', $projectId);
                             });
                         }
                     )
@@ -220,11 +219,12 @@ class TicketResource extends Resource
                             }
                             // $value is an array of IDs for multiple select
                             $userIds = is_array($value) ? $value : [$value];
-                            $project = Project::find($projectId);
-                            if (! $project) {
-                                return;
-                            }
-                            $memberIds = $project->members()->pluck('users.id')->map(fn($id) => (string) $id)->toArray();
+                            $memberIds = \Illuminate\Support\Facades\DB::table('project_members')
+                                ->where('project_id', $projectId)
+                                ->pluck('user_id')
+                                ->map(fn ($id) => (string) $id)
+                                ->toArray();
+
                             foreach ($userIds as $userId) {
                                 if (! in_array((string) $userId, $memberIds)) {
                                     $fail("Một hoặc nhiều người được chọn không phải là thành viên của dự án này.");
@@ -474,8 +474,10 @@ class TicketResource extends Resource
                     $query->where('users.id', $userId);
                 })
                     ->orWhere('created_by', $userId)
-                    ->orWhereHas('project.members', function ($query) use ($userId): void {
-                        $query->where('users.id', $userId);
+                    ->orWhereIn('project_id', function ($query) use ($userId) {
+                        $query->select('project_id')
+                            ->from('project_members')
+                            ->where('user_id', $userId);
                     });
             });
         }

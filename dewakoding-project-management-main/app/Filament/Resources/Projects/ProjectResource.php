@@ -51,6 +51,12 @@ class ProjectResource extends Resource
         return 'Dự án';
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withCount(['tickets', 'completedTickets']);
+    }
+
     public static function form(Schema $schema): Schema
     {
         return $schema
@@ -112,6 +118,12 @@ class ProjectResource extends Resource
                     ->visible(fn ($get) => $get('is_pinned'))
                     ->dehydrated(true),
             ]);
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withCount(['tickets', 'completedTickets']);
     }
 
     public static function table(Table $table): Table
