@@ -103,9 +103,4 @@ class TicketCommentResource extends Resource
     {
         return false;
     }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()->with(['ticket', 'user']);
-    }
 }

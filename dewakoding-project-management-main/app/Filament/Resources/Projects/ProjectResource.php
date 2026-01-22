@@ -120,12 +120,6 @@ class ProjectResource extends Resource
             ]);
     }
 
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withCount(['tickets', 'completedTickets']);
-    }
-
     public static function table(Table $table): Table
     {
         return $table

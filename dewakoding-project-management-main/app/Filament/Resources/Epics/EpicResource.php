@@ -139,11 +139,8 @@ class EpicResource extends Resource
         $user = auth()->user();
 
         if ($user && ! $user->isSuperAdmin()) {
-            $userId = $user->id;
-            $query->whereIn('project_id', function ($query) use ($userId) {
-                $query->select('project_id')
-                    ->from('project_members')
-                    ->where('user_id', $userId);
+            $query->whereHas('project.members', function (Builder $query): void {
+                $query->where('user_id', auth()->id());
             });
         }
 
