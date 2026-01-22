@@ -14,7 +14,7 @@ class ProjectHealthCheck extends Page
 
     protected static string $resource = ProjectResource::class;
 
-    protected static string $view = 'filament.resources.projects.pages.project-health-check';
+    protected string $view = 'filament.resources.projects.pages.project-health-check';
 
     public $analysis;
 
