@@ -21,6 +21,11 @@ class ViewProject extends ViewRecord
     {
         return [
             EditAction::make(),
+            Action::make('health_check')
+                ->label('Kiểm tra sức khỏe')
+                ->icon('heroicon-o-heart')
+                ->color('danger')
+                ->url(fn () => ProjectResource::getUrl('health-check', ['record' => $this->record])),
             Action::make('board')
                 ->label('Project Board')
                 ->icon('heroicon-o-view-columns')

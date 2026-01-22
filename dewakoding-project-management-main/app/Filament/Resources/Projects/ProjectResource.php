@@ -6,6 +6,7 @@ use App\Filament\Resources\ProjectResource\Pages;
 use App\Filament\Resources\Projects\Pages\CreateProject;
 use App\Filament\Resources\Projects\Pages\EditProject;
 use App\Filament\Resources\Projects\Pages\ListProjects;
+use App\Filament\Resources\Projects\Pages\ProjectHealthCheck;
 use App\Filament\Resources\Projects\Pages\ViewProject;
 use App\Filament\Resources\Projects\RelationManagers\EpicsRelationManager;
 use App\Filament\Resources\Projects\RelationManagers\MembersRelationManager;
@@ -28,7 +29,8 @@ use Filament\Schemas\Schema;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Table;
+use Filament\Tables\Actions\Action;
+use Filament\Actions\Action as HeaderAction;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProjectResource extends Resource
@@ -49,12 +51,6 @@ class ProjectResource extends Resource
     public static function getPluralModelLabel(): string
     {
         return 'Dự án';
-    }
-
-    public static function getEloquentQuery(): Builder
-    {
-        return parent::getEloquentQuery()
-            ->withCount(['tickets', 'completedTickets']);
     }
 
     public static function form(Schema $schema): Schema
@@ -200,6 +196,11 @@ class ProjectResource extends Resource
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->recordActions([
+                Action::make('health_check')
+                    ->label('Kiểm tra sức khỏe')
+                    ->icon('heroicon-o-heart')
+                    ->color('danger')
+                    ->url(fn (Project $record): string => static::getUrl('health-check', ['record' => $record])),
                 ViewAction::make(),
                 EditAction::make(),
             ])
@@ -228,6 +229,7 @@ class ProjectResource extends Resource
             'create' => CreateProject::route('/create'),
             'view' => ViewProject::route('/{record}'),
             'edit' => EditProject::route('/{record}/edit'),
+            'health-check' => ProjectHealthCheck::route('/{record}/health-check'),
             // Hapus baris ini: 'gantt-chart' => Pages\ProjectGanttChart::route('/gantt-chart'),
         ];
     }
