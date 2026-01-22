@@ -74,7 +74,7 @@ class TicketResource extends Resource
         return $query;
     }
 
-    public static function form(Schema $schema): Schema
+    public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
         $projectId = request()->query('project_id') ?? request()->input('project_id');
         $statusId = request()->query('ticket_status_id') ?? request()->input('ticket_status_id');
@@ -252,7 +252,7 @@ class TicketResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public static function table(\Filament\Tables\Table $table): \Filament\Tables\Table
     {
         return $table
             ->columns([

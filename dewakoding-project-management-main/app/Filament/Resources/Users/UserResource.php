@@ -43,7 +43,7 @@ class UserResource extends Resource
         return 'Người dùng';
     }
 
-    public static function form(Schema $schema): Schema
+    public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
     {
         return $schema
             ->components([
@@ -78,7 +78,7 @@ class UserResource extends Resource
             ]);
     }
 
-    public static function table(Table $table): Table
+    public static function table(\Filament\Tables\Table $table): \Filament\Tables\Table
     {
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['roles']))
