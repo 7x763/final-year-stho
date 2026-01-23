@@ -40,10 +40,7 @@ class StatsOverview extends BaseWidget
         $totalProjects = Project::count();
         $totalTickets = Ticket::count();
         $usersCount = User::count();
-        $myTickets = DB::table('tickets')
-            ->join('ticket_users', 'tickets.id', '=', 'ticket_users.ticket_id')
-            ->where('ticket_users.user_id', auth()->id())
-            ->count();
+        $myTickets = auth()->user()->assignedTickets()->count();
 
         return [
             Stat::make('Tổng số dự án', $totalProjects)
@@ -73,39 +70,32 @@ class StatsOverview extends BaseWidget
         $user = auth()->user();
         $userId = $user->id;
 
-        $myProjectIds = DB::table('project_members')
-            ->where('user_id', $userId)
-            ->pluck('project_id')
-            ->toArray();
+        $myProjectIds = $user->projects()->pluck('projects.id')->toArray();
 
         $myProjectsCount = count($myProjectIds);
 
         $projectTicketsCount = Ticket::whereIn('project_id', $myProjectIds)->count();
 
-        $myAssignedTicketsCount = DB::table('ticket_users')
-            ->where('user_id', $userId)
-            ->count();
+        $myAssignedTicketsCount = $user->assignedTickets()->count();
 
-        $myCreatedTicketsCount = Ticket::where('created_by', $userId)->count();
+        $myCreatedTicketsCount = $user->createdTickets()->count();
 
         $newTicketsThisWeekCount = Ticket::whereIn('project_id', $myProjectIds)
-            ->where('created_at', '>=', Carbon::now()->subDays(7))
+            ->where('created_at', '>=', now()->subDays(7))
             ->count();
 
-        $myOverdueTicketsCount = DB::table('tickets')
-            ->join('ticket_users', 'tickets.id', '=', 'ticket_users.ticket_id')
-            ->join('ticket_statuses', 'tickets.ticket_status_id', '=', 'ticket_statuses.id')
-            ->where('ticket_users.user_id', $userId)
-            ->where('tickets.due_date', '<', Carbon::now())
-            ->whereNotIn('ticket_statuses.name', ['Completed', 'Done', 'Closed'])
+        $myOverdueTicketsCount = $user->assignedTickets()
+            ->where('tickets.due_date', '<', now())
+            ->whereHas('status', function ($query) {
+                $query->whereNotIn('name', ['Completed', 'Done', 'Closed']);
+            })
             ->count();
 
-        $myCompletedThisWeekCount = DB::table('tickets')
-            ->join('ticket_users', 'tickets.id', '=', 'ticket_users.ticket_id')
-            ->join('ticket_statuses', 'tickets.ticket_status_id', '=', 'ticket_statuses.id')
-            ->where('ticket_users.user_id', $userId)
-            ->whereIn('ticket_statuses.name', ['Completed', 'Done', 'Closed'])
-            ->where('tickets.updated_at', '>=', Carbon::now()->subDays(7))
+        $myCompletedThisWeekCount = $user->assignedTickets()
+            ->whereHas('status', function ($query) {
+                $query->whereIn('name', ['Completed', 'Done', 'Closed']);
+            })
+            ->where('tickets.updated_at', '>=', now()->subDays(7))
             ->count();
 
         $teamMembersCount = DB::table('project_members')
