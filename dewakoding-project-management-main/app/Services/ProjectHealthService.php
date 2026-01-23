@@ -8,6 +8,7 @@ use App\Models\TicketHistory;
 use App\Models\TicketStatus;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use OpenAI\Laravel\Facades\OpenAI;
 
 class ProjectHealthService
 {
@@ -21,14 +22,56 @@ class ProjectHealthService
         $bottlenecks = $this->getBottlenecks($projectId);
         $forecast = $this->getForecast($project);
         
-        return [
+        $analysis = [
             'project_name' => $project->name,
             'overall_status' => $this->calculateOverallStatus($forecast),
             'forecast' => $forecast,
             'bottlenecks' => $bottlenecks,
             'recommendations' => $this->generateRecommendations($bottlenecks, $forecast),
         ];
+
+        $analysis['ai_summary'] = $this->getAiAnalysis($analysis);
+
+        return $analysis;
     }
+
+    /**
+     * Get AI analysis from OpenAI.
+     */
+    private function getAiAnalysis(array $data): string
+    {
+        if (!config('openai.api_key') || str_contains(config('openai.api_key'), 'your-openai-api-key')) {
+            return "Chưa cấu hình OpenAI API Key để nhận phân tích chuyên sâu.";
+        }
+
+        try {
+            $prompt = "Bạn là một chuyên gia quản lý dự án Agile. Dưới đây là dữ liệu về sức khỏe của dự án '{$data['project_name']}':\n";
+            $prompt .= "- Trạng thái tổng thể: {$data['overall_status']}\n";
+            $prompt .= "- Tiến độ: {$data['forecast']['progress']}%\n";
+            $prompt .= "- Vận tốc hoàn thành: {$data['forecast']['velocity']} ticket/ngày\n";
+            $prompt .= "- Dự kiến hoàn thành: {$data['forecast']['estimated_completion_date']}\n";
+            $prompt .= "- Thông điệp: {$data['forecast']['message']}\n";
+            $prompt .= "- Các nút thắt cổ chai:\n";
+            foreach ($data['bottlenecks'] as $b) {
+                if ($b['is_bottleneck']) {
+                    $prompt .= "  + {$b['status_name']}: trung bình {$b['avg_duration_hours']} giờ (Cảnh báo nghẽn)\n";
+                }
+            }
+            $prompt .= "\nHãy đưa ra một đoạn nhận xét ngắn gọn (khoảng 3-4 câu) bằng tiếng Việt về tình hình dự án và lời khuyên chiến lược.";
+
+            $response = OpenAI::chat()->create([
+                'model' => 'gpt-3.5-turbo',
+                'messages' => [
+                    ['role' => 'user', 'content' => $prompt],
+                ],
+            ]);
+
+            return $response->choices[0]->message->content;
+        } catch (\Exception $e) {
+            return "Không thể kết nối với AI: " . $e->getMessage();
+        }
+    }
+
 
     /**
      * Identify bottlenecks based on TicketHistory.

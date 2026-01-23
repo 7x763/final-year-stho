@@ -67,6 +67,14 @@
 
         {{-- Recommendations --}}
         <x-filament::section class="md:col-span-2">
+            <x-slot name="heading">Phân tích chuyên sâu từ AI</x-slot>
+            <div class="p-4 bg-primary-50 dark:bg-primary-900/10 border-l-4 border-primary-600 rounded-r-lg italic text-gray-800 dark:text-gray-200">
+                {{ $analysis['ai_summary'] }}
+            </div>
+        </x-filament::section>
+
+        {{-- Recommendations --}}
+        <x-filament::section class="md:col-span-2">
             <x-slot name="heading">Gợi ý từ AI</x-slot>
             <ul class="list-disc list-inside space-y-2">
                 @foreach($analysis['recommendations'] as $recommendation)
