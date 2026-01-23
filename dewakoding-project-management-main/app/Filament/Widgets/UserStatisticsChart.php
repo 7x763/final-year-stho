@@ -21,7 +21,7 @@ class UserStatisticsChart extends ChartWidget
 
     protected ?string $maxHeight = '300px';
 
-    protected ?string $pollingInterval = '30s';
+    protected ?string $pollingInterval = '120s';
 
     protected function getData(): array
     {

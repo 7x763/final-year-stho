@@ -220,6 +220,8 @@ class UserResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::count();
+        return cache()->remember('nav_badge_users_count', now()->addMinutes(5), function () {
+            return (string) static::getModel()::count();
+        });
     }
 }

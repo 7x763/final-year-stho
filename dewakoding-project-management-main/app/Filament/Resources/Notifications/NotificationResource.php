@@ -154,7 +154,14 @@ class NotificationResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return auth()->user()?->unreadNotifications()->count() ?: null;
+        $user = auth()->user();
+        if (! $user) {
+            return null;
+        }
+
+        return cache()->remember('nav_badge_unread_notifications_' . $user->id, now()->addMinutes(1), function () use ($user) {
+            return (string) ($user->unreadNotifications()->count() ?: '');
+        }) ?: null;
     }
 
     public static function getNavigationBadgeColor(): ?string

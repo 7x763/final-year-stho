@@ -465,21 +465,25 @@ class TicketResource extends Resource
             return null;
         }
 
-        $query = Ticket::query();
+        $cacheKey = 'nav_badge_tickets_' . $user->id;
 
-        if (! $user->isSuperAdmin()) {
-            $userId = $user->id;
-            $query->where(function ($query) use ($userId): void {
-                $query->whereHas('assignees', function ($query) use ($userId): void {
-                    $query->where('users.id', $userId);
-                })
-                    ->orWhere('created_by', $userId)
-                    ->orWhereHas('project.members', function ($query) use ($userId): void {
+        return cache()->remember($cacheKey, now()->addMinutes(2), function () use ($user) {
+            $query = Ticket::query();
+
+            if (! $user->isSuperAdmin()) {
+                $userId = $user->id;
+                $query->where(function ($query) use ($userId): void {
+                    $query->whereHas('assignees', function ($query) use ($userId): void {
                         $query->where('users.id', $userId);
-                    });
-            });
-        }
+                    })
+                        ->orWhere('created_by', $userId)
+                        ->orWhereHas('project.members', function ($query) use ($userId): void {
+                            $query->where('users.id', $userId);
+                        });
+                });
+            }
 
-        return (string) $query->count();
+            return (string) $query->count();
+        });
     }
 }

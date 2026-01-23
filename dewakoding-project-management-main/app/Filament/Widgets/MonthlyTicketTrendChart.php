@@ -23,7 +23,7 @@ class MonthlyTicketTrendChart extends ChartWidget
 
     protected ?string $maxHeight = '300px';
 
-    protected ?string $pollingInterval = '60s';
+    protected ?string $pollingInterval = '180s';
 
     protected function getData(): array
     {

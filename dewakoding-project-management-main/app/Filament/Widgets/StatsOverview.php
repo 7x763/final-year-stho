@@ -15,7 +15,7 @@ class StatsOverview extends BaseWidget
 {
     use HasWidgetShield;
 
-    protected ?string $pollingInterval = '30s';
+    protected ?string $pollingInterval = '60s';
 
     protected ?string $heading = 'Tổng quan';
 
