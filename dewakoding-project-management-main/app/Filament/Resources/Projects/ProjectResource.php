@@ -29,8 +29,7 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Actions\Action;
-use Filament\Actions\Action as HeaderAction;
+use Filament\Actions\Action;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProjectResource extends Resource
