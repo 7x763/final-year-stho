@@ -22,13 +22,17 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $user = auth()->user();
-        $isSuperAdmin = $user->hasRole('super_admin');
+        $cacheKey = 'stats_overview_' . $user->id;
 
-        if ($isSuperAdmin) {
-            return $this->getSuperAdminStats();
-        } else {
-            return $this->getUserStats();
-        }
+        return cache()->remember($cacheKey, now()->addMinutes(5), function () use ($user) {
+            $isSuperAdmin = $user->hasRole('super_admin');
+
+            if ($isSuperAdmin) {
+                return $this->getSuperAdminStats();
+            } else {
+                return $this->getUserStats();
+            }
+        });
     }
 
     protected function getSuperAdminStats(): array

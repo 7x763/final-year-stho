@@ -47,6 +47,11 @@ class TicketCommentResource extends Resource
             ]);
     }
 
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()->with(['ticket', 'user']);
+    }
+
     public static function table(\Filament\Tables\Table $table): \Filament\Tables\Table
     {
         return $table
