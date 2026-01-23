@@ -13,19 +13,33 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // Tạo tài khoản Admin mặc định
+        User::firstOrCreate(
+            ['email' => 'admin@admin.com'],
+            [
+                'name' => 'Super Admin',
+                'password' => bcrypt('password'),
+            ]
+        );
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        User::firstOrCreate(
+            ['email' => 'test@example.com'],
+            [
+                'name' => 'Test User',
+                'password' => bcrypt('password'),
+            ]
+        );
 
-        // Jalankan RoleSeeder
+        // Chạy RoleSeeder để tạo quyền và vai trò
         $this->call(RoleSeeder::class);
 
-        $user = User::where('email', 'test@example.com')->first();
-        if ($user) {
-            $user->assignRole('super_admin');
+        // Gán quyền super_admin cho các tài khoản admin
+        $admins = User::whereIn('email', ['admin@admin.com', 'test@example.com'])->get();
+        foreach ($admins as $admin) {
+            $admin->assignRole('super_admin');
         }
+
+        // Chạy DemoSeeder để tạo dữ liệu mẫu
+        $this->call(DemoSeeder::class);
     }
 }
