@@ -29,7 +29,11 @@ use Filament\Tables\Table;
 use Filament\Tables\Columns\ColorColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Actions\Action;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\BulkActionGroup;
+use Filament\Tables\Actions\DeleteBulkAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Illuminate\Database\Eloquent\Builder;
 
 class ProjectResource extends Resource
@@ -194,7 +198,7 @@ class ProjectResource extends Resource
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->recordActions([
+            ->actions([
                 Action::make('health_check')
                     ->label('Kiểm tra sức khỏe')
                     ->icon('heroicon-o-heart')
