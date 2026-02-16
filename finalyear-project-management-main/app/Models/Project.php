@@ -1,0 +1,134 @@
+<?php
+
+namespace App\Models;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
+class Project extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'description',
+        'ticket_prefix',
+        'color',
+        'start_date',
+        'end_date',
+        'pinned_date',
+        'is_pinned',
+        'ai_analysis',
+        'ai_analysis_at',
+        'ai_analysis_status',
+    ];
+
+    protected $casts = [
+        'start_date' => 'date',
+        'end_date' => 'date',
+        'pinned_date' => 'datetime',
+        'is_pinned' => 'boolean',
+        'ai_analysis_at' => 'datetime',
+    ];
+
+    public function pin(): void
+    {
+        $this->update([
+            'pinned_date' => now(),
+            'is_pinned' => true,
+        ]);
+    }
+
+    public function unpin(): void
+    {
+        $this->update([
+            'pinned_date' => null,
+            'is_pinned' => false,
+        ]);
+    }
+
+    public function ticketStatuses(): HasMany
+    {
+        return $this->hasMany(TicketStatus::class);
+    }
+
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class);
+    }
+
+    public function members(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_members')
+            ->withTimestamps();
+    }
+
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'project_members')
+            ->withTimestamps();
+    }
+
+    public function epics(): HasMany
+    {
+        return $this->hasMany(Epic::class);
+    }
+
+    public function notes(): HasMany
+    {
+        return $this->hasMany(ProjectNote::class);
+    }
+
+    public function completedTickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class)
+            ->whereHas('status', function ($query): void {
+                $query->where('is_completed', true);
+            });
+    }
+
+    public function getRemainingDaysAttribute()
+    {
+        if (! $this->end_date) {
+            return null;
+        }
+
+        $today = Carbon::today();
+        $endDate = Carbon::parse($this->end_date);
+
+        if ($today->gt($endDate)) {
+            return 0;
+        }
+
+        return $today->diffInDays($endDate);
+    }
+
+    public function getProgressPercentageAttribute(): float
+    {
+        $totalTickets = $this->tickets_count ?? $this->tickets()->count();
+
+        if ($totalTickets === 0) {
+            return 0.0;
+        }
+
+        $completedTickets = $this->completed_tickets_count ?? $this->completedTickets()->count();
+
+        return round(($completedTickets / $totalTickets) * 100, 1);
+    }
+
+    public function externalAccess(): HasOne
+    {
+        return $this->hasOne(ExternalAccess::class);
+    }
+
+    public function generateExternalAccess()
+    {
+        $this->externalAccess()?->delete();
+
+        return ExternalAccess::generateForProject($this->id);
+    }
+}
