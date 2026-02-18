@@ -53,17 +53,18 @@ Node.js & npm
 📦 Installation
 1. Clone repository
 git clone https://github.com/7x763/final-year-stho
+
 cd finalyear-project-management-main
 
-2. Install dependencies
+3. Install dependencies
 composer install
 npm install
 
-3. Environment setup
+4. Environment setup
 cp .env.example .env
 php artisan key:generate
 
-4. Database configuration
+5. Database configuration
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
@@ -71,20 +72,20 @@ DB_DATABASE=project_management
 DB_USERNAME=
 DB_PASSWORD=
 
-5. Run migrations
+6. Run migrations
 php artisan migrate
 php artisan storage:link
 
-6. Create admin user
+7. Create admin user
 php artisan make:filament-user
 
-7. Setup roles & permissions
+8. Setup roles & permissions
 php artisan shield:setup
 php artisan shield:install
 php artisan shield:super-admin
 php artisan shield:generate --all --option=policies
 
-8. Build assets & run server
+9. Build assets & run server
 npm run dev
 php artisan serve
 
@@ -93,7 +94,7 @@ php artisan serve
 Truy cập admin panel:
 👉 http://localhost:8000/admin
 
-Đăng nhập bằng tài khoản Filament
+Đăng nhập 
 
 Tạo Project → Ticket Status → Ticket
 
@@ -101,10 +102,12 @@ Quản lý Epic, Board, Timeline & báo cáo
 
 🔐 Google OAuth Login
 Environment config
+
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 Redirect URI
+
 /auth/google/callback
 
 📧 Queue & Email
