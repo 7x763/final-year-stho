@@ -80,7 +80,7 @@ class TicketsPerProjectChart extends ChartWidget
 
     protected function getType(): string
     {
-        return 'doughnut';
+        return 'bar';
     }
 
     protected function getOptions(): array
@@ -88,13 +88,20 @@ class TicketsPerProjectChart extends ChartWidget
         return [
             'plugins' => [
                 'legend' => [
-                    'display' => true,
+                    'display' => false,
                     'position' => 'right',
+                ],
+            ],
+            'scales' => [
+                'y' => [
+                    'beginAtZero' => true,
+                    'ticks' => [
+                        'stepSize' => 1,
+                    ],
                 ],
             ],
             'responsive' => true,
             'maintainAspectRatio' => false,
-            'cutout' => '60%', // Makes it a nice doughnut
         ];
     }
 }
