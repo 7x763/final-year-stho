@@ -1,4 +1,4 @@
-# DewaKoding Project Management
+
 
 🎉 **Now using Filament 4!** 🎉
 
@@ -45,8 +45,8 @@ A Laravel Filament 4 application for managing projects with ticket management an
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/SeptiawanAjiP/dewakoding-project-management
-   cd dewakoding-project-management
+   git clone https://github.com/7x763/final-year-stho
+   cd finalyear-project-management-main
    ```
 
 2. Install dependencies:
@@ -66,8 +66,8 @@ A Laravel Filament 4 application for managing projects with ticket management an
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
    DB_PORT=3306
-   DB_DATABASE=dewakoding_project_management
-   DB_USERNAME=root
+   DB_DATABASE=project_management
+   DB_USERNAME=
    DB_PASSWORD=
    ```
 
@@ -113,20 +113,6 @@ A Laravel Filament 4 application for managing projects with ticket management an
 5. Create and customize ticket statuses
 6. Add tickets and assign to team members
 
-## ⚠️ Upgrade from Filament 3 to Filament 4
-
-**Important Notice**: This project has been upgraded to Filament 4. If you're upgrading from a previous version that used Filament 3, please follow these steps carefully:
-
-### Prerequisites
-1. **Backup your database** before starting the upgrade process
-2. Make sure you have the latest version of the codebase
-
-### Filament Shield Upgrade Steps
-The upgrade process for Filament Shield requires special attention. Please read the official upgrade guide first:
-**[Filament Shield Upgrade Guide](https://github.com/bezhanSalleh/filament-shield?tab=readme-ov-file#upgrade)**
-
-### Required Commands
-After updating your dependencies and following the official guide, run the following command to regenerate Shield policies and permissions:
 
 ```bash
 php artisan shield:generate --all --option=policies
@@ -251,7 +237,7 @@ MAIL_USERNAME=your-email@gmail.com
 MAIL_PASSWORD=your-app-password
 MAIL_ENCRYPTION=tls
 MAIL_FROM_ADDRESS=your-email@gmail.com
-MAIL_FROM_NAME="DewaKoding Project Management"
+MAIL_FROM_NAME=" "
 ```
 
 ### 2. Queue Configuration
