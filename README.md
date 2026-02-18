@@ -93,7 +93,7 @@ php artisan serve
 Truy cập admin panel:
 👉 http://localhost:8000/admin
 
-Đăng nhập bằng tài khoản Filament
+Đăng nhập bằng tài khoản 
 
 Tạo Project → Ticket Status → Ticket
 
@@ -101,10 +101,12 @@ Quản lý Epic, Board, Timeline & báo cáo
 
 🔐 Google OAuth Login
 Environment config
+
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 
 Redirect URI
+
 /auth/google/callback
 
 📧 Queue & Email
