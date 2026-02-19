@@ -105,12 +105,14 @@ class AiCopilotService
             'controller', 'model', 'view', 'route', 'api', 'deploy', 'git', 
             'database', 'query', 'sql', 'function', 'class', 'method', 'variable',
             'example', 'implement', 'fix', 'debug', 'console', 'terminal', 
-            'composer', 'npm', 'yarn', 'run', 'import', 'export',
+            'composer', 'npm', 'yarn', 'run', 'import', 'export', 'algorithm', 
+            'logic', 'calculate', 'sort', 'search', 'optimize',
             
             // Tiếng Việt
             'lỗi', 'hàm', 'biến', 'viết code', 'viết hàm', 'tạo api', 'sửa lỗi', 'xây dựng hệ thống', 'lập trình',
             'hướng dẫn', 'làm sao để', 'làm thế nào', 'giải pháp', 'đoạn mã',
-            'kết nối db', 'cấu hình', 'triển khai', 'cơ sở dữ liệu', 'thư viện'
+            'kết nối db', 'cấu hình', 'triển khai', 'cơ sở dữ liệu', 'thư viện',
+            'thuật toán', 'logic', 'tính toán', 'sắp xếp', 'tìm kiếm', 'tối ưu', 'số lớn nhất'
         ];
 
         $questionLower = mb_strtolower($question);
