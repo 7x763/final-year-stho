@@ -233,6 +233,14 @@ class AiCopilotService
              }
         }
 
+        // Từ khóa: "người dùng", "user", "nhân viên" (số lượng user hệ thống)
+        if ((str_contains($question, 'người dùng') || str_contains($question, 'user') || str_contains($question, 'nhân viên')) 
+            && (str_contains($question, 'bao nhiêu') || str_contains($question, 'số lượng') || str_contains($question, 'tổng'))) {
+            $userCount = User::count();
+            $context .= "Thống kê người dùng hệ thống:\n";
+            $context .= "- Tổng số người dùng hiện tại: {$userCount}\n";
+        }
+
         return $context;
     }
 }
