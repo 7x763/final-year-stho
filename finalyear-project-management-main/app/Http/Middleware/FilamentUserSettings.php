@@ -21,7 +21,7 @@ class FilamentUserSettings
                 'primary' => $this->getColorConstant($savedColor),
             ]);
 
-            // $this->setNavigationStyle($userId);
+            $this->setNavigationStyle($userId);
         }
 
         return $next($request);
