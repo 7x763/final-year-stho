@@ -57,6 +57,16 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),
+                \Jeffgreco13\FilamentBreezy\BreezyCore::make()
+                    ->myProfile(
+                        shouldRegisterUserMenu: true,
+                        shouldRegisterNavigation: false,
+                        hasAvatars: false,
+                        slug: 'my-profile'
+                    )
+                    ->enableTwoFactorAuthentication(
+                        force: false,
+                    ),
             ])
             ->authMiddleware([
                 \App\Http\Middleware\AutoLoginMiddleware::class,
@@ -64,7 +74,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->passwordReset()
             ->emailVerification()
-            ->profile()
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_END,
