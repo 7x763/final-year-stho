@@ -32,6 +32,7 @@ sed -i 's/DB_DATABASE=laravel/DB_DATABASE=project_management/' .env
 sed -i 's/DB_USERNAME=root/DB_USERNAME=laravel_user/' .env
 sed -i 's/DB_PASSWORD=/DB_PASSWORD=MinhTho@2024/' .env
 sed -i 's|APP_URL=http://localhost|APP_URL=http://18.142.184.196|' .env
+sed -i 's/^GEMINI_API_KEY=.*/GEMINI_API_KEY=AIzaSyBRsRbo4U_hnIfnxSIvRBjlSdsQ4QuHXcw/' .env
 php artisan key:generate
 
 # 5. Install Dependencies
