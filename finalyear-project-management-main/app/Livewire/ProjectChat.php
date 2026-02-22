@@ -12,19 +12,24 @@ class ProjectChat extends Component
     public $input = '';
     public $messages = [];
     public $projectId = null;
+    public $isTyping = false;
 
     public function mount()
     {
-        // Initial greeting
-        $this->messages[] = [
-            'role' => 'assistant',
-            'content' => 'Xin chào! Tôi là AI Copilot. Tôi có thể giúp gì cho bạn về dự án?',
-        ];
+        // Load messages from session or initialize with greeting
+        $this->messages = session()->get('chat_messages', [
+            [
+                'role' => 'assistant',
+                'content' => 'Xin chào! Tôi là AI Copilot. Tôi có thể giúp gì cho bạn về dự án?',
+            ]
+        ]);
+
+        // Load open state from session
+        $this->isOpen = session()->get('chat_is_open', false);
 
         // Try to detect project ID from URL
         $route = Route::current();
         if ($route && $route->parameter('record')) {
-             // Assuming we are on a Project resource page where the record is the project
              $param = $route->parameter('record');
              if (is_numeric($param)) {
                  $this->projectId = (int) $param;
@@ -37,24 +42,45 @@ class ProjectChat extends Component
     public function toggleChat()
     {
         $this->isOpen = !$this->isOpen;
+        session()->put('chat_is_open', $this->isOpen);
     }
 
-    public function sendMessage(AiCopilotService $service)
+    public function clearChat()
+    {
+        $this->messages = [
+            [
+                'role' => 'assistant',
+                'content' => 'Xin chào! Tôi đã làm mới cuộc hội thoại. Tôi giúp được gì cho bạn?',
+            ]
+        ];
+        session()->put('chat_messages', $this->messages);
+    }
+
+    public function sendMessage()
     {
         if (trim($this->input) === '') return;
 
-        // User message
-        $this->messages[] = [
+        $userMessage = [
             'role' => 'user',
             'content' => $this->input,
         ];
 
+        $this->messages[] = $userMessage;
         $question = $this->input;
-        $this->input = ''; // Clear input
+        $this->input = ''; 
+        $this->isTyping = true;
 
-        // AI processing state (UI can show loading based on wire:loading)
-        
-        // Call service
+        // Save to session immediately
+        session()->put('chat_messages', $this->messages);
+
+        // Dispatch event to self for background processing
+        $this->dispatch('process-ai-response', question: $question);
+    }
+
+    #[\Livewire\Attributes\On('process-ai-response')]
+    public function handleAiResponse(AiCopilotService $service, string $question)
+    {
+        // Call slow service
         $response = $service->ask($question, $this->projectId);
 
         // Assistant message
@@ -62,6 +88,11 @@ class ProjectChat extends Component
             'role' => 'assistant',
             'content' => $response,
         ];
+
+        $this->isTyping = false;
+
+        // Save updated history
+        session()->put('chat_messages', $this->messages);
     }
 
     public function render()
