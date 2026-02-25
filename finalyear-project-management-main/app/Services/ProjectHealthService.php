@@ -52,8 +52,8 @@ class ProjectHealthService
     public function dispatchAnalysis(int $projectId): void
     {
         \App\Models\Project::where('id', $projectId)->update(['ai_analysis_status' => 'processing']);
-        // Use dispatchSync to ensure it runs immediately without needing a separate queue worker
-        \App\Jobs\AnalyzeProjectHealthJob::dispatchSync($projectId);
+        // Sử dụng dispatch (bất đồng bộ) để không làm treo trang web
+        \App\Jobs\AnalyzeProjectHealthJob::dispatch($projectId);
     }
 
     public function calculateStats(int $projectId): array
@@ -153,8 +153,8 @@ class ProjectHealthService
             $prompt .= "- **Rủi ro chính**: Chỉ ra điểm yếu nhất (người quá tải, quy trình chậm, hay ticket bị bỏ quên).\n";
             $prompt .= "- **Hành động đề xuất**: 3 việc cụ thể cần làm ngay.";
 
-            // Use gemini-2.5-flash
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
+            // Sử dụng gemini-1.5-flash giúp phản hồi nhanh hơn
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
 
             $response = Http::withOptions(['verify' => false])
                 ->withHeaders(['Content-Type' => 'application/json'])
