@@ -34,8 +34,9 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->registration(Register::class)
             ->colors([
-                'primary' => Color::Blue,
+            'primary' => Color::Blue,
             ])
+            ->font('Instrument Sans', provider: \Filament\FontProviders\GoogleFontProvider::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
