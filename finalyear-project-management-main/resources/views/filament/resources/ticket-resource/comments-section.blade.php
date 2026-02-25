@@ -3,7 +3,7 @@
     @php
         $ticket = $getRecord();
         $project = $ticket->project;
-        $canComment = $project->members()->where('users.id', auth()->id())->exists();
+        $canComment = auth()->user()->isSuperAdmin() || $project->members()->where('users.id', auth()->id())->exists();
         
         // Helper function to convert video img tags to video tags
         function convertVideoImgsToVideoTags($html) {
