@@ -57,8 +57,8 @@ class AiCopilotService
             // I will keep the original model string if it works, but `gemini-1.5-flash` is safer. Let's start with keeping it as is or safe.
             // Actually, let's just use the URL construction as before but variable system prompt.
             // $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={$apiKey}"; // Using a generally available fast model or keep previous?
-             // Sử dụng gemini-1.5-flash để tối ưu tốc độ phản hồi
-             $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
+             // Sử dụng gemini-2.5-flash (Model khả dụng cho API Key này)
+             $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
 
 
             $response = \Illuminate\Support\Facades\Http::withOptions([

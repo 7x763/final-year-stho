@@ -153,8 +153,8 @@ class ProjectHealthService
             $prompt .= "- **Rủi ro chính**: Chỉ ra điểm yếu nhất (người quá tải, quy trình chậm, hay ticket bị bỏ quên).\n";
             $prompt .= "- **Hành động đề xuất**: 3 việc cụ thể cần làm ngay.";
 
-            // Sử dụng gemini-1.5-flash giúp phản hồi nhanh hơn
-            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={$apiKey}";
+            // Sử dụng gemini-2.5-flash (Model khả dụng cho API Key này)
+            $url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={$apiKey}";
 
             $response = Http::withOptions(['verify' => false])
                 ->withHeaders(['Content-Type' => 'application/json'])
