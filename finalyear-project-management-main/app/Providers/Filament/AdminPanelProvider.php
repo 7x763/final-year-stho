@@ -36,7 +36,7 @@ class AdminPanelProvider extends PanelProvider
             ->colors([
             'primary' => Color::Blue,
             ])
-            ->font('Instrument Sans', provider: \Filament\FontProviders\GoogleFontProvider::class)
+            ->font('Be Vietnam Pro', provider: \Filament\FontProviders\GoogleFontProvider::class)
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -78,7 +78,7 @@ class AdminPanelProvider extends PanelProvider
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->renderHook(
                 \Filament\View\PanelsRenderHook::BODY_END,
-                fn () => \Illuminate\Support\Facades\Blade::render('@livewire(\'project-chat\')'),
+                fn () => auth()->check() ? \Illuminate\Support\Facades\Blade::render('@livewire(\'project-chat\')') : '',
             );
 
         return $panel;

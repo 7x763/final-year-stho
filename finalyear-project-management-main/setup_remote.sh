@@ -6,7 +6,7 @@ sudo apt install -y rsync
 
 # 1. Database Setup
 echo "Setting up Database..."
-sudo mysql -e "CREATE DATABASE IF NOT EXISTS project_management;"
+sudo mysql -e "CREATE DATABASE IF NOT EXISTS project_management CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
 sudo mysql -e "CREATE USER IF NOT EXISTS 'laravel_user'@'localhost' IDENTIFIED BY 'MinhTho2024';"
 sudo mysql -e "ALTER USER 'laravel_user'@'localhost' IDENTIFIED BY 'MinhTho2024';"
 sudo mysql -e "GRANT ALL PRIVILEGES ON project_management.* TO 'laravel_user'@'localhost';"
