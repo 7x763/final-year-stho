@@ -3,6 +3,38 @@ set -e
 
 echo "Starting Deployment..."
 
+# 0. Install PHP 8.4 if not already installed
+echo "Checking PHP version..."
+CURRENT_PHP=$(php -r 'echo PHP_VERSION;' 2>/dev/null | cut -d'.' -f1,2 || echo "0.0")
+if [[ "$CURRENT_PHP" != "8.4" ]]; then
+    echo "Installing PHP 8.4..."
+    sudo apt-get update
+    sudo apt-get install -y software-properties-common
+    sudo add-apt-repository -y ppa:ondrej/php
+    sudo apt-get update
+    sudo apt-get install -y php8.4 php8.4-fpm php8.4-mysql php8.4-mbstring php8.4-xml \
+        php8.4-bcmath php8.4-curl php8.4-gd php8.4-intl php8.4-zip php8.4-pdo
+
+    # Install Composer if not installed
+    if ! command -v composer &> /dev/null; then
+        echo "Installing Composer..."
+        curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/local/bin --filename=composer
+    fi
+
+    # Make php8.4 the default
+    sudo update-alternatives --set php /usr/bin/php8.4
+
+    # Stop old php-fpm if running, start php8.4-fpm
+    sudo systemctl stop php8.3-fpm 2>/dev/null || true
+    sudo systemctl disable php8.3-fpm 2>/dev/null || true
+    sudo systemctl enable php8.4-fpm
+    sudo systemctl start php8.4-fpm
+    echo "PHP 8.4 installed successfully."
+else
+    echo "PHP 8.4 already installed."
+    sudo systemctl start php8.4-fpm 2>/dev/null || true
+fi
+
 # 1. Database Setup
 echo "Setting up Database..."
 sudo mysql -e "CREATE DATABASE IF NOT EXISTS project_management CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
@@ -80,7 +112,7 @@ server {
     error_page 404 /index.php;
 
     location ~ \.php$ {
-        fastcgi_pass unix:/var/run/php/php8.3-fpm.sock;
+        fastcgi_pass unix:/var/run/php/php8.4-fpm.sock;
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
     }
