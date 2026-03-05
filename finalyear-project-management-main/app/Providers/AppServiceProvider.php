@@ -30,7 +30,6 @@ class AppServiceProvider extends ServiceProvider
         LanguageSwitch::configureUsing(function (LanguageSwitch $switch) {
             $switch
                 ->locales(['vi', 'en'])
-                ->renderHook('panels::user-menu.before')
                 ->circular()
                 ->visible(insidePanels: true, outsidePanels: true);
         });
