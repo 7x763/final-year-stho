@@ -12,7 +12,10 @@ class MonthlyTicketTrendChart extends ChartWidget
 {
     use HasWidgetShield;
 
-    protected ?string $heading = 'Xu hướng tạo vé hỗ trợ theo tháng';
+    public function getHeading(): ?string
+    {
+        return __('Monthly ticket creation trend');
+    }
 
     protected static ?int $sort = 4;
 
@@ -43,7 +46,7 @@ class MonthlyTicketTrendChart extends ChartWidget
         }
 
         $labels = $months->map(function ($month) {
-            return 'Tháng ' . $month->format('m Y');
+            return __('Month') . ' ' . $month->format('m Y');
         })->toArray();
 
         // Query tickets created per month
@@ -85,7 +88,7 @@ class MonthlyTicketTrendChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Vé đã tạo',
+                    'label' => __('Tickets created'),
                     'data' => $data,
                     'borderColor' => '#3B82F6',
                     'backgroundColor' => 'rgba(59, 130, 246, 0.1)',

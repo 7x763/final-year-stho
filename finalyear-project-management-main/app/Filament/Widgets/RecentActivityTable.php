@@ -17,7 +17,10 @@ class RecentActivityTable extends BaseWidget
 {
     use HasWidgetShield;
 
-    protected static ?string $heading = 'Hoạt động gần đây';
+    public function getHeading(): ?string
+    {
+        return __('Recent Activity');
+    }
 
     protected int|string|array $columnSpan = [
         'md' => 2,
@@ -41,20 +44,21 @@ class RecentActivityTable extends BaseWidget
             )
             ->columns([
                 TextColumn::make('activity_summary')
-                    ->label('Hoạt động')
+                    ->label(__('Activity'))
                     ->state(function (TicketHistory $record): string {
-                        $ticketName = $record->ticket->name ?? 'Vé không rõ';
+                        $ticketName = $record->ticket->name ?? __('Unknown ticket');
                         $trimmedName = strlen($ticketName) > 40 ? substr($ticketName, 0, 40).'...' : $ticketName;
-                        $userName = $record->user->name ?? 'Người dùng không rõ';
+                        $userName = $record->user->name ?? __('Unknown user');
+                        $changedStr = __('changed');
 
-                        return "<span class='text-primary-600 font-medium'>{$userName}</span> đã thay đổi \"{$trimmedName}\"";
+                        return "<span class='text-primary-600 font-medium'>{$userName}</span> {$changedStr} \"{$trimmedName}\"";
                     })
                     ->description(function (TicketHistory $record): string {
                         $isToday = $record->created_at->isToday();
                         $time = $isToday
                             ? $record->created_at->format('H:i')
                             : $record->created_at->format('d/m, H:i');
-                        $project = $record->ticket->project->name ?? 'Không có dự án';
+                        $project = $record->ticket->project->name ?? __('No project');
                         $uuid = $record->ticket->uuid ?? '';
 
                         return "{$time} • {$uuid} • {$project}";
@@ -63,9 +67,10 @@ class RecentActivityTable extends BaseWidget
                     ->searchable(['users.name', 'tickets.name', 'tickets.uuid'])
                     ->weight('medium'),
                 TextColumn::make('status.name')
-                    ->label('Trạng thái')
+                    ->label(__('Status'))
                     ->badge()
                     ->alignEnd()
+                    ->formatStateUsing(fn ($state) => __($state))
                     ->color(fn (TicketHistory $record): string => match ($record->status->name ?? '') {
                         'To Do', 'Backlog' => 'gray',
                         'In Progress', 'Doing' => 'warning',
@@ -78,13 +83,13 @@ class RecentActivityTable extends BaseWidget
             ->defaultSort('created_at', 'desc')
             ->filters([
                 Filter::make('date_range')
-                    ->label('Khoảng thời gian')
+                    ->label(__('Time range'))
                     ->schema([
                         DatePicker::make('start_date')
-                            ->label('Từ ngày')
+                            ->label(__('From date'))
                             ->default(today()),
                         DatePicker::make('end_date')
-                            ->label('Đến ngày')
+                            ->label(__('To date'))
                             ->default(today()),
                     ])
                     ->query(function ($query, array $data) {
@@ -99,22 +104,22 @@ class RecentActivityTable extends BaseWidget
                     ->indicateUsing(function (array $data): array {
                         $indicators = [];
                         if ($data['start_date'] ?? null) {
-                            $indicators[] = 'Từ: '.Carbon::parse($data['start_date'])->format('d/m/Y');
+                            $indicators[] = __('From date').': '.Carbon::parse($data['start_date'])->format('d/m/Y');
                         }
                         if ($data['end_date'] ?? null) {
-                            $indicators[] = 'Đến: '.Carbon::parse($data['end_date'])->format('d/m/Y');
+                            $indicators[] = __('To date').': '.Carbon::parse($data['end_date'])->format('d/m/Y');
                         }
 
                         return $indicators;
                     }),
 
                 Filter::make('today')
-                    ->label('Chỉ hôm nay')
+                    ->label(__('Only today'))
                     ->query(fn ($query) => $query->whereDate('created_at', today()))
                     ->toggle(),
 
                 SelectFilter::make('user')
-                    ->label('Người dùng')
+                    ->label(__('User'))
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload(),
@@ -125,7 +130,7 @@ class RecentActivityTable extends BaseWidget
                     ->label('')
                     ->icon('heroicon-o-arrow-top-right-on-square')
                     ->size('sm')
-                    ->tooltip('Mở vé hỗ trợ')
+                    ->tooltip(__('Open ticket'))
                     ->url(fn (TicketHistory $record): string => route('filament.admin.resources.tickets.view', $record->ticket)
                     )
                     ->openUrlInNewTab(),
@@ -135,8 +140,8 @@ class RecentActivityTable extends BaseWidget
             ->paginated([5, 25, 50])
             ->poll('30s')
             ->striped()
-            ->emptyStateHeading('Không có hoạt động nào')
-            ->emptyStateDescription('Không tìm thấy hoạt động nào của vé hỗ trợ trong khoảng thời gian đã chọn.')
+            ->emptyStateHeading(__('No activity'))
+            ->emptyStateDescription(__('No ticket activity found for the selected period.'))
             ->emptyStateIcon('heroicon-o-clock');
     }
 }

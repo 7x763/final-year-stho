@@ -40,16 +40,19 @@ class RoleResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Quản trị hệ thống';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('System Admin');
+    }
 
     public static function getModelLabel(): string
     {
-        return 'Vai trò';
+        return __('Role');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Vai trò';
+        return __('Roles');
     }
 
     public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
@@ -134,7 +137,8 @@ class RoleResource extends Resource
                 DeleteAction::make(),
             ])
             ->toolbarActions([
-                DeleteBulkAction::make(),
+                DeleteBulkAction::make()
+                    ->label(__('Delete Selected')),
             ]);
     }
 

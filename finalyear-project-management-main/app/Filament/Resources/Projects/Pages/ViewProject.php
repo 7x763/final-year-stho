@@ -22,22 +22,22 @@ class ViewProject extends ViewRecord
         return [
             EditAction::make(),
             Action::make('health_check')
-                ->label('Kiểm tra sức khỏe')
+                ->label(__('Health Check'))
                 ->icon('heroicon-o-heart')
                 ->color('danger')
                 ->url(fn () => ProjectResource::getUrl('health-check', ['record' => $this->record])),
             Action::make('board')
-                ->label('Project Board')
+                ->label(__('Project Board'))
                 ->icon('heroicon-o-view-columns')
                 ->color('info')
                 ->url(fn () => ProjectBoard::getUrl(['project_id' => $this->record->id])),
             Action::make('external_access')
-                ->label('External Dashboard')
+                ->label(__('External Dashboard'))
                 ->icon('heroicon-o-globe-alt')
                 ->color('success')
                 ->visible(fn () => auth()->user()->hasRole('super_admin'))
-                ->modalHeading('External Dashboard Access')
-                ->modalDescription('Share these credentials with external users to access the project dashboard.')
+                ->modalHeading(__('External Dashboard Access'))
+                ->modalDescription(__('Share these credentials with external users to access the project dashboard.'))
                 ->modalContent(function () {
                     $record = $this->record;
                     $externalAccess = $record->externalAccess;
@@ -56,7 +56,7 @@ class ViewProject extends ViewRecord
                     ]);
                 })
                 ->modalSubmitAction(false)
-                ->modalCancelActionLabel('Close'),
+                ->modalCancelActionLabel(__('Close')),
         ];
     }
 
@@ -64,44 +64,44 @@ class ViewProject extends ViewRecord
     {
         return $schema
             ->schema([
-                Section::make('Project Information')
+                Section::make(__('Project Information'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('name')
-                                    ->label('Project Name')
+                                    ->label(__('Project Name'))
                                     ->weight(FontWeight::Bold)
                                     ->size('lg'),
                                 TextEntry::make('ticket_prefix')
-                                    ->label('Ticket Prefix')
+                                    ->label(__('Ticket Prefix'))
                                     ->badge()
                                     ->color('primary'),
                             ]),
                         TextEntry::make('description')
-                            ->label('Description')
+                            ->label(__('Description'))
                             ->html()
                             ->columnSpanFull(),
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('start_date')
-                                    ->label('Start Date')
+                                    ->label(__('Start Date'))
                                     ->date('d/m/Y')
-                                    ->placeholder('Not set'),
+                                    ->placeholder(__('Not set')),
                                 TextEntry::make('end_date')
-                                    ->label('End Date')
+                                    ->label(__('End Date'))
                                     ->date('d/m/Y')
-                                    ->placeholder('Not set'),
+                                    ->placeholder(__('Not set')),
                             ]),
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('remaining_days')
-                                    ->label('Remaining Days')
+                                    ->label(__('Remaining Days'))
                                     ->getStateUsing(function ($record): ?string {
                                         if (! $record->end_date) {
-                                            return 'Not set';
+                                            return __('Not set');
                                         }
 
-                                        return $record->remaining_days.' days';
+                                        return $record->remaining_days.' '.__('days');
                                     })
                                     ->badge()
                                     ->color(fn ($record): string => ! $record->end_date ? 'gray' :
@@ -109,51 +109,51 @@ class ViewProject extends ViewRecord
                                         ($record->remaining_days <= 7 ? 'warning' : 'success'))
                                     ),
                                 TextEntry::make('pinned_date')
-                                    ->label('Pinned Status')
+                                    ->label(__('Pinned Status'))
                                     ->getStateUsing(function ($record): string {
-                                        return $record->pinned_date ? 'Pinned on '.$record->pinned_date->format('d/m/Y H:i') : 'Not pinned';
+                                        return $record->pinned_date ? __('Pinned on').' '.$record->pinned_date->format('d/m/Y H:i') : __('Not pinned');
                                     })
                                     ->badge()
                                     ->color(fn ($record): string => $record->pinned_date ? 'success' : 'gray'),
                             ]),
                     ]),
 
-                Section::make('Project Statistics')
+                Section::make(__('Project Statistics'))
                     ->schema([
                         Grid::make(4)
                             ->schema([
                                 TextEntry::make('members_count')
-                                    ->label('Total Members')
+                                    ->label(__('Total Members'))
                                     ->getStateUsing(fn ($record) => $record->members_count ?? $record->members()->count())
                                     ->badge()
                                     ->color('info'),
                                 TextEntry::make('tickets_count')
-                                    ->label('Total Tickets')
+                                    ->label(__('Total Tickets'))
                                     ->getStateUsing(fn ($record) => $record->tickets_count ?? $record->tickets()->count())
                                     ->badge()
                                     ->color('primary'),
                                 TextEntry::make('epics_count')
-                                    ->label('Total Epics')
+                                    ->label(__('Total Epics'))
                                     ->getStateUsing(fn ($record) => $record->epics_count ?? $record->epics()->count())
                                     ->badge()
                                     ->color('warning'),
                                 TextEntry::make('statuses_count')
-                                    ->label('Ticket Statuses')
+                                    ->label(__('Ticket Statuses'))
                                     ->getStateUsing(fn ($record) => $record->ticket_statuses_count ?? $record->ticketStatuses()->count())
                                     ->badge()
                                     ->color('success'),
                             ]),
                     ]),
 
-                Section::make('Timestamps')
+                Section::make(__('Timestamps'))
                     ->schema([
                         Grid::make(2)
                             ->schema([
                                 TextEntry::make('created_at')
-                                    ->label('Created At')
+                                    ->label(__('Created At'))
                                     ->dateTime('d/m/Y H:i'),
                                 TextEntry::make('updated_at')
-                                    ->label('Last Updated')
+                                    ->label(__('Last Updated'))
                                     ->dateTime('d/m/Y H:i'),
                             ]),
                     ])

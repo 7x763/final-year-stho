@@ -4,7 +4,7 @@
             <!-- Header với bộ lọc -->
             <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
                 <x-filament::section.heading>
-                    Dòng thời gian dự án
+                    {{ __('Project Timeline') }}
                 </x-filament::section.heading>
                 
                 <!-- Nút lọc -->
@@ -15,7 +15,7 @@
                         :outlined="$filter !== 'pinned'"
                         size="sm"
                     >
-                        Dự án đã ghim
+                        {{ __('Pinned Projects') }}
                         <x-filament::badge
                             :color="$filter === 'pinned' ? 'primary' : 'gray'"
                             size="sm"
@@ -31,7 +31,7 @@
                         :outlined="$filter !== 'all'"
                         size="sm"
                     >
-                        Tất cả dự án
+                        {{ __('All Projects') }}
                         <x-filament::badge
                             :color="$filter === 'all' ? 'primary' : 'gray'"
                             size="sm"
@@ -52,17 +52,17 @@
                     
                     <h3 class="mt-4 text-sm font-medium text-gray-900 dark:text-white">
                         @if($filter === 'pinned')
-                            Chưa có dự án nào được ghim
+                            {{ __('No projects have been pinned yet') }}
                         @else
-                            Không tìm thấy dự án nào
+                            {{ __('No projects found') }}
                         @endif
                     </h3>
                     
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400 text-center max-w-sm">
                         @if($filter === 'pinned')
-                            Bạn chưa ghim dự án nào. Hãy ghim các dự án quan trọng để truy cập nhanh chóng.
+                            {{ __('You haven\'t pinned any projects yet. Pin important projects for quick access.') }}
                         @else
-                            Hãy tạo dự án mới hoặc kiểm tra lại quyền truy cập của bạn.
+                            {{ __('Please create a new project or check your access permissions.') }}
                         @endif
                     </p>
                 </div>
@@ -80,17 +80,17 @@
                                         
                                         @php
                                             $badgeColor = match($project['status']) {
-                                                'Đã hoàn thành' => 'success',
-                                                'Quá hạn' => 'danger',
-                                                'Sắp đến hạn' => 'warning',
-                                                'Đang thực hiện' => 'primary',
-                                                'Chưa bắt đầu' => 'gray',
+                                                'Completed' => 'success',
+                                                'Overdue' => 'danger',
+                                                'Due soon' => 'warning',
+                                                'In Progress' => 'primary',
+                                                'Not started' => 'gray',
                                                 default => 'gray'
                                             };
                                         @endphp
                                         
                                         <x-filament::badge :color="$badgeColor" size="sm">
-                                            {{ $project['status'] }}
+                                            {{ __($project['status']) }}
                                         </x-filament::badge>
                                     </div>
                                 </div>
@@ -100,7 +100,7 @@
                                         {{ $project['start_date'] }} - {{ $project['end_date'] }}
                                     </div>
                                     <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Tổng cộng {{ $project['total_days'] }} ngày
+                                        {{ __('Total') }} {{ $project['total_days'] }} {{ __('days') }}
                                     </div>
                                 </div>
                             </div>
@@ -124,7 +124,7 @@
                                     <div class="flex items-center gap-4">
                                         @if($project['past_days'] > 0)
                                             <div class="text-gray-600 dark:text-gray-400">
-                                                Đã trôi qua <span class="font-medium">{{ $project['past_days'] }}</span> ngày
+                                                {{ __('Elapsed') }} <span class="font-medium">{{ $project['past_days'] }}</span> {{ __('days') }}
                                             </div>
                                         @endif
                                     </div>
@@ -132,15 +132,15 @@
                                     <div class="text-right">
                                         @if($project['remaining_days'] > 0)
                                             <div class="font-medium text-gray-900 dark:text-white">
-                                                Còn lại {{ $project['remaining_days'] }} ngày
+                                                {{ __('Remaining') }} {{ $project['remaining_days'] }} {{ __('days') }}
                                             </div>
                                         @elseif($project['remaining_days'] < 0)
                                             <div class="font-medium text-red-600 dark:text-red-400">
-                                                Quá hạn {{ abs($project['remaining_days']) }} ngày
+                                                {{ __('Overdue') }} {{ abs($project['remaining_days']) }} {{ __('days') }}
                                             </div>
                                         @else
                                             <div class="font-medium text-amber-600 dark:text-amber-400">
-                                                Hết hạn hôm nay
+                                                {{ __('Due today') }}
                                             </div>
                                         @endif
                                     </div>

@@ -31,16 +31,19 @@ class UserResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-users';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Quản trị hệ thống';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('System Admin');
+    }
 
     public static function getModelLabel(): string
     {
-        return 'Người dùng';
+        return __('User');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Người dùng';
+        return __('Users');
     }
 
     public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
@@ -48,11 +51,11 @@ class UserResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Họ tên')
+                    ->label(__('Full Name'))
                     ->required()
                     ->maxLength(255),
                 TextInput::make('email')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->email()
                     ->required()
                     ->unique(
@@ -60,9 +63,9 @@ class UserResource extends Resource
                     )
                     ->maxLength(255),
                 DateTimePicker::make('email_verified_at')
-                    ->label('Xác minh email lúc'),
+                    ->label(__('Email Verified At')),
                 TextInput::make('password')
-                    ->label('Mật khẩu')
+                    ->label(__('Password'))
                     ->password()
                     ->dehydrateStateUsing(fn ($state) => ! empty($state) ? Hash::make($state) : null
                     )
@@ -70,7 +73,7 @@ class UserResource extends Resource
                     ->required(fn (string $operation): bool => in_array($operation, ['create', 'attach.createOption']))
                     ->maxLength(255),
                 Select::make('roles')
-                    ->label('Vai trò')
+                    ->label(__('Roles'))
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->preload()
@@ -84,77 +87,77 @@ class UserResource extends Resource
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['roles']))
             ->columns([
                 TextColumn::make('name')
-                    ->label('Họ tên')
+                    ->label(__('Full Name'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('email')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('roles.name')
-                    ->label('Vai trò')
+                    ->label(__('Roles'))
                     ->badge()
                     ->separator(',')
                     ->sortable(),
 
                 TextColumn::make('projects_count')
-                    ->label('Dự án')
+                    ->label(__('Projects'))
                     ->counts('projects')
                     ->sortable(),
 
                 TextColumn::make('assigned_tickets_count')
-                    ->label('Vé được giao')
+                    ->label(__('Has Assigned Tickets'))
                     ->counts('assignedTickets')
                     ->sortable(),
 
                 TextColumn::make('created_tickets_count')
-                    ->label('Vé đã tạo')
+                    ->label(__('Has Created Tickets'))
                     ->counts('createdTickets')
                     ->sortable(),
 
                 TextColumn::make('email_verified_at')
-                    ->label('Xác minh email')
+                    ->label(__('Email Verified'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
-                    ->label('Ngày tạo')
+                    ->label(__('Created At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->label('Ngày cập nhật')
+                    ->label(__('Updated At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 Filter::make('has_projects')
-                    ->label('Có dự án')
+                    ->label(__('Has Projects'))
                     ->query(fn (Builder $query): Builder => $query->whereHas('projects')),
 
                 Filter::make('has_assigned_tickets')
-                    ->label('Có vé được giao')
+                    ->label(__('Has Assigned Tickets'))
                     ->query(fn (Builder $query): Builder => $query->whereHas('assignedTickets')),
 
                 Filter::make('has_created_tickets')
-                    ->label('Có vé đã tạo')
+                    ->label(__('Has Created Tickets'))
                     ->query(fn (Builder $query): Builder => $query->whereHas('createdTickets')),
 
                 // Filter by role
                 SelectFilter::make('roles')
-                    ->label('Vai trò')
+                    ->label(__('Roles'))
                     ->relationship('roles', 'name')
                     ->multiple()
                     ->searchable()
                     ->preload(),
 
                 Filter::make('email_unverified')
-                    ->label('Email chưa xác minh')
+                    ->label(__('Email Unverified'))
                     ->query(fn (Builder $query): Builder => $query->whereNull('email_verified_at')),
             ])
             ->recordActions([
@@ -164,15 +167,15 @@ class UserResource extends Resource
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->label('Xóa đã chọn'),
+                        ->label(__('Delete Selected')),
 
                     // NEW: Bulk action to assign role
                     BulkAction::make('assignRole')
-                        ->label('Gán vai trò')
+                        ->label(__('Assign Role'))
                         ->icon('heroicon-o-shield-check')
                         ->form([
                             Select::make('roles')
-                                ->label('Vai trò')
+                                ->label(__('Roles'))
                                 ->relationship('roles', 'name')
                                 ->multiple()
                                 ->preload()
@@ -180,10 +183,10 @@ class UserResource extends Resource
                                 ->required(),
 
                             Radio::make('role_mode')
-                                ->label('Chế độ gán')
+                                ->label(__('Assign Mode'))
                                 ->options([
-                                    'replace' => 'Thay thế vai trò hiện tại',
-                                    'add' => 'Thêm vào vai trò hiện tại',
+                                    'replace' => __('Replace existing roles'),
+                                    'add' => __('Add to existing roles'),
                                 ])
                                 ->default('add')
                                 ->required(),

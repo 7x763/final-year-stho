@@ -17,7 +17,10 @@ class StatsOverview extends BaseWidget
 
     protected ?string $pollingInterval = '60s';
 
-    protected ?string $heading = 'Tổng quan';
+    public function getHeading(): ?string
+    {
+        return __('Overview');
+    }
 
     protected function getStats(): array
     {
@@ -43,23 +46,23 @@ class StatsOverview extends BaseWidget
         $myTickets = auth()->user()->assignedTickets()->count();
 
         return [
-            Stat::make('Tổng số dự án', $totalProjects)
-                ->description('Dự án đang hoạt động trong hệ thống')
+            Stat::make(__('Total Projects'), $totalProjects)
+                ->description(__('Active projects in the system'))
                 ->descriptionIcon('heroicon-m-rectangle-stack')
                 ->color('primary'),
-
-            Stat::make('Tổng số vé hỗ trợ', $totalTickets)
-                ->description('Vé hỗ trợ trên tất cả dự án')
+ 
+            Stat::make(__('Total Tickets'), $totalTickets)
+                ->description(__('Tickets across all projects'))
                 ->descriptionIcon('heroicon-m-ticket')
                 ->color('success'),
-
-            Stat::make('Vé hỗ trợ được giao cho tôi', $myTickets)
-                ->description('Số lượng vé đang được giao cho bạn')
+ 
+            Stat::make(__('Tickets assigned to me'), $myTickets)
+                ->description(__('Number of tickets currently assigned to you'))
                 ->descriptionIcon('heroicon-m-user-circle')
                 ->color('info'),
-
-            Stat::make('Thành viên nhóm', $usersCount)
-                ->description('Người dùng đã đăng ký')
+ 
+            Stat::make(__('Team members'), $usersCount)
+                ->description(__('Registered users'))
                 ->descriptionIcon('heroicon-m-users')
                 ->color('gray'),
         ];
@@ -105,43 +108,43 @@ class StatsOverview extends BaseWidget
             ->count();
 
         return [
-            Stat::make('Dự án của tôi', $myProjectsCount)
-                ->description('Dự án bạn đang tham gia')
+            Stat::make(__('My Projects'), $myProjectsCount)
+                ->description(__('Projects you are participating in'))
                 ->descriptionIcon('heroicon-m-rectangle-stack')
                 ->color('primary'),
 
-            Stat::make('Vé hỗ trợ được giao cho tôi', $myAssignedTicketsCount)
-                ->description('Số lượng vé đang được giao cho bạn')
+            Stat::make(__('Tickets assigned to me'), $myAssignedTicketsCount)
+                ->description(__('Number of tickets currently assigned to you'))
                 ->descriptionIcon('heroicon-m-user-circle')
                 ->color($myAssignedTicketsCount > 10 ? 'danger' : ($myAssignedTicketsCount > 5 ? 'warning' : 'success')),
 
-            Stat::make('Vé hỗ trợ tôi đã tạo', $myCreatedTicketsCount)
-                ->description('Số lượng vé hỗ trợ bạn đã tạo')
+            Stat::make(__('Tickets I created'), $myCreatedTicketsCount)
+                ->description(__('Number of tickets you created'))
                 ->descriptionIcon('heroicon-m-pencil-square')
                 ->color('info'),
 
-            Stat::make('Tổng số vé trong dự án', $projectTicketsCount)
-                ->description('Số lượng vé hỗ trợ trong các dự án của bạn')
+            Stat::make(__('Total project tickets'), $projectTicketsCount)
+                ->description(__('Number of tickets in your projects'))
                 ->descriptionIcon('heroicon-m-ticket')
                 ->color('success'),
 
-            Stat::make('Đã hoàn thành trong tuần', $myCompletedThisWeekCount)
-                ->description('Số lượng vé bạn đã hoàn thành tuần này')
+            Stat::make(__('Completed this week'), $myCompletedThisWeekCount)
+                ->description(__('Number of tickets you completed this week'))
                 ->descriptionIcon('heroicon-m-check-circle')
                 ->color($myCompletedThisWeekCount > 0 ? 'success' : 'gray'),
 
-            Stat::make('Công việc mới trong tuần', $newTicketsThisWeekCount)
-                ->description('Số lượng vé mới được tạo trong tuần này')
+            Stat::make(__('New work this week'), $newTicketsThisWeekCount)
+                ->description(__('Number of tickets created this week'))
                 ->descriptionIcon('heroicon-m-plus-circle')
                 ->color('info'),
 
-            Stat::make('Công việc quá hạn', $myOverdueTicketsCount)
-                ->description('Số lượng vé đã quá hạn chót')
+            Stat::make(__('Overdue work'), $myOverdueTicketsCount)
+                ->description(__('Number of tickets past due date'))
                 ->descriptionIcon('heroicon-m-exclamation-triangle')
                 ->color($myOverdueTicketsCount > 0 ? 'danger' : 'success'),
 
-            Stat::make('Thành viên nhóm', $teamMembersCount)
-                ->description('Số lượng người trong các dự án của bạn')
+            Stat::make(__('Team members'), $teamMembersCount)
+                ->description(__('Number of people in your projects'))
                 ->descriptionIcon('heroicon-m-users')
                 ->color('gray'),
         ];

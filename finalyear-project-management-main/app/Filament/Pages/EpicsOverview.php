@@ -15,17 +15,26 @@ class EpicsOverview extends Page
 
     protected string $view = 'filament.pages.epics-overview';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Project Management');
+    }
 
-    protected static ?string $navigationLabel = 'Tổng quan Epic';
+    public static function getNavigationLabel(): string
+    {
+        return __('Epics Overview');
+    }
 
-    protected static ?string $title = 'Tổng quan Epic';
+    public function getTitle(): string
+    {
+        return __('Epics Overview');
+    }
 
     protected static ?int $navigationSort = 7;
 
     public function getSubheading(): ?string
     {
-        return 'Quản lý và theo dõi các Epic dự án cùng với các vé hỗ trợ liên quan và tiến độ';
+        return __('Manage and track project Epics along with related tickets and progress');
     }
 
     protected static ?string $slug = 'epics-overview/{project_id?}';

@@ -25,17 +25,26 @@ class ProjectBoard extends Page
 
     protected string $view = 'filament.pages.project-board';
 
-    protected static ?string $title = 'Bảng dự án';
+    public function getTitle(): string
+    {
+        return __('Kanban Board');
+    }
 
-    protected static ?string $navigationLabel = 'Board';
+    public static function getNavigationLabel(): string
+    {
+        return __('Kanban Board');
+    }
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Project Management');
+    }
 
     protected static ?int $navigationSort = 4;
 
     public function getSubheading(): ?string
     {
-        return 'Bảng Kanban để quản lý vé hỗ trợ';
+        return __('Kanban board for managing tickets');
     }
 
     protected static ?string $slug = 'project-board/{project_id?}';
@@ -246,8 +255,8 @@ class ProjectBoard extends Page
         if ($ticket && $ticket->project_id === $this->selectedProject?->id) {
             if (! $this->canManageTicket($ticket)) {
                 Notification::make()
-                    ->title('Quyền bị từ chối')
-                    ->body('Bạn không có quyền di chuyển vé này.')
+                    ->title(__('Permission Denied'))
+                    ->body(__('You do not have permission to move this ticket.'))
                     ->danger()
                     ->send();
 
@@ -263,7 +272,7 @@ class ProjectBoard extends Page
             $this->dispatch('ticket-updated');
 
             Notification::make()
-                ->title('Đã cập nhật vé')
+                ->title(__('Ticket Updated'))
                 ->success()
                 ->send();
         }
@@ -320,7 +329,7 @@ class ProjectBoard extends Page
         return [
             Action::make('new_ticket')
                 ->name('ticket_on_board')
-                ->label('Vé mới')
+                ->label(__('New Ticket'))
                 ->icon('heroicon-m-plus')
                 ->visible(fn () => $this->selectedProject !== null && auth()->user() && (
                     auth()->user()->isSuperAdmin() || 
@@ -356,14 +365,14 @@ class ProjectBoard extends Page
                     $schema->model($record)->saveRelationships();
 
                     Notification::make()
-                        ->title('Đã tạo vé')
-                        ->body('Vé hỗ trợ đã được tạo thành công.')
+                        ->title(__('Ticket Created'))
+                        ->body(__('Ticket has been created successfully.'))
                         ->success()
                         ->send();
                 }),
 
             Action::make('refresh_board')
-                ->label('Làm mới bảng')
+                ->label(__('Refresh Board'))
                 ->icon('heroicon-m-arrow-path')
                 ->action('refreshBoard')
                 ->color('warning'),
@@ -371,12 +380,12 @@ class ProjectBoard extends Page
                 ->visible(fn () => $this->selectedProject !== null && auth()->user() && auth()->user()->isSuperAdmin()),
 
             Action::make('filter_users')
-                ->label('Lọc theo người dùng')
+                ->label(__('Filter by User'))
                 ->icon('heroicon-m-user-group')
                 ->visible(fn () => $this->selectedProject !== null && $this->projectUsers->isNotEmpty())
                 ->schema([
                     CheckboxList::make('selectedUserIds')
-                        ->label('Chọn người dùng để lọc')
+                        ->label(__('Select users to filter'))
                         ->options(fn () => $this->projectUsers->pluck('name', 'id')->toArray())
                         ->columns(2)
                         ->searchable()
@@ -389,14 +398,14 @@ class ProjectBoard extends Page
                     $userCount = count($this->selectedUserIds);
                     if ($userCount > 0) {
                         Notification::make()
-                            ->title('Đã áp dụng bộ lọc')
-                            ->body("Đang hiển thị vé cho {$userCount} người dùng đã chọn")
+                            ->title(__('Filter Applied'))
+                            ->body(__('Showing tickets for :count selected users.', ['count' => $userCount]))
                             ->success()
                             ->send();
                     } else {
                         Notification::make()
-                            ->title('Đã xóa bộ lọc')
-                            ->body('Đang hiển thị tất cả vé')
+                            ->title(__('Filter Cleared'))
+                            ->body(__('Showing all tickets'))
                             ->info()
                             ->send();
                     }

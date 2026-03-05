@@ -22,18 +22,26 @@ class NotificationResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-bell';
 
-    protected static ?string $navigationLabel = 'Thông báo';
+    public static function getNavigationLabel(): string
+    {
+        return __('Notifications');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('System Admin');
+    }
 
     protected static ?int $navigationSort = 1;
 
     public static function getModelLabel(): string
     {
-        return 'Thông báo';
+        return __('Notification');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Thông báo';
+        return __('Notifications');
     }
 
     public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
@@ -56,40 +64,40 @@ class NotificationResource extends Resource
                     ->size('sm'),
 
                 TextColumn::make('user.name')
-                    ->label('Người dùng')
+                    ->label(__('User'))
                     ->badge()
                     ->color('info')
                     ->searchable()
                     ->visible(fn () => auth()->user() && auth()->user()->isSuperAdmin()),
 
                 TextColumn::make('message')
-                    ->label('Nội dung')
+                    ->label(__('Content'))
                     ->limit(50)
                     ->weight(fn (Notification $record) => $record->isUnread() ? 'bold' : 'normal'),
 
                 TextColumn::make('ticket.name')
-                    ->label('Vé hỗ trợ')
+                    ->label(__('Ticket'))
                     ->badge()
                     ->color('primary')
                     ->searchable()
                     ->placeholder('N/A'),
 
                 TextColumn::make('ticket.project.name')
-                    ->label('Dự án')
+                    ->label(__('Project'))
                     ->badge()
                     ->color('success')
                     ->searchable()
                     ->placeholder('N/A'),
 
                 TextColumn::make('created_at')
-                    ->label('Thời gian')
+                    ->label(__('Time'))
                     ->dateTime()
                     ->sortable(),
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
                 Action::make('markAsRead')
-                    ->label('Đánh dấu đã đọc')
+                    ->label(__('Mark as read'))
                     ->icon('heroicon-o-check')
                     ->color('success')
                     ->visible(fn (Notification $record) => $record->isUnread() && (auth()->id() === $record->user_id || (auth()->user() && auth()->user()->isSuperAdmin())))
@@ -97,13 +105,13 @@ class NotificationResource extends Resource
                         app(NotificationService::class)->markAsRead($record->id, $record->user_id);
 
                         FilamentNotification::make()
-                            ->title('Đã đánh dấu thông báo là đã đọc')
+                            ->title(__('Marked notification as read'))
                             ->success()
                             ->send();
                     }),
 
                 Action::make('viewTicket')
-                    ->label('Xem vé hỗ trợ')
+                    ->label(__('View Ticket'))
                     ->icon('heroicon-o-eye')
                     ->color('primary')
                     ->visible(fn (Notification $record) => isset($record->data['ticket_id']))
@@ -113,7 +121,7 @@ class NotificationResource extends Resource
             ])
             ->headerActions([
                 Action::make('markAllAsRead')
-                    ->label('Đánh dấu tất cả đã đọc')
+                    ->label(__('Mark all as read'))
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
                     ->visible(fn () => auth()->user() && ! auth()->user()->isSuperAdmin())
@@ -121,18 +129,18 @@ class NotificationResource extends Resource
                         app(NotificationService::class)->markAllAsRead(auth()->id());
 
                         FilamentNotification::make()
-                            ->title('Tất cả thông báo đã được đánh dấu là đã đọc')
+                            ->title(__('All notifications marked as read'))
                             ->success()
                             ->send();
                     }),
             ])
             ->filters([
                 Filter::make('unread')
-                    ->label('Chỉ hiện chưa đọc')
+                    ->label(__('Only show unread'))
                     ->query(fn (Builder $query) => $query->unread()),
 
                 SelectFilter::make('user')
-                    ->label('Người dùng')
+                    ->label(__('User'))
                     ->relationship('user', 'name')
                     ->searchable()
                     ->preload()

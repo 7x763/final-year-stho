@@ -28,16 +28,19 @@ class TicketPriorityResource extends Resource
 
     protected static ?string $pluralLabel = 'Ticket Priorities';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Cài đặt';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Settings');
+    }
 
     public static function getModelLabel(): string
     {
-        return 'Mức độ ưu tiên';
+        return __('Ticket Priority');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Mức độ ưu tiên';
+        return __('Ticket Priorities');
     }
 
     public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
@@ -45,12 +48,12 @@ class TicketPriorityResource extends Resource
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Tên mức độ')
+                    ->label(__('Priority Name'))
                     ->required()
                     ->maxLength(255)
                     ->unique(ignoreRecord: true),
                 ColorPicker::make('color')
-                    ->label('Màu sắc')
+                    ->label(__('Color'))
                     ->required()
                     ->default('#6B7280'),
             ]);
@@ -61,23 +64,23 @@ class TicketPriorityResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
-                    ->label('Tên mức độ')
+                    ->label(__('Priority Name'))
                     ->searchable()
                     ->sortable(),
                 ColorColumn::make('color')
-                    ->label('Màu sắc')
+                    ->label(__('Color'))
                     ->sortable(),
                 TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Số lượng vé')
+                    ->label(__('Tickets'))
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Ngày tạo')
+                    ->label(__('Created At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->label('Ngày cập nhật')
+                    ->label(__('Updated At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -91,7 +94,8 @@ class TicketPriorityResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->label(__('Delete Selected')),
                 ]),
             ]);
     }

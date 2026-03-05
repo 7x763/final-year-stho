@@ -26,18 +26,26 @@ class EpicResource extends Resource
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-flag';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Project Management');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Epics');
+    }
 
     protected static ?int $navigationSort = 2;
 
     public static function getModelLabel(): string
     {
-        return 'Epic';
+        return __('Epic');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Epic';
+        return __('Epics');
     }
 
     public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
@@ -45,29 +53,29 @@ class EpicResource extends Resource
         return $schema
             ->components([
                 Select::make('project_id')
-                    ->label('Dự án')
+                    ->label(__('Project'))
                     ->relationship('project', 'name')
                     ->required()
                     ->searchable()
                     ->preload(),
                 TextInput::make('name')
-                    ->label('Tên Epic')
+                    ->label(__('Epic Name'))
                     ->required()
                     ->maxLength(255),
                 RichEditor::make('description')
-                    ->label('Mô tả')
+                    ->label(__('Description'))
                     ->columnSpanFull(),
                 DatePicker::make('start_date')
-                    ->label('Ngày bắt đầu')
+                    ->label(__('Start Date'))
                     ->native(false)
                     ->displayFormat('d/m/Y'),
                 DatePicker::make('end_date')
-                    ->label('Ngày kết thúc')
+                    ->label(__('End Date'))
                     ->native(false)
                     ->displayFormat('d/m/Y')
                     ->afterOrEqual('start_date'),
                 TextInput::make('sort_order')
-                    ->label('Thứ tự sắp xếp')
+                    ->label(__('Sort Order'))
                     ->numeric()
                     ->default(0),
             ]);
@@ -78,26 +86,26 @@ class EpicResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('project.name')
-                    ->label('Dự án')
+                    ->label(__('Project'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
-                    ->label('Tên Epic')
+                    ->label(__('Epic Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('start_date')
-                    ->label('Ngày bắt đầu')
+                    ->label(__('Start Date'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('end_date')
-                    ->label('Ngày kết thúc')
+                    ->label(__('End Date'))
                     ->date('d/m/Y')
                     ->sortable(),
                 TextColumn::make('tickets_count')
                     ->counts('tickets')
-                    ->label('Số lượng vé'),
+                    ->label(__('Tickets')),
                 TextColumn::make('created_at')
-                    ->label('Ngày tạo')
+                    ->label(__('Created At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -111,7 +119,8 @@ class EpicResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->label(__('Delete Selected')),
                 ]),
             ]);
     }

@@ -10,7 +10,10 @@ class TicketsPerProjectChart extends ChartWidget
 {
     use HasWidgetShield;
 
-    protected ?string $heading = 'Số lượng vé hỗ trợ theo dự án';
+    public function getHeading(): ?string
+    {
+        return __('Tickets per project');
+    }
 
     protected static ?int $sort = 2;
 
@@ -67,7 +70,7 @@ class TicketsPerProjectChart extends ChartWidget
         return [
             'datasets' => [
                 [
-                    'label' => 'Số lượng vé',
+                    'label' => __('Number of tickets'),
                     'data' => $data,
                     'backgroundColor' => $colors,
                     'borderColor' => $colors,

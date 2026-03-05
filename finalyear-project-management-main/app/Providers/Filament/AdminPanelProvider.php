@@ -30,7 +30,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->brandName('Quản lý dự án')
+            ->brandName(__('Project Management'))
             ->login(Login::class)
             ->registration(Register::class)
             ->colors([
@@ -55,6 +55,7 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
                 FilamentUserSettings::class,
+                \App\Http\Middleware\LocalizationMiddleware::class,
             ])
             ->plugins([
                 FilamentShieldPlugin::make(),

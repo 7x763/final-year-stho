@@ -41,15 +41,23 @@
                 </div>
                 
                 @if (Route::has('login'))
-                    <div>
-                        @auth
-                            <a href="{{ url('/dashboard') }}" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium">Log in</a>
+                    <div class="flex items-center space-x-4">
+                        <!-- Language Switcher -->
+                        <div class="relative group">
+                            <button class="flex items-center text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129"></path></svg>
+                                {{ app()->getLocale() == 'vi' ? 'Tiếng Việt' : 'English' }}
+                            </button>
+                            <div class="absolute right-0 mt-2 w-32 bg-white rounded-md shadow-lg py-1 z-10 hidden group-hover:block border border-gray-100">
+                                <a href="{{ route('lang.switch', 'vi') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 {{ app()->getLocale() == 'vi' ? 'bg-gray-50 font-semibold' : '' }}">Tiếng Việt</a>
+                                <a href="{{ route('lang.switch', 'en') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-blue-600 {{ app()->getLocale() == 'en' ? 'bg-gray-50 font-semibold' : '' }}">English</a>
+                            </div>
+                        </div>
 
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium">Register</a>
-                            @endif
+                        @auth
+                            <a href="{{ url('/admin') }}" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium">{{ __('messages.dashboard') ?? 'Dashboard' }}</a>
+                        @else
+                            <a href="{{ route('filament.admin.auth.login') }}" class="text-gray-700 hover:text-blue-600 px-4 py-2 rounded-md text-sm font-medium">{{ __('messages.login') }}</a>
                         @endauth
                     </div>
                 @endif
@@ -58,8 +66,8 @@
             <main class="flex-1 flex flex-col items-center justify-center w-full px-6 sm:px-10 py-12">
                 <div class="max-w-4xl w-full">
                     <div class="text-center mb-12">
-                        <h1 class="text-4xl md:text-5xl font-bold mb-4">Project Management <span class="text-gradient">Simplified</span></h1>
-                        <p class="text-xl text-gray-600 max-w-4xl mx-auto">Streamline your workflow with our intuitive and collaborative project management tool, designed for teams of all sizes.</p>
+                        <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ __('messages.hero_title') ?? 'Project Management' }} <span class="text-gradient">{{ __('messages.hero_highlight') ?? 'Simplified' }}</span></h1>
+                        <p class="text-xl text-gray-600 max-w-4xl mx-auto">{{ __('messages.hero_subtitle') ?? 'Streamline your workflow with our intuitive and collaborative project management tool, designed for teams of all sizes.' }}</p>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
@@ -68,9 +76,9 @@
                                 <svg class="w-6 h-6 text-blue-600 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M9 5H7C5.89543 5 5 5.89543 5 7V19C5 20.1046 5.89543 21 7 21H17C18.1046 21 19 20.1046 19 19V7C19 5.89543 18.1046 5 17 5H15M9 5C9 6.10457 9.89543 7 11 7H13C14.1046 7 15 6.10457 15 5M9 5C9 3.89543 9.89543 3 11 3H13C14.1046 3 15 3.89543 15 5M12 12H15M12 16H15M9 12H9.01M9 16H9.01"></path>
                                 </svg>
-                                <h2 class="text-lg font-semibold">Task Management</h2>
+                                <h2 class="text-lg font-semibold">{{ __('messages.task_mgmt') }}</h2>
                             </div>
-                            <p class="text-gray-600">Create, assign, and track tasks with ease. Set priorities and deadlines to keep your team on track.</p>
+                            <p class="text-gray-600">{{ __('messages.task_mgmt_desc') }}</p>
                         </div>
 
                         <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
@@ -78,9 +86,9 @@
                                 <svg class="w-6 h-6 text-blue-600 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M17 20H22V18C22 16.3431 20.6569 15 19 15C18.0444 15 17.1931 15.4468 16.6438 16.1429M17 20H7M17 20V18C17 17.3438 16.8736 16.717 16.6438 16.1429M7 20H2V18C2 16.3431 3.34315 15 5 15C5.95561 15 6.80686 15.4468 7.35625 16.1429M7 20V18C7 17.3438 7.12642 16.717 7.35625 16.1429M7.35625 16.1429C8.0935 14.301 9.89482 13 12 13C14.1052 13 15.9065 14.301 16.6438 16.1429M15 7C15 8.65685 13.6569 10 12 10C10.3431 10 9 8.65685 9 7C9 5.34315 10.3431 4 12 4C13.6569 4 15 5.34315 15 7ZM21 10C21 11.1046 20.1046 12 19 12C17.8954 12 17 11.1046 17 10C17 8.89543 17.8954 8 19 8C20.1046 8 21 8.89543 21 10ZM7 10C7 11.1046 6.10457 12 5 12C3.89543 12 3 11.1046 3 10C3 8.89543 3.89543 8 5 8C6.10457 8 7 8.89543 7 10Z"></path>
                                 </svg>
-                                <h2 class="text-lg font-semibold">Team Collaboration</h2>
+                                <h2 class="text-lg font-semibold">{{ __('messages.team_collab') }}</h2>
                             </div>
-                            <p class="text-gray-600">Foster teamwork with real-time updates. Keep everyone in the loop.</p>
+                            <p class="text-gray-600">{{ __('messages.team_collab_desc') }}</p>
                         </div>
 
                         <div class="bg-white p-6 rounded-lg shadow-md border border-gray-100">
@@ -88,25 +96,25 @@
                                 <svg class="w-6 h-6 text-blue-600 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M9 19V13C9 11.8954 8.10457 11 7 11H5C3.89543 11 3 11.8954 3 13V19C3 20.1046 3.89543 21 5 21H7C8.10457 21 9 20.1046 9 19ZM9 19V9C9 7.89543 9.89543 7 11 7H13C14.1046 7 15 7.89543 15 9V19M9 19C9 20.1046 9.89543 21 11 21H13C14.1046 21 15 20.1046 15 19M15 19V5C15 3.89543 15.8954 3 17 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H17C15.8954 21 15 20.1046 15 19Z"></path>
                                 </svg>
-                                <h2 class="text-lg font-semibold">Progress Tracking</h2>
+                                <h2 class="text-lg font-semibold">{{ __('messages.progress_tracking') }}</h2>
                             </div>
-                            <p class="text-gray-600">Visualize project progress with intuitive boards and reports. Identify bottlenecks and optimize workflows.</p>
+                            <p class="text-gray-600">{{ __('messages.progress_tracking_desc') }}</p>
                         </div>
                     </div>
 
                     <div class="flex flex-col items-center">
                         <a href="/admin" class="gradient-background text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 text-lg">
-                            Access Admin Panel
+                            {{ __('messages.access_admin') }}
                         </a>
-                        <p class="mt-4 text-sm text-gray-500">Manage your projects and team from our powerful administration dashboard</p>
+                        <p class="mt-4 text-sm text-gray-500">{{ __('messages.admin_desc') }}</p>
                     </div>
                 </div>
             </main>
 
             <footer class="w-full py-8 px-6 sm:px-10">
                 <div class="max-w-4xl mx-auto text-center">
-                    <p class="text-gray-600">© {{ date('Y') }} KLTN. All rights reserved.</p>
-                    <p class="text-sm text-gray-500 mt-2">Built with Laravel and Filament</p>
+                    <p class="text-gray-600">© {{ date('Y') }} KLTN. {{ __('messages.footer_rights') }}</p>
+                    <p class="text-sm text-gray-500 mt-2">{{ __('messages.footer_built') }}</p>
                 </div>
             </footer>
         </div>

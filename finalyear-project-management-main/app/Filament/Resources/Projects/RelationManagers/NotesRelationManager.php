@@ -30,29 +30,29 @@ class NotesRelationManager extends RelationManager
         return $ownerRecord->notes_count ?? $ownerRecord->notes()->count();
     }
 
-    protected static ?string $title = 'Ghi chú dự án';
+    protected static ?string $title = 'Project Notes';
 
-    protected static ?string $modelLabel = 'Ghi chú';
+    protected static ?string $modelLabel = 'Note';
 
-    protected static ?string $pluralModelLabel = 'Ghi chú';
+    protected static ?string $pluralModelLabel = 'Notes';
 
     public function form(Schema $schema): Schema
     {
         return $schema
             ->components([
                 TextInput::make('title')
-                    ->label('Tiêu đề')
+                    ->label(__('Title'))
                     ->required()
                     ->maxLength(255)
                     ->columnSpanFull(),
 
                 DatePicker::make('note_date')
-                    ->label('Ngày ghi chú')
+                    ->label(__('Note Date'))
                     ->default(now())
                     ->required(),
 
                 RichEditor::make('content')
-                    ->label('Nội dung')
+                    ->label(__('Content'))
                     ->required()
                     ->columnSpanFull()
                     ->fileAttachmentsDisk('public')
@@ -74,7 +74,7 @@ class NotesRelationManager extends RelationManager
                         'underline',
                         'undo',
                     ])
-                    ->helperText('Viết tóm tắt cuộc họp hoặc ghi chú dự án tại đây.'),
+                    ->helperText(__('Write meeting summary or project notes here.')),
 
                 Hidden::make('created_by')
                     ->default(auth()->id()),
@@ -91,22 +91,22 @@ class NotesRelationManager extends RelationManager
             )
             ->columns([
                 TextColumn::make('title')
-                    ->label('Tiêu đề')
+                    ->label(__('Title'))
                     ->searchable()
                     ->sortable()
                     ->weight(FontWeight::Medium),
 
                 TextColumn::make('note_date')
-                    ->label('Ngày ghi chú')
+                    ->label(__('Note Date'))
                     ->date('d/m/Y')
                     ->sortable(),
 
                 TextColumn::make('creator.name')
-                    ->label('Người tạo')
+                    ->label(__('Creator'))
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Ngày tạo')
+                    ->label(__('Created At'))
                     ->dateTime('d/m/Y H:i')
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -114,34 +114,34 @@ class NotesRelationManager extends RelationManager
             ->filters([
                 Filter::make('recent')
                     ->query(fn ($query) => $query->where('created_at', '>=', now()->subDays(30)))
-                    ->label('Gần đây (30 ngày)'),
+                    ->label(__('Recent (30 days)')),
             ])
             ->headerActions([
                 CreateAction::make()
                     ->icon('heroicon-o-plus')
-                    ->label('Thêm ghi chú')
+                    ->label(__('Add Note'))
                     ->modalWidth('2xl')
                     ->closeModalByClickingAway(false),
             ])
             ->recordActions([
                 ViewAction::make()
-                    ->label('Xem')
+                    ->label(__('View'))
                     ->closeModalByClickingAway(false),
                 EditAction::make()
-                    ->label('Sửa')
+                    ->label(__('Edit'))
                     ->closeModalByClickingAway(false),
                 DeleteAction::make()
-                    ->label('Xóa'),
+                    ->label(__('Delete')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make()
-                        ->label('Xóa các mục đã chọn'),
+                        ->label(__('Delete Selected')),
                 ]),
             ])
             ->defaultSort('note_date', 'desc')
-            ->emptyStateHeading('Chưa có ghi chú nào')
-            ->emptyStateDescription('Bắt đầu ghi lại các cuộc họp và ghi chú quan trọng cho dự án.')
+            ->emptyStateHeading(__('No notes yet'))
+            ->emptyStateDescription(__('Start capturing meeting minutes and important project notes.'))
             ->emptyStateIcon('heroicon-o-document-text');
     }
 }

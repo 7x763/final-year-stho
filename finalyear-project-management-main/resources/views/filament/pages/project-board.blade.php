@@ -6,10 +6,10 @@
             <x-filament::section>
                 <div class="mb-5">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                        Select Project
+                        {{ __('Select Project') }}
                     </h2>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                        Choose a project to view its board
+                        {{ __('Choose a project to view its board') }}
                     </p>
                 </div>
 
@@ -24,7 +24,7 @@
                         <input
                             type="text"
                             wire:model.live.debounce.300ms="searchProject"
-                            placeholder="Search projects by name or prefix..."
+                            placeholder="{{ __('Search projects by name or prefix...') }}"
                             class="block w-full pl-10 pr-3 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         />
                         @if($searchProject)
@@ -42,16 +42,16 @@
 
                 @if($projects->isEmpty())
                     <div class="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
-                        <h3 class="text-base font-medium text-gray-900 dark:text-white mb-1">No Projects Available</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">You don't have access to any projects yet.</p>
+                        <h3 class="text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('No Projects Available') }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __("You don't have access to any projects yet.") }}</p>
                     </div>
                 @elseif($this->filteredProjects->isEmpty())
                     <div class="flex flex-col items-center justify-center py-12 text-gray-500 dark:text-gray-400">
                         <svg class="w-12 h-12 mb-3 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                         </svg>
-                        <h3 class="text-base font-medium text-gray-900 dark:text-white mb-1">No Projects Found</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400">Try adjusting your search terms</p>
+                        <h3 class="text-base font-medium text-gray-900 dark:text-white mb-1">{{ __('No Projects Found') }}</h3>
+                        <p class="text-sm text-gray-500 dark:text-gray-400">{{ __('Try adjusting your search terms') }}</p>
                     </div>
                 @else
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
@@ -66,7 +66,7 @@
                                     <div class="absolute top-2 right-2">
                                         <div class="flex items-center justify-center w-6 h-6 rounded-full shadow-sm"
                                              style="background-color: {{ $project->color ?? '#6B7280' }};"
-                                             title="Pinned Project">
+                                             title="{{ __('Pinned Project') }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-white" viewBox="0 0 24 24" fill="currentColor">
                                                 <path d="M16 9V4h1c.55 0 1-.45 1-1s-.45-1-1-1H7c-.55 0-1 .45-1 1s.45 1 1 1h1v5c0 1.66-1.34 3-3 3v2h5.97v7l1 1 1-1v-7H19v-2c-1.66 0-3-1.34-3-3z"/>
                                             </svg>
@@ -149,7 +149,7 @@
                 >
                     <div class="p-2">
                         <div class="px-3 py-2 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                            Switch Project
+                            {{ __('Switch Project') }}
                         </div>
                         @foreach($this->filteredProjects as $project)
                             <button
@@ -509,7 +509,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-                <span>Swipe horizontally to view all columns</span>
+                <span>{{ __('Swipe horizontally to view all columns') }}</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
@@ -523,8 +523,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                         </svg>
-                        <span class="text-sm font-medium">View Only Mode</span>
-                        <span class="text-xs opacity-75">You can view tickets but cannot move them</span>
+                        <span class="text-sm font-medium">{{ __('View Only Mode') }}</span>
+                        <span class="text-xs opacity-75">{{ __('You can view tickets but cannot move them') }}</span>
                     </div>
                 </div>
             @endif
@@ -545,7 +545,7 @@
                                     <span>{{ $status->name }}</span>
                                     <span class="text-sm opacity-80">{{ $status->tickets->count() }}</span>
                                     @if($status->is_completed)
-                                        <div class="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full border-2 border-white shadow-lg" title="Completed Status">
+                                        <div class="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full border-2 border-white shadow-lg" title="{{ __('Completed Status') }}">
                                             <svg class="w-3 h-3 text-white font-bold" fill="currentColor" viewBox="0 0 20 20">
                                                 <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
                                             </svg>
@@ -579,7 +579,7 @@
                                     >
                                         <div class="p-2">
                                             <div class="flex items-center justify-between px-3 py-2 border-b border-gray-200 dark:border-gray-700">
-                                                <span class="text-sm font-medium text-gray-900 dark:text-white">Sort list</span>
+                                                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ __('Sort list') }}</span>
                                                 <button @click="open = false" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
                                                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -593,35 +593,35 @@
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded"
                                                 >
-                                                    Date created (newest first)
+                                                    {{ __('Date created (newest first)') }}
                                                 </button>
                                                 <button
                                                     wire:click="setSortOrder({{ $status->id }}, 'date_created_oldest')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded"
                                                 >
-                                                    Date created (oldest first)
+                                                    {{ __('Date created (oldest first)') }}
                                                 </button>
                                                 <button
                                                     wire:click="setSortOrder({{ $status->id }}, 'card_name_alphabetical')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded"
                                                 >
-                                                    Card name (alphabetically)
+                                                    {{ __('Card name (alphabetically)') }}
                                                 </button>
                                                 <button
                                                     wire:click="setSortOrder({{ $status->id }}, 'due_date')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded"
                                                 >
-                                                    Due date
+                                                    {{ __('Due date') }}
                                                 </button>
                                                 <button
                                                     wire:click="setSortOrder({{ $status->id }}, 'priority')"
                                                     @click="open = false"
                                                     class="w-full text-left px-3 py-2 text-sm text-gray-700 dark:text-white rounded"
                                                 >
-                                                    Priority
+                                                    {{ __('Priority') }}
                                                 </button>
                                             </div>
                                         </div>
@@ -717,7 +717,7 @@
 
                             @if ($status->tickets->isEmpty())
                                 <div class="flex items-center justify-center h-24 text-gray-500 dark:text-gray-400 text-sm italic border border-dashed border-gray-300 dark:border-gray-700 rounded-lg">
-                                    No tickets
+                                    {{ __('No tickets') }}
                                 </div>
                             @else
                                 <!-- Loading indicator for more tickets -->
@@ -727,7 +727,7 @@
                                             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                                             <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        <span>Loading more tickets...</span>
+                                        <span>{{ __('Loading more tickets...') }}</span>
                                     </div>
                                 </div>
                             @endif
@@ -737,7 +737,7 @@
 
                 @if ($this->ticketStatuses->isEmpty())
                     <div class="w-full flex items-center justify-center h-40 text-gray-500 dark:text-gray-400">
-                        No status columns found for this project
+                        {{ __('No status columns found for this project') }}
                     </div>
                 @endif
             </div>

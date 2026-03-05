@@ -7,6 +7,7 @@
     "license": "GPL-3.0-or-later",
     "require": {
         "php": "^8.2",
+        "bezhansalleh/filament-language-switch": "^4.1",
         "bezhansalleh/filament-shield": "^4.0",
         "filament/filament": "^4.0",
         "jeffgreco13/filament-breezy": "^3.2",
@@ -25,6 +26,7 @@
         "laravel/pail": "^1.2.2",
         "laravel/pint": "^1.13",
         "laravel/sail": "^1.41",
+        "lucascudo/laravel-pt-br-localization": "^3.0",
         "mockery/mockery": "^1.6",
         "nunomaduro/collision": "^8.6",
         "pestphp/pest": "^3.7",

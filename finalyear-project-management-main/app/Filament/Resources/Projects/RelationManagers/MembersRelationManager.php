@@ -38,9 +38,9 @@ class MembersRelationManager extends RelationManager
             ]);
     }
 
-    protected static ?string $title = 'Thành viên';
+    protected static ?string $title = 'Members';
 
-    protected static ?string $label = 'thành viên';
+    protected static ?string $label = 'member';
 
     public function table(Table $table): Table
     {
@@ -49,11 +49,11 @@ class MembersRelationManager extends RelationManager
             ->modifyQueryUsing(fn (Builder $query) => $query->select(['users.id', 'users.name', 'users.email']))
             ->columns([
                 TextColumn::make('name')
-                    ->label('Họ tên')
+                    ->label(__('Full Name'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('email')
-                    ->label('Email')
+                    ->label(__('Email'))
                     ->searchable()
                     ->sortable(),
             ])
@@ -78,7 +78,7 @@ class MembersRelationManager extends RelationManager
                             ->modalWidth('lg')
                         )
                     )
-                    ->label('Thêm thành viên')
+                    ->label(__('Add Member'))
                     ->after(function (Model $record): void {
                         $project = $this->getOwnerRecord();
                         $user = User::find($record->id);
@@ -91,7 +91,7 @@ class MembersRelationManager extends RelationManager
             ])
             ->recordActions([
                 DetachAction::make()
-                    ->label('Gỡ bỏ')
+                    ->label(__('Remove'))
                     ->after(function (Model $record): void {
                         $project = $this->getOwnerRecord();
                         $user = User::find($record->id);
@@ -105,7 +105,7 @@ class MembersRelationManager extends RelationManager
             ->toolbarActions([
                 BulkActionGroup::make([
                     DetachBulkAction::make()
-                        ->label('Gỡ bỏ các mục đã chọn'),
+                        ->label(__('Remove Selected')),
                 ]),
             ]);
     }

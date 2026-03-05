@@ -26,11 +26,11 @@ class TicketStatusesRelationManager extends RelationManager
 
     protected static string $relationship = 'ticketStatuses';
 
-    protected static ?string $title = 'Trạng thái vé';
+    protected static ?string $title = 'Ticket Statuses';
 
-    protected static ?string $modelLabel = 'Trạng thái';
+    protected static ?string $modelLabel = 'Status';
 
-    protected static ?string $pluralModelLabel = 'Trạng thái';
+    protected static ?string $pluralModelLabel = 'Statuses';
 
     public static function getBadge(Model $ownerRecord, string $pageClass): ?string
     {
@@ -42,22 +42,22 @@ class TicketStatusesRelationManager extends RelationManager
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Tên trạng thái')
+                    ->label(__('Status Name'))
                     ->required()
                     ->maxLength(255),
                 ColorPicker::make('color')
-                    ->label('Màu sắc')
+                    ->label(__('Color'))
                     ->required()
                     ->default('#3490dc')
-                    ->helperText('Chọn màu sắc cho trạng thái này'),
+                    ->helperText(__('Choose color for this status')),
                 TextInput::make('sort_order')
-                    ->label('Thứ tự sắp xếp')
+                    ->label(__('Sort Order'))
                     ->numeric()
                     ->default(0)
-                    ->helperText('Xác định thứ tự hiển thị trên bảng dự án (số nhỏ hiện trước)'),
+                    ->helperText(__('Determines the display order on the project board (lower numbers first)')),
                 Toggle::make('is_completed')
-                    ->label('Đánh dấu là trạng thái hoàn thành')
-                    ->helperText('Mỗi dự án chỉ có thể có một trạng thái được đánh dấu là hoàn thành')
+                    ->label(__('Mark as completed status'))
+                    ->helperText(__('Each project can only have one status marked as completed'))
                     ->default(false)
                     ->reactive()
                     ->afterStateUpdated(function ($state, $get, $set, $record): void {
@@ -73,8 +73,8 @@ class TicketStatusesRelationManager extends RelationManager
                                 $set('is_completed', false);
                                 Notification::make()
                                     ->warning()
-                                    ->title('Không thể đánh dấu hoàn thành')
-                                    ->body("Trạng thái '{$existingCompleted->name}' đã được đánh dấu là hoàn thành cho dự án này. Chỉ một trạng thái có thể được chọn.")
+                                    ->title(__('Cannot mark as completed'))
+                                    ->body(__('Status \':name\' is already marked as completed for this project. Only one status can be selected.', ['name' => $existingCompleted->name]))
                                     ->send();
                             }
                         }
@@ -89,13 +89,13 @@ class TicketStatusesRelationManager extends RelationManager
             ->modifyQueryUsing(fn ($query) => $query->select(['id', 'project_id', 'name', 'color', 'sort_order', 'is_completed']))
             ->columns([
                 TextColumn::make('name')
-                    ->label('Tên trạng thái'),
+                    ->label(__('Status Name')),
                 ColorColumn::make('color')
-                    ->label('Màu sắc'),
+                    ->label(__('Color')),
                 TextColumn::make('sort_order')
-                    ->label('Thứ tự'),
+                    ->label(__('Sort Order')),
                 IconColumn::make('is_completed')
-                    ->label('Đã hoàn thành')
+                    ->label(__('Completed'))
                     ->boolean()
                     ->trueIcon('heroicon-o-check-circle')
                     ->falseIcon('heroicon-o-x-circle')
@@ -109,7 +109,7 @@ class TicketStatusesRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                    ->label('Tạo trạng thái mới')
+                    ->label(__('Create New Status'))
                     ->mutateDataUsing(function (array $data): array {
                         $maxOrder = $this->getRelationship()->max('sort_order') ?? -1;
                         $data['sort_order'] = $maxOrder + 1;
@@ -125,8 +125,8 @@ class TicketStatusesRelationManager extends RelationManager
                                 $data['is_completed'] = false;
                                 Notification::make()
                                     ->warning()
-                                    ->title('Không thể đánh dấu hoàn thành')
-                                    ->body("Trạng thái '{$existingCompleted->name}' đã được đánh dấu là hoàn thành cho dự án này.")
+                                    ->title(__('Cannot mark as completed'))
+                                    ->body(__('Status \':name\' is already marked as completed for this project.', ['name' => $existingCompleted->name]))
                                     ->send();
                             }
                         }
@@ -136,7 +136,7 @@ class TicketStatusesRelationManager extends RelationManager
             ])
             ->recordActions([
                 EditAction::make()
-                    ->label('Sửa')
+                    ->label(__('Edit'))
                     ->mutateDataUsing(function (array $data, Model $record): array {
                         // Additional validation for is_completed on edit
                         if ($data['is_completed'] ?? false) {
@@ -150,19 +150,19 @@ class TicketStatusesRelationManager extends RelationManager
                                 $data['is_completed'] = false;
                                 Notification::make()
                                     ->warning()
-                                    ->title('Không thể đánh dấu hoàn thành')
-                                    ->body("Trạng thái '{$existingCompleted->name}' đã được đánh dấu là hoàn thành cho dự án này.")
+                                    ->title(__('Cannot mark as completed'))
+                                    ->body(__('Status \':name\' is already marked as completed for this project.', ['name' => $existingCompleted->name]))
                                     ->send();
                             }
                         }
 
                         return $data;
                     }),
-                DeleteAction::make()->label('Xóa'),
+                DeleteAction::make()->label(__('Delete')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Xóa đã chọn'),
+                    DeleteBulkAction::make()->label(__('Delete Selected')),
                 ]),
             ]);
     }

@@ -20,21 +20,30 @@ class TicketTimeline extends Page implements HasForms
 
     protected static string|\BackedEnum|null $navigationIcon = 'heroicon-o-calendar';
 
-    protected static ?string $navigationLabel = 'Tickets Timeline';
+    public static function getNavigationLabel(): string
+    {
+        return __('Tickets Timeline');
+    }
 
-    protected static ?string $title = 'Dòng thời gian vé';
+    public function getTitle(): string
+    {
+        return __('Tickets Timeline');
+    }
 
     protected static ?int $navigationSort = 6;
 
     protected string $view = 'filament.pages.ticket-timeline';
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Quản lý dự án';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Project Management');
+    }
 
     protected static ?string $slug = 'ticket-timeline/{project_id?}';
 
     public function getSubheading(): ?string
     {
-        return 'Xem dòng thời gian các vé hỗ trợ dưới dạng biểu đồ Gantt';
+        return __('View ticket timelines as Gantt charts');
     }
 
     public ?string $projectId = null;

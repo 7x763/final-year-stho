@@ -64,10 +64,10 @@ class TicketsRelationManager extends RelationManager
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->label('Tên vé hỗ trợ'),
+                    ->label(__('Ticket Name')),
 
                 Select::make('ticket_status_id')
-                    ->label('Trạng thái')
+                    ->label(__('Status'))
                     ->options(function () use ($projectId) {
                         return TicketStatus::where('project_id', $projectId)
                             ->pluck('name', 'id')
@@ -88,7 +88,7 @@ class TicketsRelationManager extends RelationManager
 
                 // UPDATED: Multi-user assignment
                 Select::make('assignees')
-                    ->label('Người thực hiện')
+                    ->label(__('Assignee'))
                     ->multiple()
                     ->relationship(
                         name: 'assignees',
@@ -115,19 +115,19 @@ class TicketsRelationManager extends RelationManager
 
                         return $isCurrentUserMember ? [auth()->id()] : [];
                     })
-                    ->helperText('Chọn một hoặc nhiều người để giao vé này. Chỉ thành viên dự án mới có thể được giao.'),
+                    ->helperText(__('Choose one or more people to assign this ticket to. Only project members can be assigned.')),
 
                 DatePicker::make('start_date')
-                    ->label('Ngày bắt đầu')
+                    ->label(__('Start Date'))
                     ->nullable(),
 
                 DatePicker::make('due_date')
-                    ->label('Hạn chót')
+                    ->label(__('Due Date'))
                     ->nullable()
                     ->afterOrEqual('start_date'),
 
                 RichEditor::make('description')
-                    ->label('Mô tả')
+                    ->label(__('Description'))
                     ->columnSpanFull()
                     ->fileAttachmentsDisk('public')
                     ->fileAttachmentsDirectory('attachments')
@@ -136,7 +136,7 @@ class TicketsRelationManager extends RelationManager
 
                 // Show created by in edit mode
                 Select::make('created_by')
-                    ->label('Người tạo')
+                    ->label(__('Creator'))
                     ->relationship('creator', 'name')
                     ->disabled()
                     ->hiddenOn('create'),
@@ -158,18 +158,18 @@ class TicketsRelationManager extends RelationManager
             )
             ->columns([
                 TextColumn::make('uuid')
-                    ->label('Mã vé')
+                    ->label(__('Ticket Code'))
                     ->searchable()
                     ->sortable()
                     ->copyable(),
 
                 TextColumn::make('name')
-                    ->label('Tên vé')
+                    ->label(__('Ticket Name'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('status.name')
-                    ->label('Trạng thái')
+                    ->label(__('Status'))
                     ->badge()
                     ->color(fn ($record) => match ($record->status?->name) {
                         'To Do' => 'warning',
@@ -181,44 +181,44 @@ class TicketsRelationManager extends RelationManager
                     ->sortable(),
 
                 TextColumn::make('epic.name')
-                    ->label('Epic')
+                    ->label(__('Epic'))
                     ->badge()
                     ->color('warning')
-                    ->placeholder('Không có Epic')
+                    ->placeholder(__('None'))
                     ->sortable()
                     ->searchable(),
 
                 TextColumn::make('assignees.name')
-                    ->label('Người thực hiện')
+                    ->label(__('Assignee'))
                     ->badge()
                     ->separator(',')
                     ->expandableLimitedList()
                     ->searchable(),
 
                 TextColumn::make('creator.name')
-                    ->label('Người tạo')
+                    ->label(__('Creator'))
                     ->sortable()
                     ->toggleable(),
 
                 TextColumn::make('start_date')
-                    ->label('Ngày bắt đầu')
+                    ->label(__('Start Date'))
                     ->date()
                     ->sortable(),
 
                 TextColumn::make('due_date')
-                    ->label('Hạn chót')
+                    ->label(__('Due Date'))
                     ->date()
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->label('Ngày tạo')
+                    ->label(__('Created At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
             ->filters([
                 SelectFilter::make('ticket_status_id')
-                    ->label('Trạng thái')
+                    ->label(__('Status'))
                     ->options(function () {
                         $projectId = $this->getOwnerRecord()->id;
 
@@ -229,7 +229,7 @@ class TicketsRelationManager extends RelationManager
 
                 // UPDATED: Filter by assignees
                 SelectFilter::make('assignees')
-                    ->label('Người thực hiện')
+                    ->label(__('Assignee'))
                     ->relationship('assignees', 'name', modifyQueryUsing: function (\Illuminate\Database\Eloquent\Builder $query) {
                         $projectId = $this->getOwnerRecord()->id;
                         return $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));
@@ -240,7 +240,7 @@ class TicketsRelationManager extends RelationManager
 
                 // Filter by creator
                 SelectFilter::make('created_by')
-                    ->label('Người tạo')
+                    ->label(__('Creator'))
                     ->relationship('creator', 'name', modifyQueryUsing: function (\Illuminate\Database\Eloquent\Builder $query) {
                         $projectId = $this->getOwnerRecord()->id;
                         return $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));
@@ -250,7 +250,7 @@ class TicketsRelationManager extends RelationManager
 
                 // Filter by epic
                 SelectFilter::make('epic_id')
-                    ->label('Epic')
+                    ->label(__('Epic'))
                     ->options(function () {
                         $projectId = $this->getOwnerRecord()->id;
 
@@ -261,7 +261,7 @@ class TicketsRelationManager extends RelationManager
             ])
             ->headerActions([
                 CreateAction::make()
-                    ->label('Tạo vé mới')
+                    ->label(__('New Ticket'))
                     ->mutateDataUsing(function (array $data): array {
                         // Set project_id and created_by
                         $data['project_id'] = $this->getOwnerRecord()->id;
@@ -284,16 +284,16 @@ class TicketsRelationManager extends RelationManager
 
                 // NEW: Import from Excel action
                 Action::make('import_tickets')
-                    ->label('Nhập từ Excel')
+                    ->label(__('Import from Excel'))
                     ->icon('heroicon-m-arrow-up-tray')
                     ->color('success')
                     ->schema([
-                        Section::make('Nhập vé hỗ trợ từ Excel')
-                            ->description('Tải lên tệp Excel để nhập vé vào dự án này. Bạn có thể tải tệp mẫu bên dưới.')
+                        Section::make(__('Import tickets from Excel'))
+                            ->description(__('Upload an Excel file to import tickets into this project. You can download a template file below.'))
                             ->schema([
                                 Actions::make([
                                     Action::make('download_template')
-                                        ->label('Tải tệp mẫu')
+                                        ->label(__('Download template'))
                                         ->icon('heroicon-m-arrow-down-tray')
                                         ->color('gray')
                                         ->action(function (RelationManager $livewire) {
@@ -308,8 +308,8 @@ class TicketsRelationManager extends RelationManager
                                 ])->fullWidth(),
 
                                 FileUpload::make('excel_file')
-                                    ->label('Tệp Excel')
-                                    ->helperText('Tải lên tệp Excel chứa dữ liệu vé. Đảm bảo sử dụng đúng định dạng mẫu bên trên.')
+                                    ->label(__('Excel File'))
+                                    ->helperText(__('Upload an Excel file containing ticket data. Make sure to use the correct template format above.'))
                                     ->acceptedFileTypes(['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'application/vnd.ms-excel'])
                                     ->maxSize(5120) // 5MB
                                     ->required()
@@ -334,14 +334,14 @@ class TicketsRelationManager extends RelationManager
                             Storage::disk('local')->delete($data['excel_file']);
 
                             if ($importedCount > 0) {
-                                $message = "Đã nhập thành công {$importedCount} vé vào dự án '{$project->name}'.";
+                                $message = __('Successfully imported :count tickets into project \':project\'.', ['count' => $importedCount, 'project' => $project->name]);
 
                                 if (count($errors) > 0 || count($failures) > 0) {
-                                    $message .= ' Một số dòng gặp lỗi và đã bị bỏ qua.';
+                                    $message .= ' '.__('Some rows encountered errors and were skipped.');
                                 }
 
                                 Notification::make()
-                                    ->title('Nhập dữ liệu hoàn tất')
+                                    ->title(__('Import Completed'))
                                     ->body($message)
                                     ->success()
                                     ->send();
@@ -350,28 +350,28 @@ class TicketsRelationManager extends RelationManager
                                 $importErrors = $import->errors();
                                 $importFailures = $import->failures();
 
-                                $errorMessage = 'Không có vé nào được nhập.';
+                                $errorMessage = __('No tickets were imported.');
 
                                 // Show actual validation failures if they exist
                                 if (! empty($importFailures)) {
-                                    $errorMessage .= "\n\n**Lỗi xác thực:**";
+                                    $errorMessage .= "\n\n**".__('Validation Errors:').'**';
                                     foreach ($importFailures as $failure) {
                                         $row = $failure->row();
                                         $errors = implode(', ', $failure->errors());
-                                        $errorMessage .= "\n• Dòng {$row}: {$errors}";
+                                        $errorMessage .= "\n• ".__('Row')." {$row}: {$errors}";
                                     }
                                 }
 
                                 // Show actual processing errors if they exist
                                 if (! empty($importErrors)) {
-                                    $errorMessage .= "\n\n**Lỗi xử lý:**";
+                                    $errorMessage .= "\n\n**".__('Processing Errors:').'**';
                                     foreach ($importErrors as $error) {
                                         $errorMessage .= "\n• {$error}";
                                     }
                                 }
 
                                 Notification::make()
-                                    ->title('Nhập dữ liệu thất bại')
+                                    ->title(__('Import Failed'))
                                     ->body($errorMessage)
                                     ->warning()
                                     ->persistent()
@@ -382,27 +382,27 @@ class TicketsRelationManager extends RelationManager
                             Storage::disk('local')->delete($data['excel_file']);
 
                             Notification::make()
-                                ->title('Lỗi nhập dữ liệu')
-                                ->body('Đã xảy ra lỗi trong quá trình nhập: '.$e->getMessage())
+                                ->title(__('Import Error'))
+                                ->body(__('An error occurred during import:').' '.$e->getMessage())
                                 ->danger()
                                 ->send();
                         }
                     }),
             ])
             ->recordActions([
-                EditAction::make()->label('Sửa'),
-                DeleteAction::make()->label('Xóa'),
+                EditAction::make()->label(__('Edit')),
+                DeleteAction::make()->label(__('Delete')),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make()->label('Xóa đã chọn'),
+                    DeleteBulkAction::make()->label(__('Delete Selected')),
 
                     BulkAction::make('updateStatus')
-                        ->label('Cập nhật trạng thái')
+                        ->label(__('Update Status'))
                         ->icon('heroicon-o-arrow-path')
                         ->form([
                             Select::make('ticket_status_id')
-                                ->label('Trạng thái')
+                                ->label(__('Status'))
                                 ->options(function (RelationManager $livewire) {
                                     $projectId = $livewire->getOwnerRecord()->id;
 
@@ -421,18 +421,18 @@ class TicketsRelationManager extends RelationManager
 
                             Notification::make()
                                 ->success()
-                                ->title('Đã cập nhật trạng thái')
-                                ->body(count($records).' vé đã được cập nhật.')
+                                ->title(__('Status Updated'))
+                                ->body(__('count tickets have been updated.', ['count' => count($records)]))
                                 ->send();
                         }),
 
                     // NEW: Bulk assign users
                     BulkAction::make('assignUsers')
-                        ->label('Giao cho người dùng')
+                        ->label(__('Assign member'))
                         ->icon('heroicon-o-user-plus')
                         ->form([
                             Select::make('assignees')
-                                ->label('Người thực hiện')
+                                ->label(__('Assignee'))
                                 ->multiple()
                                 ->options(function (RelationManager $livewire) {
                                     return $livewire->getOwnerRecord()
@@ -445,10 +445,10 @@ class TicketsRelationManager extends RelationManager
                                 ->required(),
 
                             Radio::make('assignment_mode')
-                                ->label('Chế độ giao việc')
+                                ->label(__('Assign Mode'))
                                 ->options([
-                                    'replace' => 'Thay thế người hiện tại',
-                                    'add' => 'Thêm vào danh sách hiện tại',
+                                    'replace' => __('Replace existing roles'),
+                                    'add' => __('Add to existing roles'),
                                 ])
                                 ->default('add')
                                 ->required(),
@@ -464,16 +464,16 @@ class TicketsRelationManager extends RelationManager
 
                             Notification::make()
                                 ->success()
-                                ->title('Đã giao việc')
-                                ->body(count($records).' vé đã được cập nhật người thực hiện mới.')
+                                ->title(__('Assigned tickets'))
+                                ->body(__('count tickets have been updated with new assignees.', ['count' => count($records)]))
                                 ->send();
                         }),
                     BulkAction::make('updatePriority')
-                        ->label('Cập nhật mức ưu tiên')
+                        ->label(__('Update priority'))
                         ->icon('heroicon-o-flag')
                         ->form([
                             Select::make('priority_id')
-                                ->label('Mức ưu tiên')
+                                ->label(__('Ticket Priority'))
                                 ->options(TicketPriority::pluck('name', 'id')->toArray())
                                 ->nullable(),
                         ])
@@ -486,11 +486,11 @@ class TicketsRelationManager extends RelationManager
                         }),
 
                     BulkAction::make('assignToEpic')
-                        ->label('Gán vào Epic')
+                        ->label(__('Assign to Epic'))
                         ->icon('heroicon-o-bookmark')
                         ->form([
                             Select::make('epic_id')
-                                ->label('Epic')
+                                ->label(__('Epic'))
                                 ->options(function (RelationManager $livewire) {
                                     $projectId = $livewire->getOwnerRecord()->id;
 
@@ -501,7 +501,7 @@ class TicketsRelationManager extends RelationManager
                                 ->searchable()
                                 ->preload()
                                 ->nullable()
-                                ->helperText('Chọn một Epic để gán các vé đã chọn. Để trống để gỡ khỏi Epic.'),
+                                ->helperText(__('Choose an Epic to assign selected tickets. Leave blank to unassign.')),
                         ])
                         ->action(function (array $data, Collection $records): void {
                             foreach ($records as $record) {
@@ -512,12 +512,12 @@ class TicketsRelationManager extends RelationManager
 
                             $epicName = $data['epic_id']
                                 ? Epic::find($data['epic_id'])->name
-                                : 'Không có Epic';
+                                : __('None');
 
                             Notification::make()
                                 ->success()
-                                ->title('Đã cập nhật Epic')
-                                ->body(count($records).' vé đã được gán vào: '.$epicName)
+                                ->title(__('Epic Updated'))
+                                ->body(__('count tickets have been assigned to: :epic', ['count' => count($records), 'epic' => $epicName]))
                                 ->send();
                         }),
                 ]),

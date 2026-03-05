@@ -26,12 +26,12 @@ class TicketCommentResource extends Resource
 
     public static function getModelLabel(): string
     {
-        return 'Bình luận';
+        return __('Ticket Comment');
     }
 
     public static function getPluralModelLabel(): string
     {
-        return 'Bình luận';
+        return __('Ticket Comments');
     }
 
     public static function form(\Filament\Schemas\Schema $schema): \Filament\Schemas\Schema
@@ -39,7 +39,7 @@ class TicketCommentResource extends Resource
         return $schema
             ->components([
                 RichEditor::make('comment')
-                    ->label('Bình luận')
+                    ->label(__('Comment'))
                     ->required()
                     ->columnSpanFull()
                     ->fileAttachmentsDisk('public')
@@ -58,20 +58,20 @@ class TicketCommentResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('ticket.name')
-                    ->label('Vé hỗ trợ')
+                    ->label(__('Ticket'))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('user.name')
-                    ->label('Người dùng')
+                    ->label(__('User'))
                     ->numeric()
                     ->sortable(),
                 TextColumn::make('created_at')
-                    ->label('Ngày tạo')
+                    ->label(__('Created At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
-                    ->label('Ngày cập nhật')
+                    ->label(__('Updated At'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -84,7 +84,8 @@ class TicketCommentResource extends Resource
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                    DeleteBulkAction::make()
+                        ->label(__('Delete Selected')),
                 ]),
             ]);
     }
