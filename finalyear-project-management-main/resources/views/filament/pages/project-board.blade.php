@@ -542,7 +542,7 @@
                         >
                             <div class="flex items-center justify-between">
                                 <h3 class="font-medium flex items-center gap-2" style="color: white; text-shadow: 0px 0px 1px rgba(0,0,0,0.5);">
-                                    <span>{{ $status->name }}</span>
+                                    <span>{{ __($status->name) }}</span>
                                     <span class="text-sm opacity-80">{{ $status->tickets->count() }}</span>
                                     @if($status->is_completed)
                                         <div class="flex items-center justify-center w-6 h-6 bg-green-500 rounded-full border-2 border-white shadow-lg" title="{{ __('Completed Status') }}">
@@ -648,7 +648,7 @@
                                         <div class="flex items-center gap-1">
                                             @if ($ticket->priority)
                                                 <span class="text-xs px-1.5 py-0.5 rounded whitespace-nowrap text-white font-medium" style="background-color: {{ $ticket->priority->color }};">
-                                                    {{ $ticket->priority->name }}
+                                                    {{ __($ticket->priority->name) }}
                                                 </span>
                                             @endif
                                             @if ($ticket->due_date)
@@ -689,7 +689,7 @@
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400 dark:text-gray-500 mr-1 flex-shrink-0" viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
                                                 </svg>
-                                                <span class="text-xs font-medium">Unassigned</span>
+                                                <span class="text-xs font-medium">{{ __('Unassigned') }}</span>
                                             </div>
                                         @endif
 
