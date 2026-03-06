@@ -1,0 +1,163 @@
+Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
+Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
+Composer plugins have been disabled for safety in this non-interactive session. Set COMPOSER_ALLOW_SUPERUSER=1 if you want to allow plugins to run as root/super user.
+Do not run Composer as root/super user! See https://getcomposer.org/root for details
+Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
+Deprecation Notice: Composer\Pcre\Preg::replace(): Implicitly marking parameter $count as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Pcre/Preg.php:150
+Deprecation Notice: Composer\Pcre\Preg::replaceCallback(): Implicitly marking parameter $count as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Pcre/Preg.php:177
+Deprecation Notice: Composer\Pcre\Preg::replaceCallbackStrictGroups(): Implicitly marking parameter $count as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Pcre/Preg.php:206
+Deprecation Notice: Composer\Pcre\Preg::replaceCallbackArray(): Implicitly marking parameter $count as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Pcre/Preg.php:221
+Deprecation Notice: JsonSchema\Constraints\BaseConstraint::__construct(): Implicitly marking parameter $factory as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/BaseConstraint.php:41
+Deprecation Notice: JsonSchema\Constraints\BaseConstraint::addError(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/BaseConstraint.php:46
+Deprecation Notice: JsonSchema\Constraints\BaseConstraint::addError(): Implicitly marking parameter $more as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/BaseConstraint.php:46
+Deprecation Notice: JsonSchema\Constraints\Factory::__construct(): Implicitly marking parameter $schemaStorage as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Factory.php:76
+Deprecation Notice: JsonSchema\Constraints\Factory::__construct(): Implicitly marking parameter $uriRetriever as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Factory.php:76
+Deprecation Notice: JsonSchema\Constraints\Constraint::incrementPath(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:42
+Deprecation Notice: JsonSchema\Constraints\Constraint::checkArray(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:68
+Deprecation Notice: JsonSchema\Constraints\Constraint::checkObject(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:86
+Deprecation Notice: JsonSchema\Constraints\Constraint::checkType(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:103
+Deprecation Notice: JsonSchema\Constraints\Constraint::checkUndefined(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:119
+Deprecation Notice: JsonSchema\Constraints\Constraint::checkString(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:136
+Deprecation Notice: JsonSchema\Constraints\Constraint::checkNumber(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:152
+Deprecation Notice: JsonSchema\Constraints\Constraint::checkEnum(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:168
+Deprecation Notice: JsonSchema\Constraints\Constraint::checkFormat(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/Constraint.php:184
+Deprecation Notice: JsonSchema\Constraints\ConstraintInterface::addError(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ConstraintInterface.php:43
+Deprecation Notice: JsonSchema\Constraints\ConstraintInterface::addError(): Implicitly marking parameter $more as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ConstraintInterface.php:43
+Deprecation Notice: JsonSchema\Constraints\ConstraintInterface::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ConstraintInterface.php:64
+Deprecation Notice: JsonSchema\SchemaStorage::__construct(): Implicitly marking parameter $uriRetriever as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/SchemaStorage.php:19
+Deprecation Notice: JsonSchema\SchemaStorage::__construct(): Implicitly marking parameter $uriResolver as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/SchemaStorage.php:19
+Deprecation Notice: JsonSchema\Constraints\SchemaConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/SchemaConstraint.php:31
+Deprecation Notice: JsonSchema\Constraints\UndefinedConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/UndefinedConstraint.php:34
+Deprecation Notice: JsonSchema\Constraints\TypeConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/TypeConstraint.php:42
+Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:30
+Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::validatePatternProperties(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:54
+Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::validateElement(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:93
+Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::validateProperties(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:135
+Deprecation Notice: JsonSchema\Constraints\ObjectConstraint::validateMinMaxConstraint(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/ObjectConstraint.php:177
+Deprecation Notice: JsonSchema\Constraints\StringConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/StringConstraint.php:25
+Deprecation Notice: JsonSchema\Constraints\FormatConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/FormatConstraint.php:27
+Deprecation Notice: JsonSchema\Constraints\CollectionConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/CollectionConstraint.php:25
+Deprecation Notice: JsonSchema\Constraints\CollectionConstraint::validateItems(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/CollectionConstraint.php:64
+Deprecation Notice: JsonSchema\Constraints\NumberConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/NumberConstraint.php:25
+Deprecation Notice: JsonSchema\Constraints\EnumConstraint::check(): Implicitly marking parameter $path as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/JsonSchema/Constraints/EnumConstraint.php:25
+Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
+Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
+Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
+Deprecation Notice: Constant E_STRICT is deprecated in /usr/share/php/Composer/Util/Silencer.php:36
+Deprecation Notice: Composer\CaBundle\CaBundle::getSystemCaRootBundlePath(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:67
+Deprecation Notice: Composer\CaBundle\CaBundle::validateCaFile(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:163
+Deprecation Notice: Composer\CaBundle\CaBundle::caFileUsable(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:343
+Deprecation Notice: Composer\CaBundle\CaBundle::caDirUsable(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:356
+Deprecation Notice: Composer\CaBundle\CaBundle::isFile(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:369
+Deprecation Notice: Composer\CaBundle\CaBundle::isDir(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:384
+Deprecation Notice: Composer\CaBundle\CaBundle::isReadable(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:399
+Deprecation Notice: Composer\CaBundle\CaBundle::glob(): Implicitly marking parameter $logger as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/CaBundle/CaBundle.php:414
+Deprecation Notice: Composer\Util\Git::fetchRefOrSyncMirror(): Implicitly marking parameter $prettyVersion as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/Composer/Util/Git.php:301
+Loading composer repositories with package information
+Deprecation Notice: React\Promise\Promise::__construct(): Implicitly marking parameter $canceller as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:32
+Deprecation Notice: React\Promise\Promise::then(): Implicitly marking parameter $onFulfilled as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:44
+Deprecation Notice: React\Promise\Promise::then(): Implicitly marking parameter $onRejected as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:44
+Deprecation Notice: React\Promise\Promise::resolver(): Implicitly marking parameter $onFulfilled as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:169
+Deprecation Notice: React\Promise\Promise::resolver(): Implicitly marking parameter $onRejected as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Promise.php:169
+Deprecation Notice: React\Promise\Internal\FulfilledPromise::then(): Implicitly marking parameter $onFulfilled as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Internal/FulfilledPromise.php:37
+Deprecation Notice: React\Promise\Internal\FulfilledPromise::then(): Implicitly marking parameter $onRejected as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Internal/FulfilledPromise.php:37
+Deprecation Notice: React\Promise\Internal\RejectedPromise::then(): Implicitly marking parameter $onFulfilled as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Internal/RejectedPromise.php:64
+Deprecation Notice: React\Promise\Internal\RejectedPromise::then(): Implicitly marking parameter $onRejected as nullable is deprecated, the explicit nullable type must be used instead in /usr/share/php/React/Promise/Internal/RejectedPromise.php:64
+Updating dependencies
+Your requirements could not be resolved to an installable set of packages.
+
+  Problem 1
+    - maatwebsite/excel[3.1.0, ..., 3.1.25] require php ^7.0 -> your php version (8.4; overridden via config.platform, actual: 8.4.18) does not satisfy that requirement.
+    - maatwebsite/excel[3.1.28, ..., 3.1.30] require phpoffice/phpspreadsheet 1.16.* -> found phpoffice/phpspreadsheet[1.16.0] but it conflicts with your root composer.json require (1.29).
+    - maatwebsite/excel[3.1.57, ..., 3.1.58] require phpoffice/phpspreadsheet ^1.29.1 -> found phpoffice/phpspreadsheet[1.29.1, ..., 1.30.2] but it conflicts with your root composer.json require (1.29).
+    - maatwebsite/excel 3.1.59 requires phpoffice/phpspreadsheet ^1.29.2 -> found phpoffice/phpspreadsheet[1.29.2, ..., 1.30.2] but it conflicts with your root composer.json require (1.29).
+    - maatwebsite/excel[3.1.60, ..., 3.1.61] require phpoffice/phpspreadsheet ^1.29.4 -> found phpoffice/phpspreadsheet[1.29.4, ..., 1.30.2] but it conflicts with your root composer.json require (1.29).
+    - maatwebsite/excel 3.1.62 requires phpoffice/phpspreadsheet ^1.29.7 -> found phpoffice/phpspreadsheet[1.29.7, ..., 1.30.2] but it conflicts with your root composer.json require (1.29).
+    - maatwebsite/excel[3.1.63, ..., 3.1.64] require phpoffice/phpspreadsheet ^1.29.9 -> found phpoffice/phpspreadsheet[1.29.9, ..., 1.30.2] but it conflicts with your root composer.json require (1.29).
+    - maatwebsite/excel[3.1.65, ..., 3.1.66] require phpoffice/phpspreadsheet ^1.29.12 -> found phpoffice/phpspreadsheet[1.29.12, 1.30.0, 1.30.1, 1.30.2] but it conflicts with your root composer.json require (1.29).
+    - maatwebsite/excel 3.1.67 requires phpoffice/phpspreadsheet ^1.30.0 -> found phpoffice/phpspreadsheet[1.30.0, 1.30.1, 1.30.2] but it conflicts with your root composer.json require (1.29).
+    - illuminate/support[v5.8.0, ..., v5.8.36] require php ^7.1.3 -> your php version (8.4; overridden via config.platform, actual: 8.4.18) does not satisfy that requirement.
+    - illuminate/support[v6.0.0, ..., v6.19.1] require php ^7.2 -> your php version (8.4; overridden via config.platform, actual: 8.4.18) does not satisfy that requirement.
+    - illuminate/support[v7.0.0, ..., v7.28.4] require php ^7.2.5 -> your php version (8.4; overridden via config.platform, actual: 8.4.18) does not satisfy that requirement.
+    - illuminate/support[v8.0.0, ..., v8.11.2] require php ^7.3 -> your php version (8.4; overridden via config.platform, actual: 8.4.18) does not satisfy that requirement.
+    - maatwebsite/excel[3.1.46, ..., 3.1.53] require illuminate/support 5.8.*||^6.0||^7.0||^8.0||^9.0||^10.0 -> satisfiable by illuminate/support[v5.8.0, ..., v5.8.36, v6.0.0, ..., v6.20.44, v7.0.0, ..., v7.30.6, v8.0.0, ..., v8.83.27, v9.0.0, ..., v9.52.16, v10.0.0, ..., v10.49.0].
+    - maatwebsite/excel[3.1.36, ..., 3.1.45] require illuminate/support 5.8.*|^6.0|^7.0|^8.0|^9.0 -> satisfiable by illuminate/support[v5.8.0, ..., v5.8.36, v6.0.0, ..., v6.20.44, v7.0.0, ..., v7.30.6, v8.0.0, ..., v8.83.27, v9.0.0, ..., v9.52.16].
+    - maatwebsite/excel[3.1.26, ..., 3.1.35] require illuminate/support 5.8.*|^6.0|^7.0|^8.0 -> satisfiable by illuminate/support[v5.8.0, ..., v5.8.36, v6.0.0, ..., v6.20.44, v7.0.0, ..., v7.30.6, v8.0.0, ..., v8.83.27].
+    - maatwebsite/excel[3.1.54, ..., 3.1.56] require illuminate/support 5.8.*||^6.0||^7.0||^8.0||^9.0||^10.0||^11.0 -> satisfiable by illuminate/support[v5.8.0, ..., v5.8.36, v6.0.0, ..., v6.20.44, v7.0.0, ..., v7.30.6, v8.0.0, ..., v8.83.27, v9.0.0, ..., v9.52.16, v10.0.0, ..., v10.49.0, v11.0.0, ..., v11.47.0].
+    - Only one of these can be installed: illuminate/support[v1.0.0, v1.1.0, v1.1.1, v1.1.2, v4.0.0, ..., v4.2.17, v5.0.0, ..., v5.8.36, v6.0.0, ..., v6.20.44, v7.0.0, ..., v7.30.6, v8.0.0, ..., v8.83.27, v9.0.0, ..., v9.52.16, v10.0.0, ..., v10.49.0, v11.0.0, ..., v11.47.0, v12.0.0, ..., v12.53.0], laravel/framework[v12.0.0, ..., v12.53.0]. laravel/framework replaces illuminate/support and thus cannot coexist with it.
+    - Only one of these can be installed: illuminate/support[v11.0.0, ..., v11.47.0, v12.0.0, ..., v12.53.0], laravel/framework[v12.0.0, ..., v12.53.0]. They all replace spatie/once and thus cannot coexist.
+    - openai-php/laravel v0.18.0 requires laravel/framework ^11.29|^12.12 -> satisfiable by laravel/framework[v12.12.0, ..., v12.53.0].
+    - Conclusion: don't install laravel/framework v12.13.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.14.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.14.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.15.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.16.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.17.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.18.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.19.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.19.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.19.2 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.19.3 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.20.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.21.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.22.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.22.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.23.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.23.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.24.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.25.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.26.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.26.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.26.2 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.26.3 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.26.4 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.27.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.27.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.28.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.28.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.29.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.30.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.30.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.31.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.31.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.32.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.32.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.32.2 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.32.3 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.32.4 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.32.5 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.33.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.34.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.35.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.35.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.36.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.36.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.37.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.38.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.38.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.39.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.40.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.40.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.40.2 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.41.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.41.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.42.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.43.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.43.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.44.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.45.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.45.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.45.2 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.46.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.47.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.48.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.48.1 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.49.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.50.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.51.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.52.0 (conflict analysis result)
+    - Conclusion: don't install laravel/framework v12.53.0 (conflict analysis result)
+    - Root composer.json requires openai-php/laravel ^0.18.0 -> satisfiable by openai-php/laravel[v0.18.0].
+    - Root composer.json requires maatwebsite/excel ^3.1 -> satisfiable by maatwebsite/excel[3.1.0, ..., 3.1.67].
+
+Use the option --with-all-dependencies (-W) to allow upgrades, downgrades and removals for packages currently locked to specific versions.
